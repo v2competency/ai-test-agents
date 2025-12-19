@@ -1,0 +1,157 @@
+{
+  "_metadata": {
+    "module": "Products/Inventory",
+    "generatedFrom": "SauceDemo_Manual_Test_Cases.txt",
+    "generatedDate": "2025-12-19",
+    "testCaseCount": 15
+  },
+
+  "products": {
+    "backpack": {
+      "name": "Sauce Labs Backpack",
+      "price": 29.99,
+      "dataTestId": "sauce-labs-backpack"
+    },
+    "bikeLight": {
+      "name": "Sauce Labs Bike Light",
+      "price": 9.99,
+      "dataTestId": "sauce-labs-bike-light"
+    },
+    "boltTShirt": {
+      "name": "Sauce Labs Bolt T-Shirt",
+      "price": 15.99,
+      "dataTestId": "sauce-labs-bolt-t-shirt"
+    },
+    "fleeceJacket": {
+      "name": "Sauce Labs Fleece Jacket",
+      "price": 49.99,
+      "dataTestId": "sauce-labs-fleece-jacket"
+    },
+    "onesie": {
+      "name": "Sauce Labs Onesie",
+      "price": 7.99,
+      "dataTestId": "sauce-labs-onesie"
+    },
+    "redTShirt": {
+      "name": "Test.allTheThings() T-Shirt (Red)",
+      "price": 15.99,
+      "dataTestId": "test.allthethings()-t-shirt-(red)"
+    }
+  },
+
+  "validScenarios": [
+    {
+      "testId": "TC_LIST_001",
+      "description": "View products page after login",
+      "priority": "High",
+      "expectedResult": "products_visible"
+    },
+    {
+      "testId": "TC_LIST_002",
+      "description": "Add single product to cart",
+      "priority": "High",
+      "productName": "Sauce Labs Backpack",
+      "expectedCartCount": 1
+    },
+    {
+      "testId": "TC_LIST_003",
+      "description": "Add multiple products to cart",
+      "priority": "High",
+      "products": ["Sauce Labs Backpack", "Sauce Labs Bike Light"],
+      "expectedCartCount": 2
+    },
+    {
+      "testId": "TC_LIST_004",
+      "description": "Remove product from products page",
+      "priority": "High",
+      "productName": "Sauce Labs Backpack",
+      "expectedCartCount": 0
+    },
+    {
+      "testId": "TC_LIST_005",
+      "description": "Sort products by Name (A to Z)",
+      "priority": "Medium",
+      "sortOption": "az",
+      "expectedFirstProduct": "Sauce Labs Backpack"
+    },
+    {
+      "testId": "TC_LIST_006",
+      "description": "Sort products by Name (Z to A)",
+      "priority": "Medium",
+      "sortOption": "za",
+      "expectedFirstProduct": "Test.allTheThings() T-Shirt (Red)"
+    },
+    {
+      "testId": "TC_LIST_007",
+      "description": "Sort products by Price (low to high)",
+      "priority": "Medium",
+      "sortOption": "lohi",
+      "expectedFirstPrice": 7.99
+    },
+    {
+      "testId": "TC_LIST_008",
+      "description": "Sort products by Price (high to low)",
+      "priority": "Medium",
+      "sortOption": "hilo",
+      "expectedFirstPrice": 49.99
+    }
+  ],
+
+  "invalidScenarios": [
+    {
+      "testId": "TC_LIST_100",
+      "description": "Access product page directly without login",
+      "priority": "High",
+      "directUrl": "/inventory.html",
+      "expectedBehavior": "redirect_to_login"
+    },
+    {
+      "testId": "TC_LIST_101",
+      "description": "Product detail page access without login",
+      "priority": "Medium",
+      "directUrl": "/inventory-item.html?id=4",
+      "expectedBehavior": "redirect_to_login"
+    },
+    {
+      "testId": "TC_LIST_102",
+      "description": "Invalid sort parameter in URL",
+      "priority": "Low",
+      "expectedBehavior": "handle_gracefully"
+    }
+  ],
+
+  "boundaryTests": [
+    {
+      "testId": "TC_LIST_300",
+      "description": "Add all available products to cart",
+      "priority": "Medium",
+      "expectedCartCount": 6
+    },
+    {
+      "testId": "TC_LIST_301",
+      "description": "Rapid add/remove product clicks",
+      "priority": "Low",
+      "productName": "Sauce Labs Backpack",
+      "expectedBehavior": "handle_gracefully"
+    }
+  ],
+
+  "securityTests": [
+    {
+      "testId": "TC_LIST_400",
+      "description": "XSS via product URL parameter",
+      "priority": "High",
+      "payload": "<script>alert('XSS')</script>",
+      "targetUrl": "/inventory-item.html?id=<script>alert('XSS')</script>",
+      "category": "xss",
+      "expectedBehavior": "sanitize_input"
+    },
+    {
+      "testId": "TC_LIST_401",
+      "description": "Cart count manipulation attempt",
+      "priority": "Medium",
+      "category": "client_manipulation",
+      "expectedBehavior": "server_validation"
+    }
+  ]
+}

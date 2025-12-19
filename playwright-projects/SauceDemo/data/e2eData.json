@@ -1,0 +1,135 @@
+{
+  "_metadata": {
+    "module": "End-to-End Flows",
+    "generatedFrom": "SauceDemo_Manual_Test_Cases.txt",
+    "generatedDate": "2025-12-19",
+    "testCaseCount": 7
+  },
+
+  "e2eScenarios": [
+    {
+      "testId": "E2E_001",
+      "description": "Complete purchase flow - Single item",
+      "priority": "High",
+      "user": {
+        "username": "standard_user",
+        "password": "secret_sauce"
+      },
+      "product": {
+        "name": "Sauce Labs Backpack",
+        "price": 29.99
+      },
+      "checkout": {
+        "firstName": "John",
+        "lastName": "Doe",
+        "postalCode": "12345"
+      },
+      "expectedTotals": {
+        "itemTotal": 29.99,
+        "tax": 2.40,
+        "grandTotal": 32.39
+      },
+      "expectedMessage": "Thank you for your order!"
+    },
+    {
+      "testId": "E2E_002",
+      "description": "Complete purchase flow - Multiple items",
+      "priority": "High",
+      "user": {
+        "username": "standard_user",
+        "password": "secret_sauce"
+      },
+      "products": [
+        {
+          "name": "Sauce Labs Backpack",
+          "price": 29.99
+        },
+        {
+          "name": "Sauce Labs Bike Light",
+          "price": 9.99
+        }
+      ],
+      "checkout": {
+        "firstName": "Jane",
+        "lastName": "Smith",
+        "postalCode": "90210"
+      },
+      "expectedMessage": "Thank you for your order!"
+    },
+    {
+      "testId": "E2E_003",
+      "description": "Add and remove items before checkout",
+      "priority": "Medium",
+      "user": {
+        "username": "standard_user",
+        "password": "secret_sauce"
+      },
+      "productsToAdd": ["Sauce Labs Backpack", "Sauce Labs Bike Light"],
+      "productsToRemove": ["Sauce Labs Bike Light"],
+      "checkout": {
+        "firstName": "Test",
+        "lastName": "User",
+        "postalCode": "12345"
+      },
+      "expectedFinalProducts": ["Sauce Labs Backpack"]
+    },
+    {
+      "testId": "E2E_004",
+      "description": "Browse products with different sort options",
+      "priority": "Medium",
+      "user": {
+        "username": "standard_user",
+        "password": "secret_sauce"
+      },
+      "sortOptions": [
+        { "option": "az", "expectedFirst": "Sauce Labs Backpack" },
+        { "option": "za", "expectedFirst": "Test.allTheThings() T-Shirt (Red)" },
+        { "option": "lohi", "expectedFirstPrice": 7.99 },
+        { "option": "hilo", "expectedFirstPrice": 49.99 }
+      ]
+    },
+    {
+      "testId": "E2E_005",
+      "description": "Full flow with problem_user",
+      "priority": "Medium",
+      "user": {
+        "username": "problem_user",
+        "password": "secret_sauce"
+      },
+      "product": {
+        "name": "Sauce Labs Backpack",
+        "price": 29.99
+      },
+      "note": "Known issues may occur - document deviations"
+    },
+    {
+      "testId": "E2E_006",
+      "description": "Full flow with performance_glitch_user",
+      "priority": "Medium",
+      "user": {
+        "username": "performance_glitch_user",
+        "password": "secret_sauce"
+      },
+      "product": {
+        "name": "Sauce Labs Backpack",
+        "price": 29.99
+      },
+      "timeout": 60000,
+      "note": "Performance delays expected"
+    },
+    {
+      "testId": "E2E_007",
+      "description": "Logout and verify session cleared",
+      "priority": "High",
+      "user": {
+        "username": "standard_user",
+        "password": "secret_sauce"
+      },
+      "product": {
+        "name": "Sauce Labs Backpack",
+        "price": 29.99
+      },
+      "expectedBehavior": "session_cleared_on_logout"
+    }
+  ]
+}

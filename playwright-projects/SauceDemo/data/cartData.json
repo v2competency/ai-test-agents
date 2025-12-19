@@ -1,0 +1,102 @@
+{
+  "_metadata": {
+    "module": "Shopping Cart",
+    "generatedFrom": "SauceDemo_Manual_Test_Cases.txt",
+    "generatedDate": "2025-12-19",
+    "testCaseCount": 12
+  },
+
+  "validScenarios": [
+    {
+      "testId": "TC_CART_001",
+      "description": "View cart with items",
+      "priority": "High",
+      "productName": "Sauce Labs Backpack",
+      "productPrice": "$29.99",
+      "expectedResult": "cart_displays_item"
+    },
+    {
+      "testId": "TC_CART_002",
+      "description": "View empty cart",
+      "priority": "Medium",
+      "expectedResult": "cart_empty"
+    },
+    {
+      "testId": "TC_CART_003",
+      "description": "Remove item from cart page",
+      "priority": "High",
+      "productName": "Sauce Labs Backpack",
+      "expectedResult": "item_removed"
+    },
+    {
+      "testId": "TC_CART_004",
+      "description": "Continue shopping from cart",
+      "priority": "Medium",
+      "expectedRedirect": "/inventory.html"
+    },
+    {
+      "testId": "TC_CART_005",
+      "description": "Navigate to checkout from cart",
+      "priority": "High",
+      "expectedRedirect": "/checkout-step-one.html"
+    },
+    {
+      "testId": "TC_CART_006",
+      "description": "Verify product details in cart",
+      "priority": "Medium",
+      "productName": "Sauce Labs Backpack",
+      "productPrice": "$29.99",
+      "expectedQuantity": "1"
+    }
+  ],
+
+  "invalidScenarios": [
+    {
+      "testId": "TC_CART_100",
+      "description": "Access cart page directly without login",
+      "priority": "High",
+      "directUrl": "/cart.html",
+      "expectedBehavior": "redirect_to_login"
+    },
+    {
+      "testId": "TC_CART_101",
+      "description": "Checkout with empty cart",
+      "priority": "Medium",
+      "expectedBehavior": "allow_or_prevent_checkout"
+    },
+    {
+      "testId": "TC_CART_102",
+      "description": "Remove last item and verify cart state",
+      "priority": "Medium",
+      "productName": "Sauce Labs Backpack",
+      "expectedResult": "cart_empty"
+    }
+  ],
+
+  "boundaryTests": [
+    {
+      "testId": "TC_CART_300",
+      "description": "Cart persistence across page navigation",
+      "priority": "Medium",
+      "productName": "Sauce Labs Backpack",
+      "expectedBehavior": "cart_persists"
+    },
+    {
+      "testId": "TC_CART_301",
+      "description": "Cart with maximum items",
+      "priority": "Low",
+      "expectedItemCount": 6,
+      "expectedBehavior": "all_items_displayed"
+    }
+  ],
+
+  "securityTests": [
+    {
+      "testId": "TC_CART_400",
+      "description": "Cart manipulation via localStorage",
+      "priority": "Medium",
+      "category": "client_manipulation",
+      "expectedBehavior": "server_validation"
+    }
+  ]
+}

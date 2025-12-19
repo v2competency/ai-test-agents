@@ -1,0 +1,214 @@
+{
+  "agent": {
+    "name": "Automation Generator Agent",
+    "version": "1.0.0",
+    "description": "Generates Playwright test automation from manual test cases",
+    "type": "sub-agent"
+  },
+  "pipeline": {
+    "position": 2,
+    "input": {
+      "sources": ["manual-tests"],
+      "formats": ["txt"],
+      "pattern": "{AppName}_Manual_Test_Cases.txt"
+    },
+    "output": {
+      "directory": "playwright-projects/{AppName}",
+      "structure": {
+        "pages": "Page Object Model classes",
+        "tests": "Test specification files",
+        "data": "JSON test data files",
+        "utils": "Self-healing utilities",
+        "config": "Configuration files"
+      }
+    },
+    "upstream": "testcase-generator-agent"
+  },
+  "capabilities": {
+    "test_case_parsing": true,
+    "page_object_generation": true,
+    "test_data_generation": true,
+    "test_spec_generation": true,
+    "self_healing_integration": true,
+    "framework_setup": true
+  },
+  "workflow": {
+    "phases": [
+      {
+        "id": 1,
+        "name": "Parse Manual Test Cases",
+        "description": "Read and parse test case file, extract structure",
+        "requires_user_input": false
+      },
+      {
+        "id": 2,
+        "name": "Analyze & Plan",
+        "description": "Identify modules, pages, and generation plan",
+        "requires_user_input": false
+      },
+      {
+        "id": 3,
+        "name": "Present Generation Plan",
+        "description": "Show user what will be generated",
+        "requires_user_input": true
+      },
+      {
+        "id": 4,
+        "name": "Generate Page Objects",
+        "description": "Create TypeScript Page Object classes",
+        "requires_user_input": false
+      },
+      {
+        "id": 5,
+        "name": "Generate Test Data",
+        "description": "Create JSON test data files",
+        "requires_user_input": false
+      },
+      {
+        "id": 6,
+        "name": "Generate Test Specs",
+        "description": "Create Playwright test specifications",
+        "requires_user_input": false
+      },
+      {
+        "id": 7,
+        "name": "Generate Framework Files",
+        "description": "Create config, utilities, and documentation",
+        "requires_user_input": false
+      }
+    ]
+  },
+  "parsing": {
+    "module_mapping": {
+      "TC_AUTH_": {
+        "module": "Authentication",
+        "page": "LoginPage",
+        "file_prefix": "auth"
+      },
+      "TC_REG_": {
+        "module": "Registration",
+        "page": "RegistrationPage",
+        "file_prefix": "registration"
+      },
+      "TC_DASH_": {
+        "module": "Dashboard",
+        "page": "DashboardPage",
+        "file_prefix": "dashboard"
+      },
+      "TC_FORM_": {
+        "module": "Forms",
+        "page": "FormPage",
+        "file_prefix": "form"
+      },
+      "TC_LIST_": {
+        "module": "Lists",
+        "page": "ListPage",
+        "file_prefix": "list"
+      },
+      "TC_CRUD_": {
+        "module": "CRUD",
+        "page": "CrudPage",
+        "file_prefix": "crud"
+      },
+      "TC_CART_": {
+        "module": "Cart",
+        "page": "CartPage",
+        "file_prefix": "cart"
+      },
+      "TC_CHKOUT_": {
+        "module": "Checkout",
+        "page": "CheckoutPage",
+        "file_prefix": "checkout"
+      },
+      "TC_SEARCH_": {
+        "module": "Search",
+        "page": "SearchPage",
+        "file_prefix": "search"
+      },
+      "TC_PROF_": {
+        "module": "Profile",
+        "page": "ProfilePage",
+        "file_prefix": "profile"
+      },
+      "TC_SEC_": {
+        "module": "Security",
+        "page": null,
+        "file_prefix": "security"
+      },
+      "E2E_": {
+        "module": "EndToEnd",
+        "page": null,
+        "file_prefix": "e2e"
+      }
+    },
+    "type_mapping": {
+      "001-099": "validScenarios",
+      "100-199": "invalidScenarios",
+      "200-299": "emptyFieldTests",
+      "300-399": "boundaryTests",
+      "400-499": "securityTests",
+      "500-599": "caseSensitivityTests",
+      "600-699": "specialInputTests"
+    }
+  },
+  "code_generation": {
+    "typescript": {
+      "strict": true,
+      "no_any": true,
+      "async_await": true
+    },
+    "locator_strategy": {
+      "priority": [
+        "data-test",
+        "id",
+        "name",
+        "placeholder",
+        "text",
+        "class"
+      ],
+      "fallback_count": 4
+    },
+    "self_healing": {
+      "enabled": true,
+      "tiers": ["cache", "fallbacks", "ai"]
+    }
+  },
+  "output_files": {
+    "pages": {
+      "BasePage.ts": "Base class with common methods",
+      "{PageName}Page.ts": "Page-specific classes"
+    },
+    "tests": {
+      "{module}.spec.ts": "Module test specifications",
+      "e2e/{flow}.e2e.spec.ts": "End-to-end tests"
+    },
+    "data": {
+      "{module}Data.json": "Module test data",
+      "users.json": "Test user credentials",
+      "securityPayloads.json": "Security test payloads"
+    },
+    "utils": {
+      "SelfHealingLocator.ts": "Self-healing engine",
+      "AIObserver.ts": "AI observation service",
+      "TestHelpers.ts": "Common utilities"
+    },
+    "config": {
+      "playwright.config.ts": "Playwright configuration",
+      "tsconfig.json": "TypeScript configuration",
+      "package.json": "Dependencies",
+      ".env.example": "Environment template",
+      ".gitignore": "Git ignore rules",
+      "README.md": "Project documentation"
+    }
+  },
+  "guardrail_reference": {
+    "name": "Screenshot-to-Automation Guardrail",
+    "version": "2.0",
+    "path": "guardrails/screenshot-to-automation-guardrail.md"
+  },
+  "files": {
+    "agent_definition": "AGENT.md",
+    "system_prompt": "system-prompt.md",
+    "prompt_templates": "prompt-template.md"
+  }
+}

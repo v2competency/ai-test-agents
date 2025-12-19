@@ -1,0 +1,212 @@
+{
+  "_metadata": {
+    "module": "Authentication",
+    "generatedFrom": "SauceDemo_Manual_Test_Cases.txt",
+    "generatedDate": "2025-12-19",
+    "testCaseCount": 22
+  },
+
+  "validScenarios": [
+    {
+      "testId": "TC_AUTH_001",
+      "description": "Successful login with standard_user",
+      "priority": "High",
+      "username": "standard_user",
+      "password": "secret_sauce",
+      "expectedResult": "success",
+      "expectedRedirect": "/inventory.html"
+    },
+    {
+      "testId": "TC_AUTH_002",
+      "description": "Successful login with problem_user",
+      "priority": "Medium",
+      "username": "problem_user",
+      "password": "secret_sauce",
+      "expectedResult": "success",
+      "expectedRedirect": "/inventory.html"
+    },
+    {
+      "testId": "TC_AUTH_003",
+      "description": "Successful login with performance_glitch_user",
+      "priority": "Medium",
+      "username": "performance_glitch_user",
+      "password": "secret_sauce",
+      "expectedResult": "success",
+      "expectedRedirect": "/inventory.html",
+      "timeout": 30000
+    },
+    {
+      "testId": "TC_AUTH_004",
+      "description": "Successful login with error_user",
+      "priority": "Medium",
+      "username": "error_user",
+      "password": "secret_sauce",
+      "expectedResult": "success",
+      "expectedRedirect": "/inventory.html"
+    },
+    {
+      "testId": "TC_AUTH_005",
+      "description": "Login page displays correctly",
+      "priority": "High",
+      "expectedResult": "page_elements_visible"
+    }
+  ],
+
+  "invalidScenarios": [
+    {
+      "testId": "TC_AUTH_100",
+      "description": "Login attempt with locked_out_user",
+      "priority": "High",
+      "username": "locked_out_user",
+      "password": "secret_sauce",
+      "expectedError": "Epic sadface: Sorry, this user has been locked out"
+    },
+    {
+      "testId": "TC_AUTH_101",
+      "description": "Login with invalid username",
+      "priority": "High",
+      "username": "invalid_user",
+      "password": "secret_sauce",
+      "expectedError": "Epic sadface: Username and password do not match any user in this service"
+    },
+    {
+      "testId": "TC_AUTH_102",
+      "description": "Login with invalid password",
+      "priority": "High",
+      "username": "standard_user",
+      "password": "wrong_password",
+      "expectedError": "Epic sadface: Username and password do not match any user in this service"
+    },
+    {
+      "testId": "TC_AUTH_103",
+      "description": "Login with username containing only spaces",
+      "priority": "Medium",
+      "username": "   ",
+      "password": "secret_sauce",
+      "expectedError": "Epic sadface: Username and password do not match any user in this service"
+    }
+  ],
+
+  "emptyFieldTests": [
+    {
+      "testId": "TC_AUTH_200",
+      "description": "Login with empty username field",
+      "priority": "High",
+      "username": "",
+      "password": "secret_sauce",
+      "expectedError": "Epic sadface: Username is required"
+    },
+    {
+      "testId": "TC_AUTH_201",
+      "description": "Login with empty password field",
+      "priority": "High",
+      "username": "standard_user",
+      "password": "",
+      "expectedError": "Epic sadface: Password is required"
+    },
+    {
+      "testId": "TC_AUTH_202",
+      "description": "Login with both fields empty",
+      "priority": "High",
+      "username": "",
+      "password": "",
+      "expectedError": "Epic sadface: Username is required"
+    }
+  ],
+
+  "boundaryTests": [
+    {
+      "testId": "TC_AUTH_300",
+      "description": "Login with minimum length username (1 character)",
+      "priority": "Medium",
+      "username": "a",
+      "password": "secret_sauce",
+      "expectedResult": "error",
+      "expectedError": "Epic sadface: Username and password do not match any user in this service"
+    },
+    {
+      "testId": "TC_AUTH_301",
+      "description": "Login with very long username (255+ characters)",
+      "priority": "Medium",
+      "username": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "password": "secret_sauce",
+      "expectedResult": "error",
+      "expectedBehavior": "Application handles gracefully without crash"
+    },
+    {
+      "testId": "TC_AUTH_302",
+      "description": "Login with minimum length password (1 character)",
+      "priority": "Medium",
+      "username": "standard_user",
+      "password": "a",
+      "expectedResult": "error",
+      "expectedError": "Epic sadface: Username and password do not match any user in this service"
+    },
+    {
+      "testId": "TC_AUTH_303",
+      "description": "Login with very long password (255+ characters)",
+      "priority": "Medium",
+      "username": "standard_user",
+      "password": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expectedResult": "error",
+      "expectedBehavior": "Application handles gracefully without crash"
+    },
+    {
+      "testId": "TC_AUTH_304",
+      "description": "Login with special characters in username",
+      "priority": "Medium",
+      "username": "user@#$%^&*()",
+      "password": "secret_sauce",
+      "expectedResult": "error",
+      "expectedBehavior": "Application handles special characters gracefully"
+    }
+  ],
+
+  "securityTests": [
+    {
+      "testId": "TC_AUTH_400",
+      "description": "SQL injection in username field",
+      "priority": "High",
+      "payload": "' OR '1'='1",
+      "targetField": "username",
+      "password": "secret_sauce",
+      "category": "sql_injection",
+      "expectedBehavior": "reject_gracefully"
+    },
+    {
+      "testId": "TC_AUTH_401",
+      "description": "SQL injection in password field",
+      "priority": "High",
+      "username": "standard_user",
+      "payload": "' OR '1'='1' --",
+      "targetField": "password",
+      "category": "sql_injection",
+      "expectedBehavior": "reject_gracefully"
+    },
+    {
+      "testId": "TC_AUTH_402",
+      "description": "XSS script injection in username field",
+      "priority": "High",
+      "payload": "<script>alert('XSS')</script>",
+      "targetField": "username",
+      "password": "secret_sauce",
+      "category": "xss",
+      "expectedBehavior": "sanitize_input"
+    },
+    {
+      "testId": "TC_AUTH_403",
+      "description": "Direct URL access to inventory without login",
+      "priority": "High",
+      "directUrl": "/inventory.html",
+      "category": "authorization",
+      "expectedBehavior": "redirect_to_login"
+    },
+    {
+      "testId": "TC_AUTH_404",
+      "description": "Session validation after logout",
+      "priority": "High",
+      "category": "session",
+      "expectedBehavior": "session_invalidated"
+    }
+  ]
+}

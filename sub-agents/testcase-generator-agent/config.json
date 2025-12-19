@@ -1,0 +1,123 @@
+{
+  "agent": {
+    "name": "Test Case Generator Agent",
+    "version": "1.0.0",
+    "description": "Analyzes application screenshots and generates comprehensive manual test cases",
+    "type": "sub-agent"
+  },
+  "pipeline": {
+    "position": 1,
+    "input": {
+      "sources": ["screenshots", "user-input"],
+      "formats": ["png", "jpg", "jpeg", "pdf"]
+    },
+    "output": {
+      "directory": "manual-tests",
+      "format": "txt",
+      "naming": "{ApplicationName}_Manual_Test_Cases.txt"
+    },
+    "downstream": "automation-generator-agent"
+  },
+  "capabilities": {
+    "screenshot_analysis": true,
+    "element_identification": true,
+    "test_scenario_generation": true,
+    "manual_test_case_creation": true,
+    "user_confirmation_required": true
+  },
+  "workflow": {
+    "phases": [
+      {
+        "id": 1,
+        "name": "Screenshot Analysis",
+        "description": "Analyze screenshots to identify pages, elements, and flows",
+        "requires_user_input": false
+      },
+      {
+        "id": 2,
+        "name": "Summary Presentation",
+        "description": "Present analysis summary to user for review",
+        "requires_user_input": true
+      },
+      {
+        "id": 3,
+        "name": "User Confirmation",
+        "description": "Wait for user approval or modification requests",
+        "requires_user_input": true
+      },
+      {
+        "id": 4,
+        "name": "Test Case Generation",
+        "description": "Generate and save manual test cases",
+        "requires_user_input": false
+      }
+    ]
+  },
+  "test_categories": {
+    "positive": {
+      "description": "Valid inputs, happy path scenarios",
+      "minimum_per_module": 5,
+      "id_range": "001-099"
+    },
+    "negative": {
+      "description": "Invalid inputs, error handling",
+      "minimum_per_module": 5,
+      "id_range": "100-199"
+    },
+    "empty_field": {
+      "description": "Empty/missing field validation",
+      "minimum_per_module": 3,
+      "id_range": "200-299"
+    },
+    "boundary": {
+      "description": "Edge cases, min/max values, special characters",
+      "minimum_per_module": 2,
+      "id_range": "300-399"
+    },
+    "security": {
+      "description": "SQL injection, XSS, authentication bypass",
+      "minimum_per_module": 2,
+      "id_range": "400-499"
+    },
+    "case_sensitivity": {
+      "description": "Case sensitivity tests",
+      "minimum_per_module": 1,
+      "id_range": "500-599"
+    },
+    "special_input": {
+      "description": "Unicode, special characters, whitespace",
+      "minimum_per_module": 1,
+      "id_range": "600-699"
+    }
+  },
+  "module_prefixes": {
+    "TC_AUTH_": "Authentication (Login, Register, Password Reset)",
+    "TC_REG_": "Registration",
+    "TC_DASH_": "Dashboard",
+    "TC_FORM_": "Generic Forms",
+    "TC_LIST_": "Lists/Tables",
+    "TC_CRUD_": "Create, Read, Update, Delete",
+    "TC_NAV_": "Navigation",
+    "TC_SEARCH_": "Search functionality",
+    "TC_FILTER_": "Filtering/Sorting",
+    "TC_CART_": "Shopping Cart",
+    "TC_CHKOUT_": "Checkout",
+    "TC_PAY_": "Payment",
+    "TC_PROF_": "User Profile",
+    "TC_SETT_": "Settings",
+    "TC_UPLOAD_": "File Upload",
+    "TC_EXPORT_": "Data Export",
+    "TC_SEC_": "Security tests",
+    "E2E_": "End-to-End flows"
+  },
+  "guardrail_reference": {
+    "name": "Screenshot-to-Automation Guardrail",
+    "version": "2.0",
+    "path": "guardrails/screenshot-to-automation-guardrail.md"
+  },
+  "files": {
+    "agent_definition": "AGENT.md",
+    "system_prompt": "system-prompt.md",
+    "prompt_templates": "prompt-template.md"
+  }
+}

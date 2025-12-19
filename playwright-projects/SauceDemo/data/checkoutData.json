@@ -1,0 +1,212 @@
+{
+  "_metadata": {
+    "module": "Checkout",
+    "generatedFrom": "SauceDemo_Manual_Test_Cases.txt",
+    "generatedDate": "2025-12-19",
+    "testCaseCount": 22
+  },
+
+  "validScenarios": [
+    {
+      "testId": "TC_CHKOUT_001",
+      "description": "Complete checkout step one with valid data",
+      "priority": "High",
+      "firstName": "John",
+      "lastName": "Doe",
+      "postalCode": "12345",
+      "expectedRedirect": "/checkout-step-two.html"
+    },
+    {
+      "testId": "TC_CHKOUT_002",
+      "description": "View checkout overview page",
+      "priority": "High",
+      "productName": "Sauce Labs Backpack",
+      "productPrice": "$29.99",
+      "paymentInfo": "SauceCard #31337",
+      "shippingInfo": "Free Pony Express Delivery!"
+    },
+    {
+      "testId": "TC_CHKOUT_003",
+      "description": "Verify price calculation on overview",
+      "priority": "High",
+      "productName": "Sauce Labs Backpack",
+      "itemTotal": "$29.99",
+      "tax": "$2.40",
+      "grandTotal": "$32.39"
+    },
+    {
+      "testId": "TC_CHKOUT_004",
+      "description": "Complete order successfully",
+      "priority": "High",
+      "expectedRedirect": "/checkout-complete.html",
+      "expectedMessage": "Thank you for your order!"
+    },
+    {
+      "testId": "TC_CHKOUT_005",
+      "description": "Return home after order completion",
+      "priority": "Medium",
+      "expectedRedirect": "/inventory.html",
+      "expectedCartCount": 0
+    }
+  ],
+
+  "invalidScenarios": [
+    {
+      "testId": "TC_CHKOUT_100",
+      "description": "Access checkout page directly without login",
+      "priority": "High",
+      "directUrl": "/checkout-step-one.html",
+      "expectedBehavior": "redirect_to_login"
+    },
+    {
+      "testId": "TC_CHKOUT_101",
+      "description": "Cancel checkout and return to cart",
+      "priority": "Medium",
+      "expectedRedirect": "/cart.html"
+    },
+    {
+      "testId": "TC_CHKOUT_102",
+      "description": "Cancel from checkout overview",
+      "priority": "Medium",
+      "expectedRedirect": "/inventory.html"
+    }
+  ],
+
+  "emptyFieldTests": [
+    {
+      "testId": "TC_CHKOUT_200",
+      "description": "Submit checkout with empty First Name",
+      "priority": "High",
+      "firstName": "",
+      "lastName": "Doe",
+      "postalCode": "12345",
+      "expectedError": "Error: First Name is required"
+    },
+    {
+      "testId": "TC_CHKOUT_201",
+      "description": "Submit checkout with empty Last Name",
+      "priority": "High",
+      "firstName": "John",
+      "lastName": "",
+      "postalCode": "12345",
+      "expectedError": "Error: Last Name is required"
+    },
+    {
+      "testId": "TC_CHKOUT_202",
+      "description": "Submit checkout with empty Zip Code",
+      "priority": "High",
+      "firstName": "John",
+      "lastName": "Doe",
+      "postalCode": "",
+      "expectedError": "Error: Postal Code is required"
+    },
+    {
+      "testId": "TC_CHKOUT_203",
+      "description": "Submit checkout with all fields empty",
+      "priority": "High",
+      "firstName": "",
+      "lastName": "",
+      "postalCode": "",
+      "expectedError": "Error: First Name is required"
+    }
+  ],
+
+  "boundaryTests": [
+    {
+      "testId": "TC_CHKOUT_300",
+      "description": "Checkout with minimum length names (1 character)",
+      "priority": "Medium",
+      "firstName": "A",
+      "lastName": "B",
+      "postalCode": "1",
+      "expectedResult": "success_or_validation_error"
+    },
+    {
+      "testId": "TC_CHKOUT_301",
+      "description": "Checkout with very long names (255+ characters)",
+      "priority": "Medium",
+      "firstName": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "lastName": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "postalCode": "12345",
+      "expectedBehavior": "handle_gracefully"
+    },
+    {
+      "testId": "TC_CHKOUT_302",
+      "description": "Checkout with special characters in name fields",
+      "priority": "Medium",
+      "firstName": "O'Brien-Smith",
+      "lastName": "De La Cruz",
+      "postalCode": "12345",
+      "expectedResult": "success"
+    },
+    {
+      "testId": "TC_CHKOUT_303",
+      "description": "Checkout with international characters",
+      "priority": "Medium",
+      "firstName": "José",
+      "lastName": "Müller",
+      "postalCode": "12345",
+      "expectedResult": "success"
+    },
+    {
+      "testId": "TC_CHKOUT_304",
+      "description": "Checkout with alphanumeric zip code",
+      "priority": "Medium",
+      "firstName": "John",
+      "lastName": "Doe",
+      "postalCode": "A1B 2C3",
+      "expectedResult": "success_or_validation_error"
+    }
+  ],
+
+  "securityTests": [
+    {
+      "testId": "TC_CHKOUT_400",
+      "description": "XSS injection in First Name field",
+      "priority": "High",
+      "payload": "<script>alert('XSS')</script>",
+      "targetField": "firstName",
+      "lastName": "Doe",
+      "postalCode": "12345",
+      "category": "xss",
+      "expectedBehavior": "sanitize_input"
+    },
+    {
+      "testId": "TC_CHKOUT_401",
+      "description": "XSS injection in Last Name field",
+      "priority": "High",
+      "firstName": "John",
+      "payload": "<img src=x onerror=alert('XSS')>",
+      "targetField": "lastName",
+      "postalCode": "12345",
+      "category": "xss",
+      "expectedBehavior": "sanitize_input"
+    },
+    {
+      "testId": "TC_CHKOUT_402",
+      "description": "SQL injection in checkout fields",
+      "priority": "High",
+      "payload": "'; DROP TABLE orders; --",
+      "targetField": "firstName",
+      "lastName": "Doe",
+      "postalCode": "12345",
+      "category": "sql_injection",
+      "expectedBehavior": "sanitize_input"
+    },
+    {
+      "testId": "TC_CHKOUT_403",
+      "description": "Price manipulation attempt",
+      "priority": "High",
+      "category": "client_manipulation",
+      "expectedBehavior": "server_validation"
+    },
+    {
+      "testId": "TC_CHKOUT_404",
+      "description": "Direct access to checkout complete without order",
+      "priority": "High",
+      "directUrl": "/checkout-complete.html",
+      "category": "authorization",
+      "expectedBehavior": "redirect_or_error"
+    }
+  ]
+}
