@@ -1,16 +1,28 @@
 {
   "agent": {
     "name": "Automation Generator Agent",
-    "version": "1.0.0",
-    "description": "Generates Playwright test automation from manual test cases",
+    "version": "2.0.0",
+    "description": "Generates Playwright test automation with AI-powered self-healing from manual test cases",
     "type": "sub-agent"
   },
   "pipeline": {
     "position": 2,
     "input": {
       "sources": ["manual-tests"],
-      "formats": ["txt"],
-      "pattern": "{AppName}_Manual_Test_Cases.txt"
+      "formats": ["csv", "txt"],
+      "pattern": "{AppName}_Manual_Test_Cases.csv",
+      "csv_columns": [
+        "Test_ID",
+        "Module",
+        "Test_Title",
+        "Test_Type",
+        "Priority",
+        "Precondition",
+        "Test_Data",
+        "Steps",
+        "Expected_Result",
+        "Tags"
+      ]
     },
     "output": {
       "directory": "playwright-projects/{AppName}",
@@ -159,18 +171,54 @@
     },
     "locator_strategy": {
       "priority": [
+        "data-testid",
         "data-test",
         "id",
         "name",
+        "aria-label",
         "placeholder",
+        "role",
         "text",
         "class"
       ],
-      "fallback_count": 4
+      "fallback_count": 5
     },
     "self_healing": {
       "enabled": true,
-      "tiers": ["cache", "fallbacks", "ai"]
+      "framework": "AI Observer",
+      "tiers": [
+        {
+          "tier": 1,
+          "name": "cache",
+          "description": "Check previously healed selectors from cache"
+        },
+        {
+          "tier": 2,
+          "name": "fallbacks",
+          "description": "Try predefined fallback selectors"
+        },
+        {
+          "tier": 3,
+          "name": "ai_visual",
+          "description": "AI-powered visual element detection using Claude Vision"
+        },
+        {
+          "tier": 4,
+          "name": "ai_dom",
+          "description": "AI-powered DOM analysis for element identification"
+        }
+      ],
+      "healing_report": {
+        "enabled": true,
+        "format": "json",
+        "location": "reports/healing/"
+      },
+      "ai_observer": {
+        "provider": "anthropic",
+        "model": "claude-sonnet-4-20250514",
+        "capabilities": ["screenshot_analysis", "dom_parsing", "selector_generation"],
+        "fallback_without_api": true
+      }
     }
   },
   "output_files": {
@@ -188,9 +236,12 @@
       "securityPayloads.json": "Security test payloads"
     },
     "utils": {
-      "SelfHealingLocator.ts": "Self-healing engine",
-      "AIObserver.ts": "AI observation service",
-      "TestHelpers.ts": "Common utilities"
+      "SelfHealingLocator.ts": "Core self-healing engine with 4-tier healing",
+      "AIObserver.ts": "AI-powered element detection using Claude Vision API",
+      "HealingReporter.ts": "Healing statistics and report generation",
+      "ElementRegistry.ts": "Centralized element definitions with fallbacks",
+      "TestHelpers.ts": "Common test utilities and data generators",
+      "RetryHandler.ts": "Smart retry logic with exponential backoff"
     },
     "config": {
       "playwright.config.ts": "Playwright configuration",
