@@ -21,7 +21,7 @@ Please analyze the attached screenshot(s) and:
    - Boundary tests
    - Security tests
 4. Present a summary for my review before generating test cases
-5. After my confirmation, generate comprehensive manual test cases to manual-tests/
+5. After my confirmation, generate comprehensive manual test cases in CSV format to manual-tests/
 
 [Attach your screenshot(s)]
 ```
@@ -57,7 +57,7 @@ KNOWN TEST DATA (if any):
 
 OUTPUT:
 - Analysis summary for review
-- After approval: manual-tests/{APP_NAME}_Manual_Test_Cases.txt
+- After approval: manual-tests/{APP_NAME}_Manual_Test_Cases.csv (CSV format for easy integration)
 ```
 
 ---
@@ -203,17 +203,22 @@ Please also include test cases for:
 
 ### Standard Output (Default)
 ```
-Generate test cases and save to: manual-tests/{APP_NAME}_Manual_Test_Cases.txt
+Generate test cases in CSV format and save to: manual-tests/{APP_NAME}_Manual_Test_Cases.csv
 ```
 
 ### Custom Output Location
 ```
-Generate test cases and save to: manual-tests/{CUSTOM_FOLDER}/{CUSTOM_FILENAME}.txt
+Generate test cases in CSV format and save to: manual-tests/{CUSTOM_FOLDER}/{CUSTOM_FILENAME}.csv
 ```
 
 ### Preview Only
 ```
-Show me a preview of the test cases (first 5 per category) before generating the full document.
+Show me a preview of the test cases (first 5 per category) in CSV format before generating the full document.
+```
+
+### With Summary File
+```
+Generate test cases and also create a summary file: manual-tests/{APP_NAME}_Test_Summary.csv
 ```
 
 ---

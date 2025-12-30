@@ -13,8 +13,20 @@
     },
     "output": {
       "directory": "manual-tests",
-      "format": "txt",
-      "naming": "{ApplicationName}_Manual_Test_Cases.txt"
+      "format": "csv",
+      "naming": "{ApplicationName}_Manual_Test_Cases.csv",
+      "csv_columns": [
+        "Test_ID",
+        "Module",
+        "Test_Title",
+        "Test_Type",
+        "Priority",
+        "Precondition",
+        "Test_Data",
+        "Steps",
+        "Expected_Result",
+        "Tags"
+      ]
     },
     "downstream": "automation-generator-agent"
   },
