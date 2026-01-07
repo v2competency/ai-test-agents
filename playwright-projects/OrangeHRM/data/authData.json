@@ -12,7 +12,7 @@
       "description": "Login with valid admin credentials",
       "priority": "High",
       "username": "admin",
-      "password": "Admin@123",
+      "password": "Admin@123#",
       "expectedResult": "success",
       "expectedRedirect": "/dashboard"
     }

@@ -1,7 +1,7 @@
 {
   "admin": {
     "username": "admin",
-    "password": "Admin@123",
+    "password": "Admin@123#",
     "role": "Admin",
     "fullName": "Admin User"
   },
@@ -14,7 +14,7 @@
   "testAccounts": {
     "validAdmin": {
       "username": "admin",
-      "password": "Admin@123"
+      "password": "Admin@123#"
     },
     "invalidUser": {
       "username": "invaliduser",
