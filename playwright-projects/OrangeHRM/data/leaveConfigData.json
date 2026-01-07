@@ -1,0 +1,168 @@
+{
+  "_metadata": {
+    "module": "Leave Configuration",
+    "generatedFrom": "OrangeHRM_Manual_Test_Cases.csv",
+    "generatedDate": "2026-01-07",
+    "testCaseCount": 17
+  },
+
+  "leavePeriodTests": [
+    {
+      "testId": "TC_CONFIG_001",
+      "description": "Access Leave Period configuration",
+      "priority": "High",
+      "expectedResult": "page_loads"
+    },
+    {
+      "testId": "TC_CONFIG_002",
+      "description": "Configure Leave Period with valid dates",
+      "priority": "High",
+      "startMonth": "March",
+      "startDate": "02",
+      "expectedResult": "success"
+    }
+  ],
+
+  "leaveTypeTests": {
+    "validScenarios": [
+      {
+        "testId": "TC_CONFIG_003",
+        "description": "View Leave Types list",
+        "priority": "High",
+        "expectedResult": "list_displayed"
+      },
+      {
+        "testId": "TC_CONFIG_004",
+        "description": "Add new Leave Type",
+        "priority": "High",
+        "name": "Annual Leave",
+        "expectedResult": "success"
+      },
+      {
+        "testId": "TC_CONFIG_005",
+        "description": "Edit existing Leave Type",
+        "priority": "Medium",
+        "oldName": "ML",
+        "newName": "Maternity Leave",
+        "expectedResult": "success"
+      },
+      {
+        "testId": "TC_CONFIG_006",
+        "description": "Delete Leave Type",
+        "priority": "Medium",
+        "name": "SL",
+        "expectedResult": "success"
+      }
+    ],
+    "invalidScenarios": [
+      {
+        "testId": "TC_CONFIG_100",
+        "description": "Add Leave Type with duplicate name",
+        "priority": "Medium",
+        "name": "ML",
+        "expectedError": "Already exists"
+      },
+      {
+        "testId": "TC_CONFIG_101",
+        "description": "Add Leave Type with empty name",
+        "priority": "Medium",
+        "name": "",
+        "expectedError": "Required"
+      },
+      {
+        "testId": "TC_CONFIG_102",
+        "description": "Delete Leave Type in use",
+        "priority": "Medium",
+        "name": "ML",
+        "expectedError": "Cannot delete"
+      }
+    ],
+    "securityTests": [
+      {
+        "testId": "TC_CONFIG_400",
+        "description": "XSS in Leave Type name",
+        "priority": "High",
+        "payload": "<script>alert('xss')</script>",
+        "targetField": "name",
+        "category": "xss",
+        "expectedBehavior": "sanitize_input"
+      }
+    ]
+  },
+
+  "workWeekTests": [
+    {
+      "testId": "TC_CONFIG_007",
+      "description": "Configure Work Week",
+      "priority": "High",
+      "config": {
+        "Monday": "Full Day",
+        "Tuesday": "Full Day",
+        "Wednesday": "Full Day",
+        "Thursday": "Full Day",
+        "Friday": "Full Day",
+        "Saturday": "Non-working Day",
+        "Sunday": "Non-working Day"
+      },
+      "expectedResult": "success"
+    },
+    {
+      "testId": "TC_CONFIG_008",
+      "description": "Set day as Half Day in Work Week",
+      "priority": "Medium",
+      "day": "Friday",
+      "type": "Half Day",
+      "expectedResult": "success"
+    }
+  ],
+
+  "holidayTests": {
+    "validScenarios": [
+      {
+        "testId": "TC_CONFIG_009",
+        "description": "View Holidays list",
+        "priority": "High",
+        "expectedResult": "page_loads"
+      },
+      {
+        "testId": "TC_CONFIG_010",
+        "description": "Add new Holiday",
+        "priority": "High",
+        "name": "New Year",
+        "date": "2026-01-01",
+        "fullDay": true,
+        "repeatsAnnually": true,
+        "expectedResult": "success"
+      },
+      {
+        "testId": "TC_CONFIG_011",
+        "description": "Search Holidays by date range",
+        "priority": "Medium",
+        "from": "2025-03-02",
+        "to": "2026-03-01",
+        "expectedResult": "filtered_results"
+      }
+    ],
+    "invalidScenarios": [
+      {
+        "testId": "TC_CONFIG_103",
+        "description": "Add Holiday with past date",
+        "priority": "Low",
+        "name": "Old Holiday",
+        "date": "2020-01-01",
+        "expectedResult": "accepted_or_warning"
+      }
+    ],
+    "securityTests": [
+      {
+        "testId": "TC_CONFIG_401",
+        "description": "XSS in Holiday name",
+        "priority": "High",
+        "payload": "<img src=x onerror=alert('xss')>",
+        "targetField": "name",
+        "category": "xss",
+        "expectedBehavior": "sanitize_input"
+      }
+    ]
+  }
+}

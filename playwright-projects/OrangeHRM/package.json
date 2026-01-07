@@ -1,0 +1,49 @@
+{
+  "name": "orangehrm-automation",
+  "version": "1.0.0",
+  "description": "Playwright automation with AI self-healing for OrangeHRM",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:headed": "npx playwright test --headed",
+    "test:debug": "npx playwright test --debug",
+    "test:ui": "npx playwright test --ui",
+    "test:chromium": "npx playwright test --project=chromium",
+    "test:firefox": "npx playwright test --project=firefox",
+    "test:webkit": "npx playwright test --project=webkit",
+    "test:smoke": "npx playwright test --grep @smoke",
+    "test:regression": "npx playwright test --grep @regression",
+    "test:e2e": "npx playwright test --grep @e2e",
+    "test:security": "npx playwright test --grep @security",
+    "test:negative": "npx playwright test --grep @negative",
+    "test:auth": "npx playwright test tests/auth.spec.ts",
+    "test:dashboard": "npx playwright test tests/dashboard.spec.ts",
+    "test:leave": "npx playwright test tests/apply-leave.spec.ts tests/leave-list.spec.ts tests/assign-leave.spec.ts",
+    "test:config": "npx playwright test tests/leave-config.spec.ts",
+    "test:report": "npx playwright test tests/reports.spec.ts",
+    "test:entitlements": "npx playwright test tests/entitlements.spec.ts",
+    "report": "npx playwright show-report reports/playwright-report",
+    "report:open": "start reports/playwright-report/index.html",
+    "clean": "rimraf reports/ test-results/ dist/",
+    "lint": "tsc --noEmit",
+    "postinstall": "npx playwright install"
+  },
+  "keywords": [
+    "playwright",
+    "automation",
+    "testing",
+    "orangehrm",
+    "self-healing",
+    "ai"
+  ],
+  "author": "Test Automation Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@anthropic-ai/sdk": "^0.10.0",
+    "@types/node": "^20.10.0",
+    "dotenv": "^16.3.1",
+    "typescript": "^5.3.0",
+    "rimraf": "^5.0.5"
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "_metadata": {
+    "module": "Leave Assignment",
+    "generatedFrom": "OrangeHRM_Manual_Test_Cases.csv",
+    "generatedDate": "2026-01-07",
+    "testCaseCount": 12
+  },
+
+  "validScenarios": [
+    {
+      "testId": "TC_ASSIGN_001",
+      "description": "Access Assign Leave page",
+      "priority": "High",
+      "expectedResult": "page_loads"
+    },
+    {
+      "testId": "TC_ASSIGN_002",
+      "description": "Assign leave to employee successfully",
+      "priority": "High",
+      "employeeName": "Mehul Kagathara",
+      "leaveType": "ML",
+      "fromDate": "2025-04-15",
+      "toDate": "2025-04-16",
+      "comments": "Approved family leave",
+      "expectedResult": "success"
+    },
+    {
+      "testId": "TC_ASSIGN_003",
+      "description": "View Leave Balance when assigning",
+      "priority": "Medium",
+      "employeeName": "Mehul",
+      "leaveType": "ML",
+      "expectedResult": "balance_displayed"
+    },
+    {
+      "testId": "TC_ASSIGN_004",
+      "description": "Assign leave with comments",
+      "priority": "Medium",
+      "employeeName": "Mehul Kagathara",
+      "leaveType": "ML",
+      "fromDate": "2025-04-15",
+      "toDate": "2025-04-15",
+      "comments": "Manager approved for special circumstances",
+      "expectedResult": "success"
+    },
+    {
+      "testId": "TC_ASSIGN_005",
+      "description": "Employee Name autocomplete",
+      "priority": "Medium",
+      "employeeName": "Meh",
+      "expectedResult": "autocomplete_works"
+    }
+  ],
+
+  "invalidScenarios": [
+    {
+      "testId": "TC_ASSIGN_100",
+      "description": "Assign leave without Employee Name",
+      "priority": "High",
+      "employeeName": "",
+      "leaveType": "ML",
+      "fromDate": "2025-04-15",
+      "expectedError": "Required"
+    },
+    {
+      "testId": "TC_ASSIGN_101",
+      "description": "Assign leave without Leave Type",
+      "priority": "High",
+      "employeeName": "Mehul",
+      "leaveType": "",
+      "fromDate": "2025-04-15",
+      "expectedError": "Required"
+    },
+    {
+      "testId": "TC_ASSIGN_102",
+      "description": "Assign leave to employee with zero balance",
+      "priority": "Medium",
+      "employeeName": "Mehul",
+      "leaveType": "SL",
+      "fromDate": "2025-04-15",
+      "toDate": "2025-04-15",
+      "expectedError": "balance"
+    },
+    {
+      "testId": "TC_ASSIGN_103",
+      "description": "Assign leave with invalid date range",
+      "priority": "Medium",
+      "employeeName": "Mehul",
+      "leaveType": "ML",
+      "fromDate": "2025-04-20",
+      "toDate": "2025-04-15",
+      "expectedError": "To date should be after from date"
+    }
+  ],
+
+  "securityTests": [
+    {
+      "testId": "TC_ASSIGN_400",
+      "description": "SQL injection in Employee Name",
+      "priority": "High",
+      "payload": "' OR '1'='1' --",
+      "targetField": "employeeName",
+      "category": "sql_injection",
+      "expectedBehavior": "reject_gracefully"
+    },
+    {
+      "testId": "TC_ASSIGN_401",
+      "description": "XSS in comments field",
+      "priority": "High",
+      "employeeName": "Mehul",
+      "leaveType": "ML",
+      "fromDate": "2025-04-15",
+      "toDate": "2025-04-15",
+      "payload": "<script>alert('xss')</script>",
+      "targetField": "comments",
+      "category": "xss",
+      "expectedBehavior": "sanitize_input"
+    }
+  ]
+}

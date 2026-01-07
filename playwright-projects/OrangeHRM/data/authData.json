@@ -1,0 +1,196 @@
+{
+  "_metadata": {
+    "module": "Authentication",
+    "generatedFrom": "OrangeHRM_Manual_Test_Cases.csv",
+    "generatedDate": "2026-01-07",
+    "testCaseCount": 28
+  },
+
+  "validScenarios": [
+    {
+      "testId": "TC_AUTH_001",
+      "description": "Login with valid admin credentials",
+      "priority": "High",
+      "username": "admin",
+      "password": "Admin@123",
+      "expectedResult": "success",
+      "expectedRedirect": "/dashboard"
+    }
+  ],
+
+  "invalidScenarios": [
+    {
+      "testId": "TC_AUTH_100",
+      "description": "Login with invalid username",
+      "priority": "High",
+      "username": "invaliduser",
+      "password": "Admin@123",
+      "expectedError": "Invalid credentials"
+    },
+    {
+      "testId": "TC_AUTH_101",
+      "description": "Login with invalid password",
+      "priority": "High",
+      "username": "admin",
+      "password": "wrongpassword",
+      "expectedError": "Invalid credentials"
+    },
+    {
+      "testId": "TC_AUTH_102",
+      "description": "Login with both invalid credentials",
+      "priority": "High",
+      "username": "fakeuser",
+      "password": "fakepass",
+      "expectedError": "Invalid credentials"
+    }
+  ],
+
+  "emptyFieldTests": [
+    {
+      "testId": "TC_AUTH_103",
+      "description": "Login with empty username",
+      "priority": "High",
+      "username": "",
+      "password": "Admin@123",
+      "expectedError": "Required"
+    },
+    {
+      "testId": "TC_AUTH_104",
+      "description": "Login with empty password",
+      "priority": "High",
+      "username": "admin",
+      "password": "",
+      "expectedError": "Required"
+    },
+    {
+      "testId": "TC_AUTH_105",
+      "description": "Login with both fields empty",
+      "priority": "High",
+      "username": "",
+      "password": "",
+      "expectedError": "Required"
+    }
+  ],
+
+  "boundaryTests": [
+    {
+      "testId": "TC_AUTH_300",
+      "description": "Login with minimum length username",
+      "priority": "Medium",
+      "username": "a",
+      "password": "validpass",
+      "expectedResult": "error"
+    },
+    {
+      "testId": "TC_AUTH_301",
+      "description": "Login with maximum length username",
+      "priority": "Medium",
+      "username": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "password": "validpass",
+      "expectedResult": "error"
+    },
+    {
+      "testId": "TC_AUTH_302",
+      "description": "Login with username containing only whitespace",
+      "priority": "Medium",
+      "username": "   ",
+      "password": "Admin@123",
+      "expectedResult": "error"
+    },
+    {
+      "testId": "TC_AUTH_303",
+      "description": "Login with username having leading/trailing spaces",
+      "priority": "Medium",
+      "username": " admin ",
+      "password": "Admin@123",
+      "expectedResult": "error_or_success"
+    },
+    {
+      "testId": "TC_AUTH_304",
+      "description": "Login with special characters in password",
+      "priority": "Medium",
+      "username": "admin",
+      "password": "P@$$w0rd!#%",
+      "expectedResult": "error"
+    }
+  ],
+
+  "securityTests": [
+    {
+      "testId": "TC_AUTH_400",
+      "description": "SQL injection in username field",
+      "priority": "High",
+      "payload": "' OR '1'='1' --",
+      "targetField": "username",
+      "password": "any",
+      "category": "sql_injection",
+      "expectedBehavior": "reject_gracefully"
+    },
+    {
+      "testId": "TC_AUTH_401",
+      "description": "SQL injection in password field",
+      "priority": "High",
+      "username": "admin",
+      "payload": "' OR '1'='1' --",
+      "targetField": "password",
+      "category": "sql_injection",
+      "expectedBehavior": "reject_gracefully"
+    },
+    {
+      "testId": "TC_AUTH_402",
+      "description": "XSS attack in username field",
+      "priority": "High",
+      "payload": "<script>alert('xss')</script>",
+      "targetField": "username",
+      "password": "any",
+      "category": "xss",
+      "expectedBehavior": "sanitize_input"
+    },
+    {
+      "testId": "TC_AUTH_403",
+      "description": "XSS attack in password field",
+      "priority": "High",
+      "username": "admin",
+      "payload": "<script>alert('xss')</script>",
+      "targetField": "password",
+      "category": "xss",
+      "expectedBehavior": "sanitize_input"
+    }
+  ],
+
+  "uiTests": [
+    {
+      "testId": "TC_AUTH_002",
+      "description": "Verify username field accepts input",
+      "priority": "Medium",
+      "testInput": "testuser"
+    },
+    {
+      "testId": "TC_AUTH_003",
+      "description": "Verify password field masks characters",
+      "priority": "Medium",
+      "testInput": "testpass123"
+    },
+    {
+      "testId": "TC_AUTH_005",
+      "description": "Verify Forgot Password link is accessible",
+      "priority": "Medium"
+    },
+    {
+      "testId": "TC_AUTH_006",
+      "description": "Verify OrangeHRM logo is displayed",
+      "priority": "Low"
+    },
+    {
+      "testId": "TC_AUTH_007",
+      "description": "Verify social media links are present",
+      "priority": "Low"
+    },
+    {
+      "testId": "TC_AUTH_008",
+      "description": "Verify copyright information is displayed",
+      "priority": "Low",
+      "expectedText": "OrangeHRM"
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "_metadata": {
+    "module": "Reports",
+    "generatedFrom": "OrangeHRM_Manual_Test_Cases.csv",
+    "generatedDate": "2026-01-07",
+    "testCaseCount": 11
+  },
+
+  "validScenarios": [
+    {
+      "testId": "TC_RPT_001",
+      "description": "Access Leave Entitlements and Usage Report",
+      "priority": "High",
+      "expectedResult": "page_loads"
+    },
+    {
+      "testId": "TC_RPT_002",
+      "description": "Generate report by Leave Type",
+      "priority": "High",
+      "generateFor": "Leave Type",
+      "leavePeriod": "2025-03-02 - 2026-03-01",
+      "expectedResult": "report_generated"
+    },
+    {
+      "testId": "TC_RPT_003",
+      "description": "Generate report by Employee",
+      "priority": "High",
+      "generateFor": "Employee",
+      "leavePeriod": "2025-03-02 - 2026-03-01",
+      "expectedResult": "report_generated"
+    },
+    {
+      "testId": "TC_RPT_004",
+      "description": "Filter report by Location",
+      "priority": "Medium",
+      "generateFor": "Leave Type",
+      "location": "Head Office",
+      "leavePeriod": "2025-03-02 - 2026-03-01",
+      "expectedResult": "filtered_report"
+    },
+    {
+      "testId": "TC_RPT_005",
+      "description": "Filter report by Sub Unit",
+      "priority": "Medium",
+      "generateFor": "Leave Type",
+      "subUnit": "Engineering",
+      "leavePeriod": "2025-03-02 - 2026-03-01",
+      "expectedResult": "filtered_report"
+    },
+    {
+      "testId": "TC_RPT_006",
+      "description": "Filter report by Job Title",
+      "priority": "Medium",
+      "generateFor": "Employee",
+      "jobTitle": "Software Engineer",
+      "leavePeriod": "2025-03-02 - 2026-03-01",
+      "expectedResult": "filtered_report"
+    },
+    {
+      "testId": "TC_RPT_007",
+      "description": "Include Past Employees in report",
+      "priority": "Medium",
+      "generateFor": "Leave Type",
+      "includePastEmployees": true,
+      "leavePeriod": "2025-03-02 - 2026-03-01",
+      "expectedResult": "past_employees_included"
+    },
+    {
+      "testId": "TC_RPT_008",
+      "description": "Access My Leave Usage Report",
+      "priority": "High",
+      "expectedResult": "page_loads"
+    },
+    {
+      "testId": "TC_RPT_009",
+      "description": "Generate My Leave Usage Report",
+      "priority": "High",
+      "leavePeriod": "2025-03-02 - 2026-03-01",
+      "expectedResult": "report_generated"
+    },
+    {
+      "testId": "TC_RPT_010",
+      "description": "Verify report data accuracy",
+      "priority": "High",
+      "expectedResult": "data_accurate"
+    }
+  ],
+
+  "invalidScenarios": [
+    {
+      "testId": "TC_RPT_100",
+      "description": "Generate report without required Leave Period",
+      "priority": "High",
+      "generateFor": "Leave Type",
+      "leavePeriod": "",
+      "expectedError": "Required"
+    }
+  ]
+}

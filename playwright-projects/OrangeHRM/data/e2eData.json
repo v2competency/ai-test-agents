@@ -1,0 +1,212 @@
+{
+  "_metadata": {
+    "module": "End-to-End",
+    "generatedFrom": "OrangeHRM_Manual_Test_Cases.csv",
+    "generatedDate": "2026-01-07",
+    "testCaseCount": 8
+  },
+
+  "e2eScenarios": [
+    {
+      "testId": "E2E_001",
+      "description": "Complete Leave Application Flow",
+      "priority": "High",
+      "credentials": {
+        "username": "admin",
+        "password": "Admin@123"
+      },
+      "leaveData": {
+        "leaveType": "ML",
+        "fromDate": "2025-04-01",
+        "toDate": "2025-04-02",
+        "comments": "E2E Test Leave Application"
+      },
+      "expectedSteps": [
+        "login_success",
+        "navigate_to_apply_leave",
+        "submit_leave",
+        "verify_in_my_leave",
+        "logout_success"
+      ]
+    },
+    {
+      "testId": "E2E_002",
+      "description": "Admin Leave Configuration Flow",
+      "priority": "High",
+      "credentials": {
+        "username": "admin",
+        "password": "Admin@123"
+      },
+      "configData": {
+        "leaveType": "Sick Leave",
+        "holiday": {
+          "name": "Company Holiday",
+          "date": "2025-12-25"
+        },
+        "workWeek": {
+          "Monday": "Full Day",
+          "Friday": "Half Day"
+        }
+      },
+      "expectedSteps": [
+        "login_success",
+        "add_leave_type",
+        "configure_work_week",
+        "add_holiday",
+        "verify_configurations"
+      ]
+    },
+    {
+      "testId": "E2E_003",
+      "description": "Entitlement Management Flow",
+      "priority": "High",
+      "credentials": {
+        "username": "admin",
+        "password": "Admin@123"
+      },
+      "entitlementData": {
+        "employeeName": "Test Employee",
+        "leaveType": "ML",
+        "entitlement": "20"
+      },
+      "expectedSteps": [
+        "login_success",
+        "add_entitlement",
+        "search_entitlement",
+        "generate_report",
+        "verify_data"
+      ]
+    },
+    {
+      "testId": "E2E_004",
+      "description": "Leave Request and Approval Flow",
+      "priority": "High",
+      "employeeCredentials": {
+        "username": "employee1",
+        "password": "employee123"
+      },
+      "managerCredentials": {
+        "username": "admin",
+        "password": "Admin@123"
+      },
+      "expectedSteps": [
+        "employee_login",
+        "apply_leave",
+        "employee_logout",
+        "manager_login",
+        "view_pending_leaves",
+        "approve_leave",
+        "manager_logout",
+        "employee_verify_status"
+      ]
+    },
+    {
+      "testId": "E2E_005",
+      "description": "Employee Self-Service Flow",
+      "priority": "High",
+      "credentials": {
+        "username": "employee",
+        "password": "employee123"
+      },
+      "expectedSteps": [
+        "login_success",
+        "view_dashboard",
+        "check_entitlements",
+        "apply_leave",
+        "view_my_leave",
+        "generate_my_report"
+      ]
+    },
+    {
+      "testId": "E2E_006",
+      "description": "Full Leave Period Configuration",
+      "priority": "High",
+      "credentials": {
+        "username": "admin",
+        "password": "Admin@123"
+      },
+      "periodConfig": {
+        "startMonth": "January",
+        "startDate": "01"
+      },
+      "expectedSteps": [
+        "login_success",
+        "configure_leave_period",
+        "configure_work_week",
+        "add_holidays",
+        "create_leave_types",
+        "add_entitlements",
+        "verify_calculations"
+      ]
+    },
+    {
+      "testId": "E2E_007",
+      "description": "Dashboard Widget Interaction Flow",
+      "priority": "Medium",
+      "credentials": {
+        "username": "admin",
+        "password": "Admin@123"
+      },
+      "expectedSteps": [
+        "login_success",
+        "view_time_at_work",
+        "click_apply_leave_shortcut",
+        "return_to_dashboard",
+        "click_leave_list_shortcut",
+        "return_to_dashboard",
+        "verify_widgets"
+      ]
+    },
+    {
+      "testId": "E2E_008",
+      "description": "Search and Filter Comprehensive Test",
+      "priority": "Medium",
+      "credentials": {
+        "username": "admin",
+        "password": "Admin@123"
+      },
+      "filterCombinations": [
+        {
+          "fromDate": "2025-03-02",
+          "toDate": "2026-03-01"
+        },
+        {
+          "status": "Pending Approval"
+        },
+        {
+          "leaveType": "ML"
+        },
+        {
+          "employeeName": "Mehul"
+        },
+        {
+          "includePastEmployees": true
+        }
+      ],
+      "expectedSteps": [
+        "login_success",
+        "navigate_to_leave_list",
+        "apply_date_filter",
+        "apply_status_filter",
+        "apply_leave_type_filter",
+        "apply_employee_filter",
+        "toggle_past_employees",
+        "reset_filters",
+        "verify_all_work"
+      ]
+    }
+  ],
+
+  "testUsers": {
+    "admin": {
+      "username": "admin",
+      "password": "Admin@123",
+      "role": "Admin"
+    },
+    "employee": {
+      "username": "employee",
+      "password": "employee123",
+      "role": "ESS"
+    }
+  }
+}

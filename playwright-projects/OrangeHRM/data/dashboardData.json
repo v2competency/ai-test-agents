@@ -1,0 +1,98 @@
+{
+  "_metadata": {
+    "module": "Dashboard",
+    "generatedFrom": "OrangeHRM_Manual_Test_Cases.csv",
+    "generatedDate": "2026-01-07",
+    "testCaseCount": 10
+  },
+
+  "validScenarios": [
+    {
+      "testId": "TC_DASH_001",
+      "description": "Verify Dashboard loads after login",
+      "priority": "High",
+      "credentials": {
+        "username": "admin",
+        "password": "Admin@123"
+      },
+      "expectedResult": "dashboard_loads"
+    },
+    {
+      "testId": "TC_DASH_002",
+      "description": "Verify left navigation menu items",
+      "priority": "High",
+      "expectedMenuItems": [
+        "Search",
+        "Admin",
+        "PIM",
+        "Leave",
+        "Time",
+        "Recruitment",
+        "My Info",
+        "Performance",
+        "Dashboard",
+        "Directory",
+        "Maintenance",
+        "Claim"
+      ]
+    },
+    {
+      "testId": "TC_DASH_003",
+      "description": "Verify Time at Work widget",
+      "priority": "Medium",
+      "expectedResult": "widget_displayed"
+    },
+    {
+      "testId": "TC_DASH_004",
+      "description": "Verify My Actions widget",
+      "priority": "Medium",
+      "expectedResult": "widget_displayed"
+    },
+    {
+      "testId": "TC_DASH_005",
+      "description": "Verify Quick Launch shortcuts",
+      "priority": "Medium",
+      "expectedShortcuts": [
+        "Assign Leave",
+        "Leave List",
+        "Apply Leave",
+        "My Leave"
+      ]
+    },
+    {
+      "testId": "TC_DASH_006",
+      "description": "Navigate to Leave module from Quick Launch",
+      "priority": "Medium",
+      "shortcut": "Apply Leave",
+      "expectedRedirect": "/leave/applyLeave"
+    },
+    {
+      "testId": "TC_DASH_007",
+      "description": "Verify user profile dropdown",
+      "priority": "Medium",
+      "expectedOptions": ["Logout"]
+    },
+    {
+      "testId": "TC_DASH_008",
+      "description": "Verify Upgrade button presence",
+      "priority": "Low",
+      "expectedResult": "button_visible"
+    },
+    {
+      "testId": "TC_DASH_009",
+      "description": "Navigate to each main menu item",
+      "priority": "High",
+      "menuItems": [
+        { "name": "Leave", "expectedUrl": "/leave" },
+        { "name": "Admin", "expectedUrl": "/admin" },
+        { "name": "PIM", "expectedUrl": "/pim" }
+      ]
+    },
+    {
+      "testId": "TC_DASH_010",
+      "description": "Collapse and expand sidebar",
+      "priority": "Medium",
+      "expectedResult": "sidebar_toggles"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run test:regression:*)",
+      "Bash(npm run test:auth:*)",
+      "Bash(npx playwright test:*)",
+      "Bash(set \"BASE_URL=http://localhost/orangehrm\")"
+    ]
+  }
+}

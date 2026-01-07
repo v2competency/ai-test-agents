@@ -1,0 +1,130 @@
+{
+  "_metadata": {
+    "module": "Entitlements",
+    "generatedFrom": "OrangeHRM_Manual_Test_Cases.csv",
+    "generatedDate": "2026-01-07",
+    "testCaseCount": 14
+  },
+
+  "validScenarios": [
+    {
+      "testId": "TC_ENT_001",
+      "description": "Access Add Entitlements page",
+      "priority": "High",
+      "expectedResult": "page_loads"
+    },
+    {
+      "testId": "TC_ENT_002",
+      "description": "Add entitlement to Individual Employee",
+      "priority": "High",
+      "addTo": "Individual Employee",
+      "employeeName": "Mehul Kagathara",
+      "leaveType": "ML",
+      "entitlement": "10",
+      "expectedResult": "success"
+    },
+    {
+      "testId": "TC_ENT_003",
+      "description": "Add entitlement to Multiple Employees",
+      "priority": "High",
+      "addTo": "Multiple Employees",
+      "leaveType": "ML",
+      "entitlement": "15",
+      "expectedResult": "success"
+    },
+    {
+      "testId": "TC_ENT_004",
+      "description": "Search Employee Entitlements",
+      "priority": "High",
+      "employeeName": "Mehul Kagathara",
+      "leaveType": "ML",
+      "expectedResult": "results_displayed"
+    },
+    {
+      "testId": "TC_ENT_005",
+      "description": "View My Leave Entitlements",
+      "priority": "High",
+      "expectedResult": "page_loads"
+    },
+    {
+      "testId": "TC_ENT_006",
+      "description": "Filter My Entitlements by Leave Type",
+      "priority": "Medium",
+      "leaveType": "ML",
+      "expectedResult": "filtered_results"
+    },
+    {
+      "testId": "TC_ENT_007",
+      "description": "Filter My Entitlements by Leave Period",
+      "priority": "Medium",
+      "leavePeriod": "2025-03-02 - 2026-03-01",
+      "expectedResult": "filtered_results"
+    },
+    {
+      "testId": "TC_ENT_008",
+      "description": "Verify total days calculation",
+      "priority": "Medium",
+      "expectedResult": "total_calculated"
+    }
+  ],
+
+  "invalidScenarios": [
+    {
+      "testId": "TC_ENT_100",
+      "description": "Add entitlement without Employee Name",
+      "priority": "High",
+      "employeeName": "",
+      "leaveType": "ML",
+      "entitlement": "10",
+      "expectedError": "Required"
+    },
+    {
+      "testId": "TC_ENT_101",
+      "description": "Add entitlement without Leave Type",
+      "priority": "High",
+      "employeeName": "Mehul",
+      "leaveType": "",
+      "entitlement": "10",
+      "expectedError": "Required"
+    },
+    {
+      "testId": "TC_ENT_102",
+      "description": "Add entitlement with zero days",
+      "priority": "Medium",
+      "employeeName": "Mehul",
+      "leaveType": "ML",
+      "entitlement": "0",
+      "expectedError": "Should be greater than 0"
+    },
+    {
+      "testId": "TC_ENT_103",
+      "description": "Add entitlement with negative value",
+      "priority": "Medium",
+      "employeeName": "Mehul",
+      "leaveType": "ML",
+      "entitlement": "-5",
+      "expectedError": "Should be a positive number"
+    }
+  ],
+
+  "boundaryTests": [
+    {
+      "testId": "TC_ENT_300",
+      "description": "Add minimum entitlement value",
+      "priority": "Medium",
+      "employeeName": "Mehul",
+      "leaveType": "ML",
+      "entitlement": "0.5",
+      "expectedResult": "success"
+    },
+    {
+      "testId": "TC_ENT_301",
+      "description": "Add maximum entitlement value",
+      "priority": "Medium",
+      "employeeName": "Mehul",
+      "leaveType": "ML",
+      "entitlement": "365",
+      "expectedResult": "success_or_limit"
+    }
+  ]
+}

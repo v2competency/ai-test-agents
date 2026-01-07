@@ -1,0 +1,28 @@
+{
+  "admin": {
+    "username": "admin",
+    "password": "Admin@123",
+    "role": "Admin",
+    "fullName": "Admin User"
+  },
+  "employee": {
+    "username": "employee",
+    "password": "employee123",
+    "role": "ESS",
+    "fullName": "Employee User"
+  },
+  "testAccounts": {
+    "validAdmin": {
+      "username": "admin",
+      "password": "Admin@123"
+    },
+    "invalidUser": {
+      "username": "invaliduser",
+      "password": "invalidpass"
+    },
+    "disabledUser": {
+      "username": "disableduser",
+      "password": "validpass"
+    }
+  }
+}

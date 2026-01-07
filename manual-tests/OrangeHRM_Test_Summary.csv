@@ -1,0 +1,20 @@
+Property,Value
+Application_Name,OrangeHRM
+Application_URL,http://localhost/orangehrm
+Application_Type,Human Resource Management System (HRMS)
+Application_Version,OrangeHRM OS 5.8
+Generated_Date,2026-01-07
+Total_Test_Cases,123
+Modules,"Authentication,Dashboard,Leave List,Leave Configuration,Leave Application,Entitlements,Reports,Leave Assignment"
+Module_Count,8
+Positive_Tests,45
+Negative_Tests,35
+Boundary_Tests,12
+Security_Tests,15
+E2E_Tests,8
+High_Priority_Tests,68
+Medium_Priority_Tests,45
+Low_Priority_Tests,10
+Pages_Analyzed,19
+Screenshots_Processed,19
+Generator_Version,Test Case Generator Agent v1.0

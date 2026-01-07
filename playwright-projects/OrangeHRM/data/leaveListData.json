@@ -1,0 +1,104 @@
+{
+  "_metadata": {
+    "module": "Leave List",
+    "generatedFrom": "OrangeHRM_Manual_Test_Cases.csv",
+    "generatedDate": "2026-01-07",
+    "testCaseCount": 13
+  },
+
+  "validScenarios": [
+    {
+      "testId": "TC_LIST_001",
+      "description": "View Leave List page",
+      "priority": "High",
+      "expectedResult": "page_loads"
+    },
+    {
+      "testId": "TC_LIST_002",
+      "description": "Search leaves with valid date range",
+      "priority": "High",
+      "fromDate": "2025-03-02",
+      "toDate": "2026-03-01",
+      "expectedResult": "results_displayed"
+    },
+    {
+      "testId": "TC_LIST_003",
+      "description": "Filter by Pending Approval status",
+      "priority": "High",
+      "status": "Pending Approval",
+      "expectedResult": "filtered_results"
+    },
+    {
+      "testId": "TC_LIST_004",
+      "description": "Filter by Leave Type",
+      "priority": "Medium",
+      "leaveType": "ML",
+      "expectedResult": "filtered_results"
+    },
+    {
+      "testId": "TC_LIST_005",
+      "description": "Search by Employee Name with autocomplete",
+      "priority": "Medium",
+      "employeeName": "Mehul",
+      "expectedResult": "autocomplete_works"
+    },
+    {
+      "testId": "TC_LIST_006",
+      "description": "Filter by Sub Unit",
+      "priority": "Medium",
+      "subUnit": "Engineering",
+      "expectedResult": "filtered_results"
+    },
+    {
+      "testId": "TC_LIST_007",
+      "description": "Toggle Include Past Employees",
+      "priority": "Medium",
+      "includePastEmployees": true,
+      "expectedResult": "past_employees_included"
+    },
+    {
+      "testId": "TC_LIST_008",
+      "description": "Reset all filters",
+      "priority": "Medium",
+      "expectedResult": "filters_cleared"
+    }
+  ],
+
+  "invalidScenarios": [
+    {
+      "testId": "TC_LIST_100",
+      "description": "Search with From Date greater than To Date",
+      "priority": "Medium",
+      "fromDate": "2026-03-01",
+      "toDate": "2025-03-02",
+      "expectedError": "validation_error"
+    },
+    {
+      "testId": "TC_LIST_101",
+      "description": "Search without required status field",
+      "priority": "Medium",
+      "status": "",
+      "expectedError": "Required"
+    },
+    {
+      "testId": "TC_LIST_102",
+      "description": "Search with invalid Employee Name",
+      "priority": "Low",
+      "employeeName": "NonExistentEmployee12345",
+      "expectedResult": "no_records"
+    }
+  ],
+
+  "uiTests": [
+    {
+      "testId": "TC_LIST_009",
+      "description": "Remove status chip",
+      "priority": "Medium"
+    },
+    {
+      "testId": "TC_LIST_010",
+      "description": "Verify date picker functionality",
+      "priority": "Medium"
+    }
+  ]
+}
