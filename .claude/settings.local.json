@@ -6,7 +6,8 @@
       "Bash(npm run test:regression:*)",
       "Bash(npm run test:auth:*)",
       "Bash(npx playwright test:*)",
-      "Bash(set \"BASE_URL=http://localhost/orangehrm\")"
+      "Bash(set \"BASE_URL=http://localhost/orangehrm\")",
+      "Bash(npm run allure:serve:*)"
     ]
   }
 }
