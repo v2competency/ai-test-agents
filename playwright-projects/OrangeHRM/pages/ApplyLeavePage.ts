@@ -4,7 +4,7 @@ import { BasePage } from './BasePage';
 import { ElementDefinition } from '../utils/SelfHealingLocator';
 
 export class ApplyLeavePage extends BasePage {
-  readonly pageUrl = '/web/index.php/leave/applyLeave';
+  readonly pageUrl = '/orangehrm/web/index.php/leave/applyLeave';
 
   // Element definitions
   private readonly leaveTypeDropdownDef: ElementDefinition = {

@@ -1,0 +1,78 @@
+{
+  "leaveTypesEligible": {
+    "data": [
+      {
+        "id": 2,
+        "name": "ML",
+        "deleted": false,
+        "situational": true
+      }
+    ],
+    "meta": {
+      "empNumber": 1
+    },
+    "rels": []
+  },
+  "leaveBalance": {
+    "data": {
+      "balance": {
+        "entitled": 2,
+        "used": 1.5,
+        "scheduled": 0,
+        "pending": 1.5,
+        "taken": 0,
+        "balance": 0.5,
+        "asAtDate": "2026-01-08",
+        "endDate": "2026-03-01"
+      }
+    },
+    "meta": {
+      "employee": {
+        "empNumber": 1,
+        "lastName": "Kagathara",
+        "firstName": "Mehul",
+        "middleName": "",
+        "employeeId": "0001",
+        "terminationId": null
+      },
+      "leaveType": {
+        "id": 2,
+        "name": "ML",
+        "deleted": false,
+        "situational": true
+      }
+    },
+    "rels": []
+  },
+  "applyLeaveSuccess": {
+    "data": {
+      "id": 123,
+      "dates": [
+        {
+          "date": "2026-01-10",
+          "lengthHours": 8,
+          "lengthDays": 1,
+          "status": {
+            "id": 1,
+            "name": "Pending Approval"
+          }
+        }
+      ],
+      "leaveType": {
+        "id": 2,
+        "name": "ML",
+        "deleted": false
+      },
+      "leaveBalance": "0.50",
+      "numberOfDays": "1.00"
+    },
+    "meta": [],
+    "rels": []
+  },
+  "applyLeaveError": {
+    "error": {
+      "status": "422",
+      "message": "Insufficient leave balance"
+    }
+  }
+}
