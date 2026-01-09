@@ -1,0 +1,45 @@
+{
+  "name": "imdex-playwright",
+  "version": "1.0.0",
+  "description": "IMDEX Playwright automation framework - Migrated from QAF/Selenium",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:headed": "npx playwright test --headed",
+    "test:debug": "npx playwright test --debug",
+    "test:ui": "npx playwright test --ui",
+    "test:desktop": "npx playwright test --project=desktop-chrome",
+    "test:mobile": "npx playwright test --project=mobile-pixel7",
+    "test:all-platforms": "npx playwright test --project=desktop-chrome --project=mobile-pixel7",
+    "test:smoke": "npx playwright test --grep @smoke",
+    "test:self-healing": "npx playwright test tests/self-healing.spec.ts --headed",
+    "report": "npx playwright show-report reports/playwright-report",
+    "codegen": "npx playwright codegen https://www.imdex.com",
+    "clean": "rimraf reports/ dist/ test-results/",
+    "lint": "eslint . --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "install:browsers": "npx playwright install"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@anthropic-ai/sdk": "^0.10.0",
+    "@types/node": "^20.10.0",
+    "dotenv": "^16.3.1",
+    "typescript": "^5.3.0",
+    "eslint": "^8.55.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "rimraf": "^5.0.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "playwright",
+    "automation",
+    "testing",
+    "imdex",
+    "migrated-from-selenium"
+  ],
+  "author": "Migrated from QAF/Selenium",
+  "license": "ISC"
+}

@@ -9,6 +9,7 @@ dist/
 reports/
 test-results/
 allure-results/
+allure-report/
 playwright-report/
 *.png
 *.mp4

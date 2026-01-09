@@ -1,0 +1,54 @@
+<testsuites id="" name="" tests="8" failures="0" skipped="1" errors="0" time="65.54466000000001">
+<testsuite name="imdex.spec.ts" timestamp="2025-12-17T12:31:35.174Z" hostname="desktop-chrome" tests="8" failures="0" skipped="1" time="207.938" errors="0">
+<testcase name="IMDEX Search and Filter Module › Basic Search and Filter @smoke › TC_SEARCH_001: Validate Search and Filter Functionality" classname="imdex.spec.ts" time="41.614">
+<system-out>
+<![CDATA[Cookie accepted using: .cookie-consent .action-accept a
+]]>
+</system-out>
+</testcase>
+<testcase name="IMDEX Search and Filter Module › Data-Driven Search Tests (Examples Table) @smoke @dataDriven › TC_SEARCH_002: Search for mining keyword with Solution filter (Data Driven)" classname="imdex.spec.ts" time="29.357">
+<system-out>
+<![CDATA[Cookie accepted using: .cookie-consent .action-accept a
+]]>
+</system-out>
+</testcase>
+<testcase name="IMDEX Search and Filter Module › Data-Driven Search Tests (Examples Table) @smoke @dataDriven › TC_SEARCH_003: Search for fluids optimisation keyword with Solution filter (Data Driven)" classname="imdex.spec.ts" time="40.888">
+<system-out>
+<![CDATA[Cookie accepted using: .cookie-consent .action-accept a
+]]>
+</system-out>
+</testcase>
+<testcase name="IMDEX Search and Filter Module › Data Provider Search Tests (External JSON) @smoke @dataProvider › TC_SEARCH_004: Search for mining keyword with Content filter (Data Provider)" classname="imdex.spec.ts" time="30.406">
+<system-out>
+<![CDATA[Cookie accepted using: .cookie-consent .action-accept a
+]]>
+</system-out>
+</testcase>
+<testcase name="IMDEX Search and Filter Module › Data Provider Search Tests (External JSON) @smoke @dataProvider › TC_SEARCH_005: Search for fluids optimisation keyword with Content filter (Data Provider)" classname="imdex.spec.ts" time="22.102">
+<system-out>
+<![CDATA[Cookie accepted using: .cookie-consent .action-accept a
+]]>
+</system-out>
+</testcase>
+<testcase name="IMDEX Search and Filter Module › Keyword-Based Search Tests @smoke › Search for keyword: mining (keyword-1)" classname="imdex.spec.ts" time="22.551">
+<system-out>
+<![CDATA[Cookie accepted using: .cookie-consent .action-accept a
+]]>
+</system-out>
+</testcase>
+<testcase name="IMDEX Search and Filter Module › Keyword-Based Search Tests @smoke › Search for keyword: fluids optimisation (keyword-2)" classname="imdex.spec.ts" time="20.153">
+<system-out>
+<![CDATA[Cookie accepted using: .cookie-consent .action-accept a
+]]>
+</system-out>
+</testcase>
+<testcase name="IMDEX Mobile Search Tests › Mobile: Search functionality on Pixel 7 viewport" classname="imdex.spec.ts" time="0.867">
+<properties>
+<property name="skip" value="Skip non-mobile projects">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+</testsuites>
