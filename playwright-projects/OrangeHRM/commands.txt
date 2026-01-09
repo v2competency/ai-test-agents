@@ -1,0 +1,2 @@
+npx playwright test auth.spec.ts --project=chromium --workers=3
+npx playwright test apply-leave-mocked.spec.ts --project=chromium --headed --workers=1
