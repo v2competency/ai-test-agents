@@ -1,7 +1,7 @@
 {
   "agent": {
     "name": "Migration Agent",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Migrates legacy automation frameworks (Selenium, Protractor, Cypress, etc.) to modern Playwright with AI-powered self-healing",
     "type": "sub-agent"
   },
@@ -222,14 +222,58 @@
       "ai_observer": {
         "provider": "anthropic",
         "model": "claude-sonnet-4-20250514",
+        "sdk_version": "^0.73.0",
         "capabilities": ["screenshot_analysis", "dom_parsing", "selector_generation"],
         "fallback_without_api": true
+      },
+      "safe_locator": {
+        "description": "Always use .first() on locators to prevent strict mode violations",
+        "pattern": "page.locator(selector).first()"
+      },
+      "element_descriptions": {
+        "description": "Rich, contextual descriptions improve AI healing accuracy",
+        "include": ["element type", "location on page", "visible text", "visual cues"]
       }
     },
     "documentation": {
       "preserve_original_locators": true,
       "add_migration_comments": true,
       "generate_mapping_docs": true
+    },
+    "dual_test_mode": {
+      "enabled": true,
+      "description": "Generate tests in both normal and self-healing modes",
+      "normal_mode": {
+        "file_pattern": "{module}.spec.ts",
+        "description": "Standard Page Object tests, fast execution, for CI/CD",
+        "uses_self_healing": false
+      },
+      "healing_mode": {
+        "file_pattern": "{module}-healing.spec.ts",
+        "description": "Tests using SelfHealingLocator + AIObserver, with healing reports",
+        "uses_self_healing": true,
+        "tag": "@healing"
+      },
+      "demo_mode": {
+        "file_pattern": "self-healing-demo.spec.ts",
+        "description": "Deliberately broken selectors to demonstrate AI healing",
+        "uses_self_healing": true
+      }
+    },
+    "page_object_patterns": {
+      "constructor_fallback_chains": {
+        "description": "Use comma-separated locators in constructors for resilience",
+        "pattern": "page.locator('#primary, .fallback1, [fallback2]').first()"
+      },
+      "cookie_consent_handling": {
+        "description": "Handle both simple banners and modal dialogs",
+        "patterns": [
+          ".action-accept a",
+          "[role='dialog'] a:has-text('Accept')",
+          ".cookie-consent button:has-text('Accept')",
+          "[data-test='accept-cookies']"
+        ]
+      }
     }
   },
   "output_files": {
@@ -238,9 +282,10 @@
       "{PageName}Page.ts": "Migrated page classes"
     },
     "tests": {
-      "{module}.spec.ts": "Module test specifications",
+      "{module}.spec.ts": "Normal mode: standard Page Object test specifications",
+      "{module}-healing.spec.ts": "Healing mode: same tests using SelfHealingLocator + AIObserver",
       "e2e/{flow}.e2e.spec.ts": "End-to-end tests",
-      "self-healing-demo.spec.ts": "Self-healing demonstration"
+      "self-healing-demo.spec.ts": "Self-healing demonstration with deliberately broken selectors"
     },
     "data": {
       "{module}Data.json": "Module test data",

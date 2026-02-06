@@ -53,14 +53,27 @@ Extract and convert test data:
 - Maintain original test IDs for traceability
 - Add metadata with migration information
 
-### 5. Migrate Test Specifications
-Convert tests to Playwright format:
+### 5. Migrate Test Specifications (Dual Mode)
+Convert tests to Playwright format in **two modes**:
+
+**Normal Mode (`{module}.spec.ts`)**:
+- Uses standard Page Object locators directly
+- Fast execution, no AI overhead, suitable for CI/CD
 - Map test framework hooks (Before/After → beforeEach/afterEach)
 - Transform assertions to expect() API
 - Implement data-driven test loops
 - Preserve test names, groups, and tags
-- Reference original test IDs
-- Add healing report generation in afterAll
+
+**Self-Healing Mode (`{module}-healing.spec.ts`)**:
+- Uses `SelfHealingLocator` with `ElementRegistry` for every interaction
+- Tags tests with `@healing` for selective execution
+- Generates healing reports in afterAll hook
+- Ideal for post-migration validation and monitoring site changes
+
+**Self-Healing Demo (`self-healing-demo.spec.ts`)**:
+- Uses deliberately broken selectors to demonstrate AI Observer
+- Shows the 4-tier healing pipeline in action
+- Always include this file in every migration
 
 ### 6. Generate Self-Healing Framework
 Create AI-powered healing utilities:
@@ -395,7 +408,9 @@ export class {PageName}Page extends BasePage {
         '{fallback4}',
         '{fallback5}'
       ],
-      description: '{Element description}',
+      // IMPORTANT: Rich descriptions help AI healing accuracy
+      // Include: what the element is, where it is on the page, visible text/icon
+      description: '{Element type} in the {location on page}, with text "{visible text}" and {visual cue}',
       originalLocator: '{original_selenium_locator}'
     }
     // ... more elements
@@ -404,11 +419,12 @@ export class {PageName}Page extends BasePage {
   constructor(page: Page) {
     super(page);
 
-    // Initialize locators
-    this.{field}Input = page.locator('{primary_selector}');
-    this.{button}Button = page.locator('{primary_selector}');
-    this.errorMessage = page.locator('.error-message, [data-test="error"], [role="alert"]');
-    this.successMessage = page.locator('.success-message, [data-test="success"]');
+    // Initialize locators with comma-separated fallback chains for resilience
+    // Uses .first() to prevent strict mode violations when multiple elements match
+    this.{field}Input = page.locator('{primary_selector}, {fallback1}, {fallback2}').first();
+    this.{button}Button = page.locator('{primary_selector}, {fallback1}').first();
+    this.errorMessage = page.locator('.error-message, [data-test="error"], [role="alert"]').first();
+    this.successMessage = page.locator('.success-message, [data-test="success"]').first();
   }
 
   // ==================== NAVIGATION ====================
@@ -698,31 +714,38 @@ export default defineConfig({
   "version": "1.0.0",
   "description": "Playwright automation migrated from {source_framework} - {App Name}",
   "scripts": {
-    "test": "npx playwright test",
-    "test:headed": "npx playwright test --headed",
+    "test": "npx playwright test --grep-invert @healing",
+    "test:headed": "npx playwright test --grep-invert @healing --headed",
     "test:debug": "npx playwright test --debug",
     "test:ui": "npx playwright test --ui",
-    "test:chrome": "npx playwright test --project=chromium",
-    "test:firefox": "npx playwright test --project=firefox",
-    "test:healing": "npx playwright test tests/self-healing-demo.spec.ts --headed",
+    "test:chrome": "npx playwright test --grep-invert @healing --project=chromium",
+    "test:firefox": "npx playwright test --grep-invert @healing --project=firefox",
+    "test:healing": "npx playwright test --grep @healing",
+    "test:healing:headed": "npx playwright test --grep @healing --headed",
+    "test:healing:demo": "npx playwright test tests/self-healing-demo.spec.ts --headed",
+    "test:all": "npx playwright test",
     "report": "npx playwright show-report reports/playwright-report",
-    "report:healing": "cat reports/healing/healing-report.json",
-    "clean": "rm -rf reports/ test-results/",
+    "clean": "rimraf reports test-results",
     "lint": "eslint . --ext .ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0",
-    "@anthropic-ai/sdk": "^0.10.0",
     "@types/node": "^20.10.0",
     "dotenv": "^16.3.1",
     "typescript": "^5.3.0",
     "eslint": "^8.55.0",
     "@typescript-eslint/eslint-plugin": "^6.13.0",
-    "@typescript-eslint/parser": "^6.13.0"
+    "@typescript-eslint/parser": "^6.13.0",
+    "rimraf": "^5.0.5"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.73.0"
   }
 }
 ```
+
+> **IMPORTANT**: The `@anthropic-ai/sdk` must be `^0.73.0` or later. Version `^0.10.0` has breaking API changes where `client.messages` does not exist. Always use `latest` when generating.
 
 ### .env.example Template
 ```bash
@@ -764,7 +787,7 @@ import { HealingReporter } from './HealingReporter';
 
 export interface ElementDefinition {
   name: string;
-  description: string;
+  description: string;  // IMPORTANT: Use rich descriptions for AI healing
   primary: string;
   fallbacks: string[];
   type: 'input' | 'button' | 'link' | 'text' | 'container';
@@ -777,18 +800,27 @@ export class SelfHealingLocator {
   private aiObserver: AIObserver;
   private reporter: HealingReporter;
 
-  constructor(page: Page) {
+  constructor(page: Page, options?: { enableAI?: boolean }) {
     this.page = page;
-    this.aiObserver = new AIObserver();
+    this.aiObserver = new AIObserver(options?.enableAI ?? true);
     this.reporter = new HealingReporter();
   }
 
-  async locate(element: ElementDefinition, timeout = 5000): Promise<Locator> {
+  /**
+   * CRITICAL: Use .first() to prevent strict mode violations.
+   * AI-suggested selectors or fallbacks may match multiple elements
+   * (e.g., desktop + mobile variants of the same button).
+   */
+  private safeLocator(selector: string): Locator {
+    return this.page.locator(selector).first();
+  }
+
+  async locate(element: ElementDefinition, timeout = 10000): Promise<Locator> {
     const start = Date.now();
 
     // Try primary selector
     try {
-      const locator = this.page.locator(element.primary);
+      const locator = this.safeLocator(element.primary);
       await locator.waitFor({ state: 'visible', timeout: timeout / 4 });
       return locator;
     } catch {
@@ -802,7 +834,7 @@ export class SelfHealingLocator {
     const cached = this.cache.get(element.name);
     if (cached) {
       try {
-        const locator = this.page.locator(cached);
+        const locator = this.safeLocator(cached);
         await locator.waitFor({ state: 'visible', timeout: timeout / 4 });
         this.reporter.record(element.name, element.primary, cached, 'cache', Date.now() - start, element.originalLocator);
         return locator;
@@ -814,10 +846,11 @@ export class SelfHealingLocator {
     // TIER 2: Fallbacks
     for (const fallback of element.fallbacks) {
       try {
-        const locator = this.page.locator(fallback);
-        await locator.waitFor({ state: 'visible', timeout: timeout / 6 });
+        const locator = this.safeLocator(fallback);
+        await locator.waitFor({ state: 'visible', timeout: timeout / (element.fallbacks.length + 2) });
         this.cache.set(element.name, fallback);
         this.reporter.record(element.name, element.primary, fallback, 'fallback', Date.now() - start, element.originalLocator);
+        console.log(`[Healer] Healed with fallback: ${fallback}`);
         return locator;
       } catch { continue; }
     }
@@ -825,31 +858,35 @@ export class SelfHealingLocator {
     // TIER 3 & 4: AI Healing
     if (this.aiObserver.isEnabled()) {
       // Visual analysis
-      const screenshot = await this.page.screenshot({ type: 'png' });
-      let aiSelector = await this.aiObserver.findByVision(screenshot, element.description, element.type);
-
-      if (aiSelector) {
-        try {
-          const locator = this.page.locator(aiSelector);
+      try {
+        const screenshot = await this.page.screenshot({ type: 'png' });
+        const aiSelector = await this.aiObserver.findByVision(screenshot, element.description, element.type);
+        if (aiSelector) {
+          const locator = this.safeLocator(aiSelector);
           await locator.waitFor({ state: 'visible', timeout: timeout / 4 });
           this.cache.set(element.name, aiSelector);
           this.reporter.record(element.name, element.primary, aiSelector, 'ai_visual', Date.now() - start, element.originalLocator);
+          console.log(`[Healer] Healed with AI Visual: ${aiSelector}`);
           return locator;
-        } catch { /* try DOM analysis */ }
+        }
+      } catch (error) {
+        console.log(`[Healer] AI Visual failed: ${error}`);
       }
 
       // DOM analysis
-      const html = await this.page.content();
-      aiSelector = await this.aiObserver.findByDOM(html, element.description, element.type);
-
-      if (aiSelector) {
-        try {
-          const locator = this.page.locator(aiSelector);
+      try {
+        const html = await this.page.content();
+        const aiSelector = await this.aiObserver.findByDOM(html, element.description, element.type);
+        if (aiSelector) {
+          const locator = this.safeLocator(aiSelector);
           await locator.waitFor({ state: 'visible', timeout: timeout / 4 });
           this.cache.set(element.name, aiSelector);
           this.reporter.record(element.name, element.primary, aiSelector, 'ai_dom', Date.now() - start, element.originalLocator);
+          console.log(`[Healer] Healed with AI DOM: ${aiSelector}`);
           return locator;
-        } catch { /* healing failed */ }
+        }
+      } catch (error) {
+        console.log(`[Healer] AI DOM failed: ${error}`);
       }
     }
 
@@ -859,6 +896,8 @@ export class SelfHealingLocator {
 
   getReport(): string { return this.reporter.generateReport(); }
   async saveReport(path: string): Promise<void> { await this.reporter.save(path); }
+  getStats() { return this.reporter.getStats(); }
+  clearCache(): void { this.cache.clear(); }
 }
 ```
 
@@ -885,15 +924,68 @@ Before completing migration, verify:
 - [ ] All Page Objects converted to TypeScript
 - [ ] All locators mapped to Playwright format
 - [ ] Original locators documented in comments
-- [ ] Fallback selectors generated for each element
-- [ ] All test specifications converted
+- [ ] Fallback selectors generated for each element (5+ per element)
+- [ ] Page Object constructors use comma-separated fallback chains with `.first()`
+- [ ] All test specifications converted in **both modes** (normal + healing)
 - [ ] Test hooks properly mapped
 - [ ] Assertions converted to expect()
 - [ ] Test data extracted to JSON
 - [ ] Configuration files created
-- [ ] Self-healing utilities included
+- [ ] Self-healing utilities included (with `safeLocator()` method)
+- [ ] Self-healing demo test included (with deliberately broken selectors)
+- [ ] Cookie consent handling covers both banners AND modal dialogs
+- [ ] Element descriptions are rich and contextual for AI healing
+- [ ] `@anthropic-ai/sdk` version is `^0.73.0` or later (NOT `^0.10.0`)
 - [ ] Migration report generated
-- [ ] README with instructions created
+- [ ] README with dual-mode run instructions created
+
+---
+
+## Cookie Consent Handling Pattern
+
+Modern sites use various cookie consent implementations. Always generate a robust pattern:
+
+```typescript
+async acceptCookies(): Promise<void> {
+  try {
+    // Try standard banner first
+    const banner = this.acceptCookiesButton;
+    await banner.waitFor({ state: 'visible', timeout: 5000 });
+    await banner.click();
+    await banner.waitFor({ state: 'hidden', timeout: 5000 }).catch(() => {});
+  } catch {
+    // Fallback: handle modal cookie consent dialogs
+    try {
+      const modalAccept = this.page.locator(
+        '[role="dialog"] a:has-text("Accept"), ' +
+        '.cookie-consent button:has-text("Accept"), ' +
+        '.cookie-consent a, ' +
+        '[data-test="accept-cookies"]'
+      ).first();
+      await modalAccept.click({ timeout: 5000 });
+    } catch {
+      // Cookie banner may not appear if already accepted
+      console.log('[Page] Cookie banner not displayed or already accepted');
+    }
+  }
+}
+```
+
+---
+
+## Element Description Guidelines for AI Healing
+
+Rich descriptions dramatically improve AI healing accuracy. Always include:
+
+**Bad descriptions** (low AI accuracy):
+- "search button"
+- "input field"
+- "submit"
+
+**Good descriptions** (high AI accuracy):
+- "Search button in the secondary navigation bar at top of page, with text 'Search' and a magnifying glass icon"
+- "Main search text input field where users type their search query, with placeholder 'Search products...'"
+- "Desktop search submit button inside the search form overlay, labeled 'Submit search'"
 
 ---
 
@@ -906,3 +998,9 @@ Before completing migration, verify:
 - Generate comprehensive migration documentation
 - **Always include AI Observer self-healing framework**
 - Support graceful degradation when API key not available
+- **Generate tests in DUAL MODE: normal (`{module}.spec.ts`) + healing (`{module}-healing.spec.ts`)**
+- **Use `safeLocator()` with `.first()` in SelfHealingLocator to prevent strict mode violations**
+- **Use comma-separated fallback chains in Page Object constructors**: `page.locator('#a, .b, [c]').first()`
+- **Write rich, contextual element descriptions** for AI healing accuracy
+- **Handle cookie consent as both banners AND modal dialogs**
+- **Use `@anthropic-ai/sdk@latest`** (NOT `^0.10.0`)

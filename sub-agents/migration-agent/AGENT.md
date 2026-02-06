@@ -146,11 +146,12 @@ playwright-projects/{AppName}-migrated/
 │       └── {ComponentName}Component.ts
 │
 ├── tests/                              # Migrated test specification files
-│   ├── {module}.spec.ts                # Module tests
+│   ├── {module}.spec.ts                # Normal mode: standard Page Object tests
+│   ├── {module}-healing.spec.ts        # Healing mode: same tests using SelfHealingLocator
 │   ├── {module}-validation.spec.ts     # Validation tests
 │   ├── e2e/                            # End-to-end tests
 │   │   └── {flow}.e2e.spec.ts
-│   └── self-healing-demo.spec.ts       # Self-healing demonstration
+│   └── self-healing-demo.spec.ts       # Self-healing demonstration with broken selectors
 │
 ├── data/                               # Migrated test data (JSON)
 │   ├── {module}Data.json               # Module test data
@@ -676,6 +677,65 @@ test.describe('Authentication - Login', () => {
 
 ---
 
+## Dual Test Mode
+
+The migration agent generates tests in **two modes** allowing users to run the same test scenarios either with standard Playwright locators or with the AI-powered self-healing pipeline.
+
+### Mode 1: Normal Run (`{module}.spec.ts`)
+- Uses standard Page Object locators directly
+- Fast execution, no AI overhead
+- Ideal for CI/CD pipelines and daily regression
+- Locators use comma-separated fallback chains: `page.locator('#a, .b, [c]').first()`
+
+### Mode 2: Self-Healing Run (`{module}-healing.spec.ts`)
+- Uses `SelfHealingLocator` with `ElementRegistry` for every element interaction
+- Triggers the 4-tier healing pipeline (Cache → Fallbacks → AI Visual → AI DOM)
+- Generates healing reports showing which selectors needed healing
+- Ideal for post-migration validation, debugging broken selectors, and monitoring site changes
+
+### Mode 3: Self-Healing Demo (`self-healing-demo.spec.ts`)
+- Uses deliberately broken selectors to demonstrate AI Observer capabilities
+- Shows the full healing pipeline in action
+- Generates comprehensive healing reports
+
+### npm Scripts for Both Modes
+```json
+{
+  "test": "npx playwright test --grep-invert @healing",
+  "test:healing": "npx playwright test --grep @healing",
+  "test:all": "npx playwright test",
+  "test:healing:demo": "npx playwright test tests/self-healing-demo.spec.ts --headed"
+}
+```
+
+---
+
+## Learnings from Production Migrations
+
+### Critical Patterns Discovered
+
+1. **Strict Mode Violations**: When AI suggests a selector matching multiple elements (e.g., `button[type="submit"]` matching desktop + mobile), Playwright throws strict mode errors. **Fix**: Always use `.first()` in `SelfHealingLocator` via a `safeLocator()` helper.
+
+2. **Cookie Consent Modals**: Modern sites use `[role="dialog"]` modal dialogs, not just simple banners. Cookie handling must account for:
+   - Simple banners: `.action-accept a`
+   - Modal dialogs: `[role="dialog"] a:has-text("Accept")`
+   - Already-accepted state (no banner visible)
+
+3. **AI Element Descriptions Matter**: Vague descriptions like "search button" produce poor AI healing results. **Use rich descriptions** that include location context: "Search button in the secondary navigation bar at top of page, with text 'Search' and a magnifying glass icon."
+
+4. **Fallback Chains in Page Object Constructors**: In addition to self-healing fallbacks in `ElementRegistry`, Page Object constructors should use comma-separated locators for resilience:
+   ```typescript
+   this.searchInput = page.locator('#searchBox, input[name="search"], input[type="search"]').first();
+   ```
+
+5. **Site Structure Changes Post-Migration**: The original Selenium locators may all be broken if the site has been redesigned. Tier 2 (Fallbacks) and Tier 3 (AI Visual) are the most effective tiers for handling this.
+
+6. **Anthropic SDK Version**: Use `@anthropic-ai/sdk@latest` (currently `^0.73.0`+). Version `^0.10.0` has breaking API changes with `client.messages.create()`.
+
+7. **Wait After Panel Transitions**: After clicking triggers that open panels/modals (e.g., search trigger opening search overlay), add a short `waitForTimeout(1000)` before interacting with elements inside the panel.
+
+---
+
 ## Quality Standards
 
 ### Generated Code Quality
@@ -702,7 +762,7 @@ test.describe('Authentication - Login', () => {
 ---
 
 ## Agent Version
-**Version**: 1.0.0
+**Version**: 1.1.0
 **Last Updated**: {CURRENT_DATE}
 **Guardrail Reference**: Migration Guardrail v1.0
-**Self-Healing Framework**: AI Observer v1.0
+**Self-Healing Framework**: AI Observer v1.1 (with Dual Test Mode + safeLocator)

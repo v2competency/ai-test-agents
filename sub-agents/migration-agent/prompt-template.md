@@ -633,8 +633,53 @@ npm test
 ## Next Steps
 1. Configure .env with your settings
 2. Review flagged XPath locators in migration report
-3. Run `npm test` to verify migration
-4. Run `npm run test:healing` to demo self-healing
+3. Run `npm test` to verify migration (normal mode)
+4. Run `npm run test:healing` to run tests with AI Observer self-healing
+5. Run `npm run test:healing:demo` to see AI healing with broken selectors
+```
+
+---
+
+## Running Tests in Different Modes
+
+### Normal Mode (Standard Page Object Tests)
+```
+Run the migrated tests in normal mode - standard Playwright execution without AI healing.
+This is the default for CI/CD pipelines.
+
+cd playwright-projects/{AppName}-migrated
+npm test                    # All normal tests
+npm run test:headed         # With browser visible
+npm run test:chrome         # Chrome only
+```
+
+### Self-Healing Mode (AI Observer Tests)
+```
+Run the migrated tests with AI Observer self-healing enabled.
+Each test uses SelfHealingLocator + ElementRegistry for every element interaction.
+Generates healing reports showing which selectors needed healing.
+
+cd playwright-projects/{AppName}-migrated
+npm run test:healing        # All healing-mode tests
+npm run test:healing:headed # With browser visible
+```
+
+### Self-Healing Demo (Broken Selector Demo)
+```
+Run the self-healing demonstration with deliberately broken selectors.
+Shows the 4-tier healing pipeline in action:
+  Tier 1: Cache → Tier 2: Fallbacks → Tier 3: AI Visual → Tier 4: AI DOM
+
+cd playwright-projects/{AppName}-migrated
+npm run test:healing:demo   # Headed mode, shows AI healing live
+```
+
+### Run All Tests (Both Modes)
+```
+Run both normal and self-healing test suites together.
+
+cd playwright-projects/{AppName}-migrated
+npm run test:all            # Everything
 ```
 
 ---
@@ -646,8 +691,10 @@ npm test
 3. **Specify base URL** - Used in configuration and navigation
 4. **Review analysis first** - Verify all components identified before migration
 5. **Migrate incrementally** - For large projects, migrate module by module
-6. **Configure API key** - For full AI-powered self-healing capabilities
-7. **Run tests after migration** - Verify with `npm test` and `npm run test:headed`
-8. **Review migration report** - Check flagged items and recommendations
-9. **Update real credentials** - Replace placeholder values in .env
-10. **Verify data accuracy** - Especially for Excel → JSON conversions
+6. **Configure API key** - Set `ANTHROPIC_API_KEY` in .env for AI-powered self-healing (Tier 3 & 4)
+7. **Run normal tests first** - Verify with `npm test` that basic migration is correct
+8. **Then run healing tests** - Use `npm run test:healing` to validate self-healing pipeline
+9. **Review migration report** - Check flagged items and recommendations
+10. **Update real credentials** - Replace placeholder values in .env
+11. **Verify data accuracy** - Especially for Excel → JSON conversions
+12. **Use rich element descriptions** - In ElementRegistry, describe elements with location context for better AI healing
