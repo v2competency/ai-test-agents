@@ -12,6 +12,7 @@
     "test:mobile": "npx playwright test --project=mobile-chrome",
     "test:all-browsers": "npx playwright test --project=desktop-chrome --project=desktop-firefox --project=desktop-safari",
     "test:healing": "npx playwright test tests/self-healing-demo.spec.ts --headed",
+    "test:healing:headless": "npx playwright test tests/self-healing-demo.spec.ts",
     "report": "npx playwright show-report reports/playwright-report",
     "report:open": "npx playwright show-report reports/playwright-report",
     "trace": "npx playwright show-trace",
