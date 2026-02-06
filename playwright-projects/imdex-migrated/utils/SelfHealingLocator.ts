@@ -32,6 +32,14 @@ export class SelfHealingLocator {
   }
 
   /**
+   * Safely create a locator that handles strict mode violations
+   * Uses .first() to resolve when multiple elements match
+   */
+  private safeLocator(selector: string): Locator {
+    return this.page.locator(selector).first();
+  }
+
+  /**
    * Locate element with self-healing capabilities
    * Enhanced from Healenium's healing approach
    */
@@ -41,7 +49,7 @@ export class SelfHealingLocator {
 
     // Try primary selector first
     try {
-      const locator = this.page.locator(primary);
+      const locator = this.safeLocator(primary);
       await locator.waitFor({ state: 'visible', timeout: timeout / 4 });
       return locator;
     } catch {
@@ -55,7 +63,7 @@ export class SelfHealingLocator {
     const cachedSelector = this.healingCache.get(element.name);
     if (cachedSelector) {
       try {
-        const locator = this.page.locator(cachedSelector);
+        const locator = this.safeLocator(cachedSelector);
         await locator.waitFor({ state: 'visible', timeout: timeout / 4 });
         this.reporter.record({
           element: element.name,
@@ -75,7 +83,7 @@ export class SelfHealingLocator {
     // TIER 2: Try fallback selectors
     for (const fallback of fallbacks) {
       try {
-        const locator = this.page.locator(fallback);
+        const locator = this.safeLocator(fallback);
         await locator.waitFor({ state: 'visible', timeout: timeout / (fallbacks.length + 2) });
         this.healingCache.set(element.name, fallback);
         this.reporter.record({
@@ -104,7 +112,7 @@ export class SelfHealingLocator {
         );
 
         if (aiSelector) {
-          const locator = this.page.locator(aiSelector);
+          const locator = this.safeLocator(aiSelector);
           await locator.waitFor({ state: 'visible', timeout: timeout / 4 });
           this.healingCache.set(element.name, aiSelector);
           this.reporter.record({
@@ -132,7 +140,7 @@ export class SelfHealingLocator {
         );
 
         if (aiSelector) {
-          const locator = this.page.locator(aiSelector);
+          const locator = this.safeLocator(aiSelector);
           await locator.waitFor({ state: 'visible', timeout: timeout / 4 });
           this.healingCache.set(element.name, aiSelector);
           this.reporter.record({

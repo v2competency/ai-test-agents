@@ -24,10 +24,10 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
 
   // Retry failed tests
-  retries: process.env.CI ? 2 : 1,
+  retries: process.env.CI ? 0 : 0,
 
   // Number of workers
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 5 : 5,
 
   // Reporter configuration
   reporter: [

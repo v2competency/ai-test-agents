@@ -49,14 +49,16 @@ export const ELEMENT_REGISTRY: Record<string, Record<string, ElementDefinition>>
 
     searchInputButton: {
       name: 'searchInputButton',
-      description: 'Search input trigger button/icon to focus search box',
+      description: 'Search button in secondary navigation bar at top of page',
       primary: '#search-input span',
       fallbacks: [
         '[id="search-input"] span',
         '#search-input > span',
+        'nav[aria-label="Secondary"] button:has-text("Search")',
+        'button:has-text("Search")',
+        'button[aria-label*="search" i]',
         '.search-input span',
         '[data-test="search-trigger"]',
-        'button[aria-label*="search" i]',
         '.search-icon'
       ],
       type: 'button',
@@ -65,15 +67,17 @@ export const ELEMENT_REGISTRY: Record<string, Record<string, ElementDefinition>>
 
     searchInput: {
       name: 'searchInput',
-      description: 'Main search text input field',
+      description: 'Main search text input field where users type their search query',
       primary: '#searchBox',
       fallbacks: [
         'input#searchBox',
         '[id="searchBox"]',
         'input[name="search"]',
+        'input[placeholder*="Search products" i]',
         'input[placeholder*="search" i]',
         '[data-test="search-input"]',
-        'input[type="search"]'
+        'input[type="search"]',
+        '.search__input'
       ],
       type: 'input',
       originalLocator: 'id=searchBox'
@@ -81,15 +85,15 @@ export const ELEMENT_REGISTRY: Record<string, Record<string, ElementDefinition>>
 
     searchSubmitButton: {
       name: 'searchSubmitButton',
-      description: 'Search submit button',
+      description: 'Desktop search submit button inside the search form',
       primary: 'form button[type="submit"]',
       fallbacks: [
-        'button[type="submit"]',
-        '.search-form button',
-        'button:has-text("Search")',
+        '.search__submit',
+        'button.search__submit',
+        ':not(#mobile-menu) > form button[type="submit"]',
+        'button:has-text("Submit search")',
         '[data-test="search-submit"]',
-        'input[type="submit"]',
-        '.search-btn'
+        'input[type="submit"]'
       ],
       type: 'button',
       originalLocator: 'xpath=//button[@type="submit"]'

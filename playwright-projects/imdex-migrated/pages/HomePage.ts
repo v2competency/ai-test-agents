@@ -112,10 +112,10 @@ export class HomePage extends BasePage {
   constructor(page: Page) {
     super(page);
 
-    // Initialize locators
+    // Initialize locators (with fallback chains for site resilience)
     this.acceptCookiesButton = page.locator('.action-accept a');
-    this.searchInputButton = page.locator('#search-input span');
-    this.searchInput = page.locator('#searchBox');
+    this.searchInputButton = page.locator('#search-input span, nav[aria-label="Secondary"] button:has-text("Search")').first();
+    this.searchInput = page.locator('#searchBox, input[name="search"], input[type="search"], input[placeholder*="search" i]').first();
     this.searchSubmitButton = page.locator('form button[type="submit"]').first();
     this.mobileNavigation = page.locator('#mobile-navigation');
     this.mobileSearchInput = page.locator('#mobile-menu #searchBox');
