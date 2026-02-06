@@ -10,6 +10,7 @@
 |-------|---------|-------------|
 | **Test Case Generator Agent** | Screenshot → Manual Test Cases | [See Section 1](#1-test-case-generator-agent-prompts) |
 | **Automation Generator Agent** | Manual Test Cases → Playwright | [See Section 2](#2-automation-generator-agent-prompts) |
+| **Migration Agent** | Legacy Framework → Playwright | [See Section 3](#3-migration-agent-prompts) |
 
 ---
 
@@ -192,7 +193,186 @@ Please:
 
 ---
 
-## 3. Complete Pipeline Example
+## 3. Migration Agent Prompts
+
+### ✅ Basic Usage (Migrate Existing Project)
+
+```
+Please act as the Migration Agent using the system prompt at:
+sub-agents/migration-agent/system-prompt.md
+
+I have an existing automation project that needs to be migrated to Playwright.
+
+Source Project: D:/projects/my-selenium-tests
+Framework: Selenium
+Language: Java
+Base URL: https://myapp.example.com
+
+Please analyze and migrate to Playwright with self-healing capabilities.
+```
+
+---
+
+### ✅ Simple Version
+
+```
+I need to migrate my Selenium Java project to Playwright.
+
+Source: D:/projects/selenium-automation
+Framework: Selenium with TestNG
+Language: Java
+URL: https://myapp.example.com
+
+Please:
+1. Analyze the existing project
+2. Show what will be migrated
+3. Generate Playwright project with self-healing
+```
+
+---
+
+### ✅ Python Selenium Migration
+
+```
+Migrate my Python Selenium pytest project to Playwright.
+
+Source Project: D:/projects/python-selenium
+Framework: Selenium
+Language: Python
+Test Framework: pytest
+Base URL: https://myapp.example.com
+
+Convert:
+- Page Objects (pages/*.py) → TypeScript
+- Tests (tests/test_*.py) → Playwright specs
+- Fixtures (conftest.py) → beforeEach/afterEach
+- Test data → JSON format
+```
+
+---
+
+### ✅ Protractor (Angular) Migration
+
+```
+Migrate my Protractor project to Playwright.
+
+Source: D:/projects/angular-e2e
+Framework: Protractor
+Language: TypeScript
+URL: https://angular-app.example.com
+
+Handle Angular-specific locators:
+- by.model → appropriate CSS
+- by.binding → data binding alternative
+- element() → page.locator()
+```
+
+---
+
+### ✅ Cypress Migration
+
+```
+Migrate my Cypress project to Playwright.
+
+Source: D:/projects/cypress-tests
+Framework: Cypress
+Language: JavaScript
+URL: https://myapp.example.com
+
+Convert:
+- cy.get() → page.locator()
+- Custom commands → utility functions
+- Fixtures → data/*.json
+- cy.intercept() → page.route()
+```
+
+---
+
+### ✅ Analyze Before Migration
+
+```
+Before migrating, please analyze and show me:
+
+Source Project: D:/projects/my-automation
+Framework: Selenium
+Language: Java
+
+Analysis Required:
+1. Project structure overview
+2. Page Objects found (count, patterns)
+3. Test specifications found (count, framework)
+4. Test data sources (Excel, CSV, inline)
+5. Locator strategies used (ID, XPath, CSS counts)
+6. Complexity assessment per component
+7. Potential migration issues
+
+Wait for my approval before proceeding.
+```
+
+---
+
+### ✅ Migrate Specific Module
+
+```
+Migrate only the Authentication module from: D:/projects/selenium-tests
+
+Source Framework: Java Selenium TestNG
+Files to migrate:
+- pages/LoginPage.java
+- tests/LoginTests.java
+- testdata/login_data.xlsx
+
+Generate:
+- pages/LoginPage.ts
+- tests/auth.spec.ts
+- data/authData.json
+
+Skip other modules for now.
+```
+
+---
+
+### ✅ With Full Self-Healing
+
+```
+Migrate with full AI-powered self-healing.
+
+Source: D:/projects/selenium-automation
+Framework: Selenium (Java)
+URL: https://myapp.example.com
+
+Options:
+- Self-healing: Full 4-tier (Cache → Fallbacks → AI Visual → AI DOM)
+- AI Observer: Enabled
+- Track original locators: Yes
+- Generate migration report: Yes
+- Fallback selectors: 5+ per element
+
+Output to: playwright-projects/MyApp-migrated/
+```
+
+---
+
+### ✅ Generate Migration Report Only
+
+```
+Generate a migration analysis report for: D:/projects/legacy-automation
+
+Framework: Selenium (Java/TestNG)
+
+Report should include:
+1. Source project inventory
+2. Migration complexity assessment
+3. Locator analysis (strategies, upgrade opportunities)
+4. Potential issues and manual review items
+5. Estimated effort
+
+Don't migrate yet - just the analysis report.
+```
+
+---
+
+## 4. Complete Pipeline Examples
 
 ### Step 1: Screenshot Analysis
 
@@ -235,7 +415,7 @@ Yes, proceed with generation.
 
 ---
 
-## 4. Advanced Usage
+## 5. Advanced Usage
 
 ### For E-Commerce Applications
 
@@ -321,7 +501,7 @@ I need extensive validation testing for:
 
 ---
 
-## 5. Modification Requests
+## 6. Modification Requests
 
 ### After Initial Analysis
 
@@ -352,7 +532,7 @@ Other files look perfect.
 
 ---
 
-## 6. Troubleshooting Prompts
+## 7. Troubleshooting Prompts
 
 ### If Agent Doesn't Understand
 
@@ -378,7 +558,7 @@ Use the template shown in the "Output Format - Manual Test Cases" section.
 
 ---
 
-## 7. Tips for Best Results
+## 8. Tips for Best Results
 
 ### ✅ DO:
 - Provide clear, high-resolution screenshots
@@ -395,7 +575,7 @@ Use the template shown in the "Output Format - Manual Test Cases" section.
 
 ---
 
-## 8. Quick Copy-Paste Templates
+## 9. Quick Copy-Paste Templates
 
 ### Template 1: New Project Start
 
@@ -443,7 +623,7 @@ Please:
 
 ---
 
-## 9. Reference
+## 10. Reference
 
 | File | Purpose |
 |------|---------|
@@ -451,12 +631,16 @@ Please:
 | `sub-agents/testcase-generator-agent/prompt-template.md` | More example prompts |
 | `sub-agents/automation-generator-agent/system-prompt.md` | Automation Generator behavior |
 | `sub-agents/automation-generator-agent/prompt-template.md` | More example prompts |
+| `sub-agents/migration-agent/system-prompt.md` | Migration Agent behavior |
+| `sub-agents/migration-agent/prompt-template.md` | More migration prompts |
+| `sub-agents/migration-agent/AGENT.md` | Migration Agent full documentation |
+| `guardrails/migration-guardrail.md` | Migration patterns & mappings reference |
 | `manual-tests/EXAMPLE_SampleApp_Manual_Test_Cases.txt` | Example output format |
 | `playwright-projects/EXAMPLE_SampleApp/` | Example generated project |
 
 ---
 
-## 10. Getting Help
+## 11. Getting Help
 
 If something doesn't work, say:
 

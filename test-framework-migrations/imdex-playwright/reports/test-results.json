@@ -1,7 +1,7 @@
 {
   "config": {
-    "configFile": "D:\\Work\\Anthropic-Migration\\imdex-playwright\\playwright.config.ts",
-    "rootDir": "D:/Work/Anthropic-Migration/imdex-playwright/tests",
+    "configFile": "D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\playwright.config.ts",
+    "rootDir": "D:/Work/ai-test-agents/test-framework-migrations/imdex-playwright/tests",
     "forbidOnly": false,
     "fullyParallel": true,
     "globalSetup": null,
@@ -46,7 +46,7 @@
     "quiet": false,
     "projects": [
       {
-        "outputDir": "D:/Work/Anthropic-Migration/imdex-playwright/reports/test-artifacts",
+        "outputDir": "D:/Work/ai-test-agents/test-framework-migrations/imdex-playwright/reports/test-artifacts",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
@@ -54,7 +54,7 @@
         },
         "id": "desktop-chrome",
         "name": "desktop-chrome",
-        "testDir": "D:/Work/Anthropic-Migration/imdex-playwright/tests",
+        "testDir": "D:/Work/ai-test-agents/test-framework-migrations/imdex-playwright/tests",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -62,7 +62,7 @@
         "timeout": 60000
       },
       {
-        "outputDir": "D:/Work/Anthropic-Migration/imdex-playwright/reports/test-artifacts",
+        "outputDir": "D:/Work/ai-test-agents/test-framework-migrations/imdex-playwright/reports/test-artifacts",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
@@ -70,7 +70,7 @@
         },
         "id": "mobile-pixel7",
         "name": "mobile-pixel7",
-        "testDir": "D:/Work/Anthropic-Migration/imdex-playwright/tests",
+        "testDir": "D:/Work/ai-test-agents/test-framework-migrations/imdex-playwright/tests",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -125,7 +125,7 @@
                           "workerIndex": 0,
                           "parallelIndex": 0,
                           "status": "passed",
-                          "duration": 41614,
+                          "duration": 31117,
                           "errors": [],
                           "stdout": [
                             {
@@ -134,7 +134,7 @@
                           ],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2025-12-17T12:31:38.011Z",
+                          "startTime": "2026-01-09T12:55:33.673Z",
                           "annotations": [],
                           "attachments": []
                         }
@@ -143,6 +143,46 @@
                     }
                   ],
                   "id": "20a0d3ecefaea32a6f10-cfb2525cc42b4e6a5100",
+                  "file": "imdex.spec.ts",
+                  "line": 40,
+                  "column": 9
+                },
+                {
+                  "title": "TC_SEARCH_001: Validate Search and Filter Functionality",
+                  "ok": true,
+                  "tags": [
+                    "smoke"
+                  ],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-pixel7",
+                      "projectName": "mobile-pixel7",
+                      "results": [
+                        {
+                          "workerIndex": 4,
+                          "parallelIndex": 1,
+                          "status": "passed",
+                          "duration": 23485,
+                          "errors": [],
+                          "stdout": [
+                            {
+                              "text": "Cookie accepted using: .cookie-consent .action-accept a\n"
+                            }
+                          ],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-09T12:56:46.401Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "20a0d3ecefaea32a6f10-a41dab1db59363469358",
                   "file": "imdex.spec.ts",
                   "line": 40,
                   "column": 9
@@ -174,7 +214,7 @@
                           "workerIndex": 1,
                           "parallelIndex": 1,
                           "status": "passed",
-                          "duration": 29357,
+                          "duration": 34427,
                           "errors": [],
                           "stdout": [
                             {
@@ -183,7 +223,7 @@
                           ],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2025-12-17T12:31:38.316Z",
+                          "startTime": "2026-01-09T12:55:33.240Z",
                           "annotations": [],
                           "attachments": []
                         }
@@ -215,7 +255,7 @@
                           "workerIndex": 2,
                           "parallelIndex": 2,
                           "status": "passed",
-                          "duration": 40888,
+                          "duration": 30984,
                           "errors": [],
                           "stdout": [
                             {
@@ -224,7 +264,7 @@
                           ],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2025-12-17T12:31:38.087Z",
+                          "startTime": "2026-01-09T12:55:33.414Z",
                           "annotations": [],
                           "attachments": []
                         }
@@ -233,6 +273,88 @@
                     }
                   ],
                   "id": "20a0d3ecefaea32a6f10-488034ce4ae974df7110",
+                  "file": "imdex.spec.ts",
+                  "line": 86,
+                  "column": 11
+                },
+                {
+                  "title": "TC_SEARCH_002: Search for mining keyword with Solution filter (Data Driven)",
+                  "ok": true,
+                  "tags": [
+                    "smoke",
+                    "dataDriven"
+                  ],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-pixel7",
+                      "projectName": "mobile-pixel7",
+                      "results": [
+                        {
+                          "workerIndex": 5,
+                          "parallelIndex": 3,
+                          "status": "passed",
+                          "duration": 23607,
+                          "errors": [],
+                          "stdout": [
+                            {
+                              "text": "Cookie accepted using: .cookie-consent .action-accept a\n"
+                            }
+                          ],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-09T12:57:01.708Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "20a0d3ecefaea32a6f10-6aace044a76be48301df",
+                  "file": "imdex.spec.ts",
+                  "line": 86,
+                  "column": 11
+                },
+                {
+                  "title": "TC_SEARCH_003: Search for fluids optimisation keyword with Solution filter (Data Driven)",
+                  "ok": true,
+                  "tags": [
+                    "smoke",
+                    "dataDriven"
+                  ],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-pixel7",
+                      "projectName": "mobile-pixel7",
+                      "results": [
+                        {
+                          "workerIndex": 6,
+                          "parallelIndex": 2,
+                          "status": "passed",
+                          "duration": 23615,
+                          "errors": [],
+                          "stdout": [
+                            {
+                              "text": "Cookie accepted using: .cookie-consent .action-accept a\n"
+                            }
+                          ],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-09T12:57:17.433Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "20a0d3ecefaea32a6f10-dceb0b94a6526f701962",
                   "file": "imdex.spec.ts",
                   "line": 86,
                   "column": 11
@@ -264,7 +386,7 @@
                           "workerIndex": 3,
                           "parallelIndex": 3,
                           "status": "passed",
-                          "duration": 30406,
+                          "duration": 31418,
                           "errors": [],
                           "stdout": [
                             {
@@ -273,7 +395,7 @@
                           ],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2025-12-17T12:31:38.437Z",
+                          "startTime": "2026-01-09T12:55:33.860Z",
                           "annotations": [],
                           "attachments": []
                         }
@@ -302,10 +424,10 @@
                       "projectName": "desktop-chrome",
                       "results": [
                         {
-                          "workerIndex": 1,
-                          "parallelIndex": 1,
+                          "workerIndex": 2,
+                          "parallelIndex": 2,
                           "status": "passed",
-                          "duration": 22102,
+                          "duration": 22613,
                           "errors": [],
                           "stdout": [
                             {
@@ -314,7 +436,7 @@
                           ],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2025-12-17T12:32:08.506Z",
+                          "startTime": "2026-01-09T12:56:05.907Z",
                           "annotations": [],
                           "attachments": []
                         }
@@ -323,6 +445,88 @@
                     }
                   ],
                   "id": "20a0d3ecefaea32a6f10-752210db72d5d3289012",
+                  "file": "imdex.spec.ts",
+                  "line": 127,
+                  "column": 11
+                },
+                {
+                  "title": "TC_SEARCH_004: Search for mining keyword with Content filter (Data Provider)",
+                  "ok": true,
+                  "tags": [
+                    "smoke",
+                    "dataProvider"
+                  ],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-pixel7",
+                      "projectName": "mobile-pixel7",
+                      "results": [
+                        {
+                          "workerIndex": 4,
+                          "parallelIndex": 1,
+                          "status": "passed",
+                          "duration": 19480,
+                          "errors": [],
+                          "stdout": [
+                            {
+                              "text": "Cookie accepted using: .cookie-consent .action-accept a\n"
+                            }
+                          ],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-09T12:57:11.576Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "20a0d3ecefaea32a6f10-51a13072e8c2e6ec04e9",
+                  "file": "imdex.spec.ts",
+                  "line": 127,
+                  "column": 11
+                },
+                {
+                  "title": "TC_SEARCH_005: Search for fluids optimisation keyword with Content filter (Data Provider)",
+                  "ok": true,
+                  "tags": [
+                    "smoke",
+                    "dataProvider"
+                  ],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-pixel7",
+                      "projectName": "mobile-pixel7",
+                      "results": [
+                        {
+                          "workerIndex": 7,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 27037,
+                          "errors": [],
+                          "stdout": [
+                            {
+                              "text": "Cookie accepted using: .cookie-consent .action-accept a\n"
+                            }
+                          ],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-09T12:57:18.030Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "20a0d3ecefaea32a6f10-eddc891d1999b2ffb33f",
                   "file": "imdex.spec.ts",
                   "line": 127,
                   "column": 11
@@ -350,10 +554,10 @@
                       "projectName": "desktop-chrome",
                       "results": [
                         {
-                          "workerIndex": 3,
-                          "parallelIndex": 3,
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
                           "status": "passed",
-                          "duration": 22551,
+                          "duration": 24358,
                           "errors": [],
                           "stdout": [
                             {
@@ -362,7 +566,7 @@
                           ],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2025-12-17T12:32:09.690Z",
+                          "startTime": "2026-01-09T12:56:06.282Z",
                           "annotations": [],
                           "attachments": []
                         }
@@ -390,10 +594,10 @@
                       "projectName": "desktop-chrome",
                       "results": [
                         {
-                          "workerIndex": 2,
-                          "parallelIndex": 2,
+                          "workerIndex": 3,
+                          "parallelIndex": 3,
                           "status": "passed",
-                          "duration": 20153,
+                          "duration": 21753,
                           "errors": [],
                           "stdout": [
                             {
@@ -402,7 +606,7 @@
                           ],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2025-12-17T12:32:19.801Z",
+                          "startTime": "2026-01-09T12:56:06.894Z",
                           "annotations": [],
                           "attachments": []
                         }
@@ -411,6 +615,86 @@
                     }
                   ],
                   "id": "20a0d3ecefaea32a6f10-e860b285ea5f119d14dc",
+                  "file": "imdex.spec.ts",
+                  "line": 161,
+                  "column": 11
+                },
+                {
+                  "title": "Search for keyword: mining (keyword-1)",
+                  "ok": true,
+                  "tags": [
+                    "smoke"
+                  ],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-pixel7",
+                      "projectName": "mobile-pixel7",
+                      "results": [
+                        {
+                          "workerIndex": 5,
+                          "parallelIndex": 3,
+                          "status": "passed",
+                          "duration": 20631,
+                          "errors": [],
+                          "stdout": [
+                            {
+                              "text": "Cookie accepted using: .cookie-consent .action-accept a\n"
+                            }
+                          ],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-09T12:57:27.725Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "20a0d3ecefaea32a6f10-a47ca6ecca75e8887321",
+                  "file": "imdex.spec.ts",
+                  "line": 161,
+                  "column": 11
+                },
+                {
+                  "title": "Search for keyword: fluids optimisation (keyword-2)",
+                  "ok": true,
+                  "tags": [
+                    "smoke"
+                  ],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile-pixel7",
+                      "projectName": "mobile-pixel7",
+                      "results": [
+                        {
+                          "workerIndex": 4,
+                          "parallelIndex": 1,
+                          "status": "passed",
+                          "duration": 19155,
+                          "errors": [],
+                          "stdout": [
+                            {
+                              "text": "Cookie accepted using: .cookie-consent .action-accept a\n"
+                            }
+                          ],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-09T12:57:31.110Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "20a0d3ecefaea32a6f10-80c7b05f38d84d3f2713",
                   "file": "imdex.spec.ts",
                   "line": 161,
                   "column": 11
@@ -437,7 +721,7 @@
                       "type": "skip",
                       "description": "Skip non-mobile projects",
                       "location": {
-                        "file": "D:\\Work\\Anthropic-Migration\\imdex-playwright\\tests\\imdex.spec.ts",
+                        "file": "D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\tests\\imdex.spec.ts",
                         "line": 198,
                         "column": 10
                       }
@@ -448,21 +732,21 @@
                   "projectName": "desktop-chrome",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "skipped",
-                      "duration": 867,
+                      "duration": 1552,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-12-17T12:32:20.414Z",
+                      "startTime": "2026-01-09T12:56:09.425Z",
                       "annotations": [
                         {
                           "type": "skip",
                           "description": "Skip non-mobile projects",
                           "location": {
-                            "file": "D:\\Work\\Anthropic-Migration\\imdex-playwright\\tests\\imdex.spec.ts",
+                            "file": "D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\tests\\imdex.spec.ts",
                             "line": 198,
                             "column": 10
                           }
@@ -478,6 +762,616 @@
               "file": "imdex.spec.ts",
               "line": 204,
               "column": 7
+            },
+            {
+              "title": "Mobile: Search functionality on Pixel 7 viewport",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-pixel7",
+                  "projectName": "mobile-pixel7",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 21696,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Cookie accepted using: .cookie-consent .action-accept a\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-09T12:57:42.536Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "20a0d3ecefaea32a6f10-a7a163d59c1d95e49caa",
+              "file": "imdex.spec.ts",
+              "line": 204,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "self-healing.spec.ts",
+      "file": "self-healing.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Self-Healing Demonstration",
+          "file": "self-healing.spec.ts",
+          "line": 16,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Demonstrate self-healing with home page elements",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop-chrome",
+                  "projectName": "desktop-chrome",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 18932,
+                      "error": {
+                        "message": "Error: [SelfHealing] Could not locate element: Search text input field where users type their search query",
+                        "stack": "Error: [SelfHealing] Could not locate element: Search text input field where users type their search query\n    at SelfHealingLocator.locate (D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\utils\\SelfHealingLocator.ts:137:11)\n    at D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\tests\\self-healing.spec.ts:56:25",
+                        "location": {
+                          "file": "D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\utils\\SelfHealingLocator.ts",
+                          "column": 11,
+                          "line": 137
+                        },
+                        "snippet": "\u001b[90m   at \u001b[39m..\\utils\\SelfHealingLocator.ts:137\n\n\u001b[0m \u001b[90m 135 |\u001b[39m     \u001b[90m// All strategies failed\u001b[39m\n \u001b[90m 136 |\u001b[39m     \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mrecordHealing(description\u001b[33m,\u001b[39m primary\u001b[33m,\u001b[39m \u001b[36mnull\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'failed'\u001b[39m\u001b[33m,\u001b[39m originalLocator)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 137 |\u001b[39m     \u001b[36mthrow\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m`[SelfHealing] Could not locate element: ${description}`\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 138 |\u001b[39m   }\n \u001b[90m 139 |\u001b[39m\n \u001b[90m 140 |\u001b[39m   \u001b[90m/**\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\utils\\SelfHealingLocator.ts",
+                            "column": 11,
+                            "line": 137
+                          },
+                          "message": "Error: [SelfHealing] Could not locate element: Search text input field where users type their search query\n\n\u001b[90m   at \u001b[39m..\\utils\\SelfHealingLocator.ts:137\n\n\u001b[0m \u001b[90m 135 |\u001b[39m     \u001b[90m// All strategies failed\u001b[39m\n \u001b[90m 136 |\u001b[39m     \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mrecordHealing(description\u001b[33m,\u001b[39m primary\u001b[33m,\u001b[39m \u001b[36mnull\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'failed'\u001b[39m\u001b[33m,\u001b[39m originalLocator)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 137 |\u001b[39m     \u001b[36mthrow\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m`[SelfHealing] Could not locate element: ${description}`\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 138 |\u001b[39m   }\n \u001b[90m 139 |\u001b[39m\n \u001b[90m 140 |\u001b[39m   \u001b[90m/**\u001b[39m\u001b[0m\n\u001b[2m    at SelfHealingLocator.locate (D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\utils\\SelfHealingLocator.ts:137:11)\u001b[22m\n\u001b[2m    at D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\tests\\self-healing.spec.ts:56:25\u001b[22m"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "Cookie button found and clicked\n"
+                        },
+                        {
+                          "text": "[SelfHealing] Primary selector failed: #Search-Menu input[type=\"search\"]\n"
+                        },
+                        {
+                          "text": "[SelfHealing] Original Selenium locator: id=searchBox\n"
+                        },
+                        {
+                          "text": "======================================================================\nSELF-HEALING LOCATOR REPORT\n======================================================================\n\nMigrated from: Healenium (EPAM) self-healing engine\n\nSTATISTICS:\n----------------------------------------------------------------------\nTotal Locate Attempts: 3\nPrimary Success: 2\nHealed (Cache): 0\nHealed (Fallback): 0\nHealed (AI): 0\nFailed: 1\n\nHealing Success Rate: 0.0%\n\n\nFAILED ELEMENTS:\n----------------------------------------------------------------------\nElement: Search text input field where users type their search query\n  Selector: #Search-Menu input[type=\"search\"]\n  Original: id=searchBox\n----------------------------------------------------------------------\n\n======================================================================\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-09T12:56:11.872Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\reports\\test-artifacts\\self-healing-Self-Healing--176a6-ing-with-home-page-elements-desktop-chrome\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\reports\\test-artifacts\\self-healing-Self-Healing--176a6-ing-with-home-page-elements-desktop-chrome\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\utils\\SelfHealingLocator.ts",
+                        "column": 11,
+                        "line": 137
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "8d7eec67450fac9c0d7d-a8a2fd1d701176d4fb2c",
+              "file": "self-healing.spec.ts",
+              "line": 28,
+              "column": 7
+            },
+            {
+              "title": "Demonstrate fallback selector healing",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop-chrome",
+                  "projectName": "desktop-chrome",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 42233,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "[SelfHealing] Primary selector failed: div.search-results__header span\n"
+                        },
+                        {
+                          "text": "[SelfHealing] Original Selenium locator: xpath=//div[@class=\"search-results__header\"]/span\n"
+                        },
+                        {
+                          "text": "Results heading not found (expected on search page)\n"
+                        },
+                        {
+                          "text": "======================================================================\nSELF-HEALING LOCATOR REPORT\n======================================================================\n\nMigrated from: Healenium (EPAM) self-healing engine\n\nSTATISTICS:\n----------------------------------------------------------------------\nTotal Locate Attempts: 1\nPrimary Success: 0\nHealed (Cache): 0\nHealed (Fallback): 0\nHealed (AI): 0\nFailed: 1\n\nHealing Success Rate: 0.0%\n\n\nFAILED ELEMENTS:\n----------------------------------------------------------------------\nElement: Search results header showing the count of results\n  Selector: div.search-results__header span\n  Original: xpath=//div[@class=\"search-results__header\"]/span\n----------------------------------------------------------------------\n\n======================================================================\n"
+                        },
+                        {
+                          "text": "======================================================================\nSELF-HEALING LOCATOR REPORT\n======================================================================\n\nMigrated from: Healenium (EPAM) self-healing engine\n\nSTATISTICS:\n----------------------------------------------------------------------\nTotal Locate Attempts: 1\nPrimary Success: 0\nHealed (Cache): 0\nHealed (Fallback): 0\nHealed (AI): 0\nFailed: 1\n\nHealing Success Rate: 0.0%\n\n\nFAILED ELEMENTS:\n----------------------------------------------------------------------\nElement: Search results header showing the count of results\n  Selector: div.search-results__header span\n  Original: xpath=//div[@class=\"search-results__header\"]/span\n----------------------------------------------------------------------\n\n======================================================================\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-09T12:56:29.034Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "8d7eec67450fac9c0d7d-d9966e7f91ef269c2cbc",
+              "file": "self-healing.spec.ts",
+              "line": 70,
+              "column": 7
+            },
+            {
+              "title": "Healing cache persistence demonstration",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop-chrome",
+                  "projectName": "desktop-chrome",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 15936,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "[SelfHealing] Primary selector failed: #Search-Menu input[type=\"search\"]\n"
+                        },
+                        {
+                          "text": "[SelfHealing] Original Selenium locator: id=searchBox\n"
+                        },
+                        {
+                          "text": "Exported cache: {}\n"
+                        },
+                        {
+                          "text": "Stats after cache usage: {\n  total: \u001b[33m3\u001b[39m,\n  healed: \u001b[33m0\u001b[39m,\n  failed: \u001b[33m1\u001b[39m,\n  byMethod: { primary: \u001b[33m2\u001b[39m, cache: \u001b[33m0\u001b[39m, fallback: \u001b[33m0\u001b[39m, ai: \u001b[33m0\u001b[39m, failed: \u001b[33m1\u001b[39m }\n}\n"
+                        },
+                        {
+                          "text": "======================================================================\nSELF-HEALING LOCATOR REPORT\n======================================================================\n\nMigrated from: Healenium (EPAM) self-healing engine\n\nSTATISTICS:\n----------------------------------------------------------------------\nTotal Locate Attempts: 3\nPrimary Success: 2\nHealed (Cache): 0\nHealed (Fallback): 0\nHealed (AI): 0\nFailed: 1\n\nHealing Success Rate: 0.0%\n\n\nFAILED ELEMENTS:\n----------------------------------------------------------------------\nElement: Search text input field where users type their search query\n  Selector: #Search-Menu input[type=\"search\"]\n  Original: id=searchBox\n----------------------------------------------------------------------\n\n======================================================================\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-09T12:56:29.089Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "8d7eec67450fac9c0d7d-ea70463005aedf07cb9f",
+              "file": "self-healing.spec.ts",
+              "line": 93,
+              "column": 7
+            },
+            {
+              "title": "Demonstrate self-healing with home page elements",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-pixel7",
+                  "projectName": "mobile-pixel7",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 25009,
+                      "error": {
+                        "message": "Error: [SelfHealing] Could not locate element: Search icon/button that opens the search input field",
+                        "stack": "Error: [SelfHealing] Could not locate element: Search icon/button that opens the search input field\n    at SelfHealingLocator.locate (D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\utils\\SelfHealingLocator.ts:137:11)\n    at D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\tests\\self-healing.spec.ts:48:26",
+                        "location": {
+                          "file": "D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\utils\\SelfHealingLocator.ts",
+                          "column": 11,
+                          "line": 137
+                        },
+                        "snippet": "\u001b[90m   at \u001b[39m..\\utils\\SelfHealingLocator.ts:137\n\n\u001b[0m \u001b[90m 135 |\u001b[39m     \u001b[90m// All strategies failed\u001b[39m\n \u001b[90m 136 |\u001b[39m     \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mrecordHealing(description\u001b[33m,\u001b[39m primary\u001b[33m,\u001b[39m \u001b[36mnull\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'failed'\u001b[39m\u001b[33m,\u001b[39m originalLocator)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 137 |\u001b[39m     \u001b[36mthrow\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m`[SelfHealing] Could not locate element: ${description}`\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 138 |\u001b[39m   }\n \u001b[90m 139 |\u001b[39m\n \u001b[90m 140 |\u001b[39m   \u001b[90m/**\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\utils\\SelfHealingLocator.ts",
+                            "column": 11,
+                            "line": 137
+                          },
+                          "message": "Error: [SelfHealing] Could not locate element: Search icon/button that opens the search input field\n\n\u001b[90m   at \u001b[39m..\\utils\\SelfHealingLocator.ts:137\n\n\u001b[0m \u001b[90m 135 |\u001b[39m     \u001b[90m// All strategies failed\u001b[39m\n \u001b[90m 136 |\u001b[39m     \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mrecordHealing(description\u001b[33m,\u001b[39m primary\u001b[33m,\u001b[39m \u001b[36mnull\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'failed'\u001b[39m\u001b[33m,\u001b[39m originalLocator)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 137 |\u001b[39m     \u001b[36mthrow\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m`[SelfHealing] Could not locate element: ${description}`\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 138 |\u001b[39m   }\n \u001b[90m 139 |\u001b[39m\n \u001b[90m 140 |\u001b[39m   \u001b[90m/**\u001b[39m\u001b[0m\n\u001b[2m    at SelfHealingLocator.locate (D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\utils\\SelfHealingLocator.ts:137:11)\u001b[22m\n\u001b[2m    at D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\tests\\self-healing.spec.ts:48:26\u001b[22m"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "Cookie button found and clicked\n"
+                        },
+                        {
+                          "text": "[SelfHealing] Primary selector failed: #search-input\n"
+                        },
+                        {
+                          "text": "[SelfHealing] Original Selenium locator: xpath=//*[@id=\"search-input\"]/span\n"
+                        },
+                        {
+                          "text": "======================================================================\nSELF-HEALING LOCATOR REPORT\n======================================================================\n\nMigrated from: Healenium (EPAM) self-healing engine\n\nSTATISTICS:\n----------------------------------------------------------------------\nTotal Locate Attempts: 2\nPrimary Success: 1\nHealed (Cache): 0\nHealed (Fallback): 0\nHealed (AI): 0\nFailed: 1\n\nHealing Success Rate: 0.0%\n\n\nFAILED ELEMENTS:\n----------------------------------------------------------------------\nElement: Search icon/button that opens the search input field\n  Selector: #search-input\n  Original: xpath=//*[@id=\"search-input\"]/span\n----------------------------------------------------------------------\n\n======================================================================\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-09T12:57:47.595Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\reports\\test-artifacts\\self-healing-Self-Healing--176a6-ing-with-home-page-elements-mobile-pixel7\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\reports\\test-artifacts\\self-healing-Self-Healing--176a6-ing-with-home-page-elements-mobile-pixel7\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\utils\\SelfHealingLocator.ts",
+                        "column": 11,
+                        "line": 137
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "8d7eec67450fac9c0d7d-a4c01c4b5c29e301b599",
+              "file": "self-healing.spec.ts",
+              "line": 28,
+              "column": 7
+            },
+            {
+              "title": "Demonstrate fallback selector healing",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-pixel7",
+                  "projectName": "mobile-pixel7",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 43183,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "[SelfHealing] Primary selector failed: div.search-results__header span\n"
+                        },
+                        {
+                          "text": "[SelfHealing] Original Selenium locator: xpath=//div[@class=\"search-results__header\"]/span\n"
+                        },
+                        {
+                          "text": "Results heading not found (expected on search page)\n"
+                        },
+                        {
+                          "text": "======================================================================\nSELF-HEALING LOCATOR REPORT\n======================================================================\n\nMigrated from: Healenium (EPAM) self-healing engine\n\nSTATISTICS:\n----------------------------------------------------------------------\nTotal Locate Attempts: 1\nPrimary Success: 0\nHealed (Cache): 0\nHealed (Fallback): 0\nHealed (AI): 0\nFailed: 1\n\nHealing Success Rate: 0.0%\n\n\nFAILED ELEMENTS:\n----------------------------------------------------------------------\nElement: Search results header showing the count of results\n  Selector: div.search-results__header span\n  Original: xpath=//div[@class=\"search-results__header\"]/span\n----------------------------------------------------------------------\n\n======================================================================\n"
+                        },
+                        {
+                          "text": "======================================================================\nSELF-HEALING LOCATOR REPORT\n======================================================================\n\nMigrated from: Healenium (EPAM) self-healing engine\n\nSTATISTICS:\n----------------------------------------------------------------------\nTotal Locate Attempts: 1\nPrimary Success: 0\nHealed (Cache): 0\nHealed (Fallback): 0\nHealed (AI): 0\nFailed: 1\n\nHealing Success Rate: 0.0%\n\n\nFAILED ELEMENTS:\n----------------------------------------------------------------------\nElement: Search results header showing the count of results\n  Selector: div.search-results__header span\n  Original: xpath=//div[@class=\"search-results__header\"]/span\n----------------------------------------------------------------------\n\n======================================================================\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-09T12:57:48.828Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "8d7eec67450fac9c0d7d-51b5d2da62dfa4c2b4f9",
+              "file": "self-healing.spec.ts",
+              "line": 70,
+              "column": 7
+            },
+            {
+              "title": "Healing cache persistence demonstration",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-pixel7",
+                  "projectName": "mobile-pixel7",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 24558,
+                      "error": {
+                        "message": "Error: [SelfHealing] Could not locate element: Search icon/button that opens the search input field",
+                        "stack": "Error: [SelfHealing] Could not locate element: Search icon/button that opens the search input field\n    at SelfHealingLocator.locate (D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\utils\\SelfHealingLocator.ts:137:11)\n    at D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\tests\\self-healing.spec.ts:118:26",
+                        "location": {
+                          "file": "D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\utils\\SelfHealingLocator.ts",
+                          "column": 11,
+                          "line": 137
+                        },
+                        "snippet": "\u001b[90m   at \u001b[39m..\\utils\\SelfHealingLocator.ts:137\n\n\u001b[0m \u001b[90m 135 |\u001b[39m     \u001b[90m// All strategies failed\u001b[39m\n \u001b[90m 136 |\u001b[39m     \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mrecordHealing(description\u001b[33m,\u001b[39m primary\u001b[33m,\u001b[39m \u001b[36mnull\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'failed'\u001b[39m\u001b[33m,\u001b[39m originalLocator)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 137 |\u001b[39m     \u001b[36mthrow\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m`[SelfHealing] Could not locate element: ${description}`\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 138 |\u001b[39m   }\n \u001b[90m 139 |\u001b[39m\n \u001b[90m 140 |\u001b[39m   \u001b[90m/**\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\utils\\SelfHealingLocator.ts",
+                            "column": 11,
+                            "line": 137
+                          },
+                          "message": "Error: [SelfHealing] Could not locate element: Search icon/button that opens the search input field\n\n\u001b[90m   at \u001b[39m..\\utils\\SelfHealingLocator.ts:137\n\n\u001b[0m \u001b[90m 135 |\u001b[39m     \u001b[90m// All strategies failed\u001b[39m\n \u001b[90m 136 |\u001b[39m     \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mrecordHealing(description\u001b[33m,\u001b[39m primary\u001b[33m,\u001b[39m \u001b[36mnull\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'failed'\u001b[39m\u001b[33m,\u001b[39m originalLocator)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 137 |\u001b[39m     \u001b[36mthrow\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m`[SelfHealing] Could not locate element: ${description}`\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 138 |\u001b[39m   }\n \u001b[90m 139 |\u001b[39m\n \u001b[90m 140 |\u001b[39m   \u001b[90m/**\u001b[39m\u001b[0m\n\u001b[2m    at SelfHealingLocator.locate (D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\utils\\SelfHealingLocator.ts:137:11)\u001b[22m\n\u001b[2m    at D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\tests\\self-healing.spec.ts:118:26\u001b[22m"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "[SelfHealing] Primary selector failed: #search-input\n"
+                        },
+                        {
+                          "text": "[SelfHealing] Original Selenium locator: xpath=//*[@id=\"search-input\"]/span\n"
+                        },
+                        {
+                          "text": "Exported cache: {}\n"
+                        },
+                        {
+                          "text": "[SelfHealing] Primary selector failed: #search-input\n"
+                        },
+                        {
+                          "text": "[SelfHealing] Original Selenium locator: xpath=//*[@id=\"search-input\"]/span\n"
+                        },
+                        {
+                          "text": "======================================================================\nSELF-HEALING LOCATOR REPORT\n======================================================================\n\nMigrated from: Healenium (EPAM) self-healing engine\n\nSTATISTICS:\n----------------------------------------------------------------------\nTotal Locate Attempts: 2\nPrimary Success: 0\nHealed (Cache): 0\nHealed (Fallback): 0\nHealed (AI): 0\nFailed: 2\n\nHealing Success Rate: 0.0%\n\n\nFAILED ELEMENTS:\n----------------------------------------------------------------------\nElement: Search icon/button that opens the search input field\n  Selector: #search-input\n  Original: xpath=//*[@id=\"search-input\"]/span\n----------------------------------------------------------------------\nElement: Search icon/button that opens the search input field\n  Selector: #search-input\n  Original: xpath=//*[@id=\"search-input\"]/span\n----------------------------------------------------------------------\n\n======================================================================\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-09T12:57:50.913Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\reports\\test-artifacts\\self-healing-Self-Healing--75049-e-persistence-demonstration-mobile-pixel7\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\reports\\test-artifacts\\self-healing-Self-Healing--75049-e-persistence-demonstration-mobile-pixel7\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\utils\\SelfHealingLocator.ts",
+                        "column": 11,
+                        "line": 137
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "8d7eec67450fac9c0d7d-e3523238820e855c1b7e",
+              "file": "self-healing.spec.ts",
+              "line": 93,
+              "column": 7
+            }
+          ]
+        },
+        {
+          "title": "Self-Healing E2E Integration",
+          "file": "self-healing.spec.ts",
+          "line": 134,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Complete search flow with self-healing",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "desktop-chrome",
+                  "projectName": "desktop-chrome",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 39914,
+                      "error": {
+                        "message": "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#search-input')\u001b[22m\n\u001b[2m    - locator resolved to <button type=\"button\" id=\"search-input\" aria-expanded=\"false\" data-target=\"Search-Menu\" class=\"header__search nav-item__level-1 mega-menu-toggle\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <div tabindex=\"-1\" role=\"dialog\" aria-modal=\"true\" id=\"CookieConsent_8befed7d\" class=\"imdex-modalsection modal cookie-consent modal-auto-activate show\">…</div> from <main class=\"content \" id=\"page-content\">…</main> subtree intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <div tabindex=\"-1\" role=\"dialog\" aria-modal=\"true\" id=\"CookieConsent_8befed7d\" class=\"imdex-modalsection modal cookie-consent modal-auto-activate show\">…</div> from <main class=\"content \" id=\"page-content\">…</main> subtree intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    43 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is visible, enabled and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - <div tabindex=\"-1\" role=\"dialog\" aria-modal=\"true\" id=\"CookieConsent_8befed7d\" class=\"imdex-modalsection modal cookie-consent modal-auto-activate show\">…</div> from <main class=\"content \" id=\"page-content\">…</main> subtree intercepts pointer events\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n",
+                        "stack": "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#search-input')\u001b[22m\n\u001b[2m    - locator resolved to <button type=\"button\" id=\"search-input\" aria-expanded=\"false\" data-target=\"Search-Menu\" class=\"header__search nav-item__level-1 mega-menu-toggle\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <div tabindex=\"-1\" role=\"dialog\" aria-modal=\"true\" id=\"CookieConsent_8befed7d\" class=\"imdex-modalsection modal cookie-consent modal-auto-activate show\">…</div> from <main class=\"content \" id=\"page-content\">…</main> subtree intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <div tabindex=\"-1\" role=\"dialog\" aria-modal=\"true\" id=\"CookieConsent_8befed7d\" class=\"imdex-modalsection modal cookie-consent modal-auto-activate show\">…</div> from <main class=\"content \" id=\"page-content\">…</main> subtree intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    43 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is visible, enabled and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - <div tabindex=\"-1\" role=\"dialog\" aria-modal=\"true\" id=\"CookieConsent_8befed7d\" class=\"imdex-modalsection modal cookie-consent modal-auto-activate show\">…</div> from <main class=\"content \" id=\"page-content\">…</main> subtree intercepts pointer events\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n    at D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\tests\\self-healing.spec.ts:156:21",
+                        "location": {
+                          "file": "D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\tests\\self-healing.spec.ts",
+                          "column": 21,
+                          "line": 156
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 154 |\u001b[39m       timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m\n \u001b[90m 155 |\u001b[39m     })\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 156 |\u001b[39m     \u001b[36mawait\u001b[39m searchBtn\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 157 |\u001b[39m\n \u001b[90m 158 |\u001b[39m     \u001b[90m// Step 3: Enter search term (with healing)\u001b[39m\n \u001b[90m 159 |\u001b[39m     \u001b[36mconst\u001b[39m searchInput \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m healer\u001b[33m.\u001b[39mlocate(\u001b[33mHOME_ELEMENTS\u001b[39m\u001b[33m.\u001b[39msearchInputField\u001b[33m,\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\tests\\self-healing.spec.ts",
+                            "column": 21,
+                            "line": 156
+                          },
+                          "message": "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#search-input')\u001b[22m\n\u001b[2m    - locator resolved to <button type=\"button\" id=\"search-input\" aria-expanded=\"false\" data-target=\"Search-Menu\" class=\"header__search nav-item__level-1 mega-menu-toggle\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <div tabindex=\"-1\" role=\"dialog\" aria-modal=\"true\" id=\"CookieConsent_8befed7d\" class=\"imdex-modalsection modal cookie-consent modal-auto-activate show\">…</div> from <main class=\"content \" id=\"page-content\">…</main> subtree intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <div tabindex=\"-1\" role=\"dialog\" aria-modal=\"true\" id=\"CookieConsent_8befed7d\" class=\"imdex-modalsection modal cookie-consent modal-auto-activate show\">…</div> from <main class=\"content \" id=\"page-content\">…</main> subtree intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    43 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is visible, enabled and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - <div tabindex=\"-1\" role=\"dialog\" aria-modal=\"true\" id=\"CookieConsent_8befed7d\" class=\"imdex-modalsection modal cookie-consent modal-auto-activate show\">…</div> from <main class=\"content \" id=\"page-content\">…</main> subtree intercepts pointer events\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n\n\u001b[0m \u001b[90m 154 |\u001b[39m       timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m\n \u001b[90m 155 |\u001b[39m     })\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 156 |\u001b[39m     \u001b[36mawait\u001b[39m searchBtn\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 157 |\u001b[39m\n \u001b[90m 158 |\u001b[39m     \u001b[90m// Step 3: Enter search term (with healing)\u001b[39m\n \u001b[90m 159 |\u001b[39m     \u001b[36mconst\u001b[39m searchInput \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m healer\u001b[33m.\u001b[39mlocate(\u001b[33mHOME_ELEMENTS\u001b[39m\u001b[33m.\u001b[39msearchInputField\u001b[33m,\u001b[39m {\u001b[0m\n\u001b[2m    at D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\tests\\self-healing.spec.ts:156:21\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-09T12:56:31.517Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\reports\\test-artifacts\\self-healing-Self-Healing--3ae55-arch-flow-with-self-healing-desktop-chrome\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\reports\\test-artifacts\\self-healing-Self-Healing--3ae55-arch-flow-with-self-healing-desktop-chrome\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\tests\\self-healing.spec.ts",
+                        "column": 21,
+                        "line": 156
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "8d7eec67450fac9c0d7d-b37d01238950c664774b",
+              "file": "self-healing.spec.ts",
+              "line": 135,
+              "column": 7
+            },
+            {
+              "title": "Complete search flow with self-healing",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-pixel7",
+                  "projectName": "mobile-pixel7",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 2,
+                      "status": "failed",
+                      "duration": 21882,
+                      "error": {
+                        "message": "Error: [SelfHealing] Could not locate element: Search icon/button that opens the search input field",
+                        "stack": "Error: [SelfHealing] Could not locate element: Search icon/button that opens the search input field\n    at SelfHealingLocator.locate (D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\utils\\SelfHealingLocator.ts:137:11)\n    at D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\tests\\self-healing.spec.ts:153:23",
+                        "location": {
+                          "file": "D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\utils\\SelfHealingLocator.ts",
+                          "column": 11,
+                          "line": 137
+                        },
+                        "snippet": "\u001b[90m   at \u001b[39m..\\utils\\SelfHealingLocator.ts:137\n\n\u001b[0m \u001b[90m 135 |\u001b[39m     \u001b[90m// All strategies failed\u001b[39m\n \u001b[90m 136 |\u001b[39m     \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mrecordHealing(description\u001b[33m,\u001b[39m primary\u001b[33m,\u001b[39m \u001b[36mnull\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'failed'\u001b[39m\u001b[33m,\u001b[39m originalLocator)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 137 |\u001b[39m     \u001b[36mthrow\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m`[SelfHealing] Could not locate element: ${description}`\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 138 |\u001b[39m   }\n \u001b[90m 139 |\u001b[39m\n \u001b[90m 140 |\u001b[39m   \u001b[90m/**\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\utils\\SelfHealingLocator.ts",
+                            "column": 11,
+                            "line": 137
+                          },
+                          "message": "Error: [SelfHealing] Could not locate element: Search icon/button that opens the search input field\n\n\u001b[90m   at \u001b[39m..\\utils\\SelfHealingLocator.ts:137\n\n\u001b[0m \u001b[90m 135 |\u001b[39m     \u001b[90m// All strategies failed\u001b[39m\n \u001b[90m 136 |\u001b[39m     \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mrecordHealing(description\u001b[33m,\u001b[39m primary\u001b[33m,\u001b[39m \u001b[36mnull\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'failed'\u001b[39m\u001b[33m,\u001b[39m originalLocator)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 137 |\u001b[39m     \u001b[36mthrow\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m`[SelfHealing] Could not locate element: ${description}`\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 138 |\u001b[39m   }\n \u001b[90m 139 |\u001b[39m\n \u001b[90m 140 |\u001b[39m   \u001b[90m/**\u001b[39m\u001b[0m\n\u001b[2m    at SelfHealingLocator.locate (D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\utils\\SelfHealingLocator.ts:137:11)\u001b[22m\n\u001b[2m    at D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\tests\\self-healing.spec.ts:153:23\u001b[22m"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "[SelfHealing] Primary selector failed: #search-input\n"
+                        },
+                        {
+                          "text": "[SelfHealing] Original Selenium locator: xpath=//*[@id=\"search-input\"]/span\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-09T12:58:08.677Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\reports\\test-artifacts\\self-healing-Self-Healing--3ae55-arch-flow-with-self-healing-mobile-pixel7\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\reports\\test-artifacts\\self-healing-Self-Healing--3ae55-arch-flow-with-self-healing-mobile-pixel7\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\Work\\ai-test-agents\\test-framework-migrations\\imdex-playwright\\utils\\SelfHealingLocator.ts",
+                        "column": 11,
+                        "line": 137
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "8d7eec67450fac9c0d7d-6d77e9faed2ef4cbbc02",
+              "file": "self-healing.spec.ts",
+              "line": 135,
+              "column": 7
             }
           ]
         }
@@ -486,11 +1380,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-12-17T12:31:34.524Z",
-    "duration": 65544.66,
-    "expected": 7,
+    "startTime": "2026-01-09T12:55:28.888Z",
+    "duration": 183291.165,
+    "expected": 18,
     "skipped": 1,
-    "unexpected": 0,
+    "unexpected": 5,
     "flaky": 0
   }
 }

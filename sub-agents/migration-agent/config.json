@@ -1,0 +1,311 @@
+{
+  "agent": {
+    "name": "Migration Agent",
+    "version": "1.0.0",
+    "description": "Migrates legacy automation frameworks (Selenium, Protractor, Cypress, etc.) to modern Playwright with AI-powered self-healing",
+    "type": "sub-agent"
+  },
+  "pipeline": {
+    "position": "standalone",
+    "input": {
+      "sources": ["existing-automation-project"],
+      "required": {
+        "source_project_path": "Path to existing automation project",
+        "source_framework": "Selenium|Protractor|Cypress|TestCafe|WebDriverIO",
+        "source_language": "Java|Python|JavaScript|TypeScript|C#",
+        "base_url": "Application URL"
+      },
+      "optional": {
+        "application_name": "Name of the application",
+        "output_directory": "Custom output path",
+        "priority_modules": "Modules to migrate first",
+        "enable_self_healing": true,
+        "preserve_comments": true
+      }
+    },
+    "output": {
+      "directory": "playwright-projects/{AppName}-migrated",
+      "structure": {
+        "pages": "Migrated Page Object Model classes",
+        "tests": "Migrated test specification files",
+        "data": "Migrated JSON test data files",
+        "utils": "Self-healing utilities",
+        "config": "Configuration files",
+        "migration-docs": "Migration documentation and reports"
+      }
+    }
+  },
+  "supported_frameworks": {
+    "selenium": {
+      "languages": ["java", "python", "javascript", "csharp"],
+      "patterns": {
+        "page_object": "@FindBy, PageFactory.initElements, WebElement",
+        "locators": "By.id, By.xpath, By.cssSelector, By.name, By.className",
+        "waits": "WebDriverWait, ExpectedConditions, implicitlyWait",
+        "assertions": "Assert.assertEquals, Assert.assertTrue, assertThat",
+        "test_frameworks": ["testng", "junit", "pytest", "mocha", "nunit"]
+      }
+    },
+    "protractor": {
+      "languages": ["javascript", "typescript"],
+      "patterns": {
+        "page_object": "element(), element.all()",
+        "locators": "by.css, by.id, by.model, by.binding, by.buttonText",
+        "waits": "browser.wait, ExpectedConditions",
+        "assertions": "expect() from Jasmine",
+        "angular_specific": "by.model, by.binding, by.repeater"
+      }
+    },
+    "cypress": {
+      "languages": ["javascript", "typescript"],
+      "patterns": {
+        "page_object": "Custom commands, class-based",
+        "locators": "cy.get(), cy.contains(), cy.find()",
+        "waits": "Built-in auto-wait",
+        "assertions": "should(), expect()",
+        "commands": "Custom Cypress commands"
+      }
+    },
+    "testcafe": {
+      "languages": ["javascript", "typescript"],
+      "patterns": {
+        "page_object": "Class with Selector()",
+        "locators": "Selector(), withText(), withAttribute()",
+        "waits": "Built-in auto-wait",
+        "assertions": "t.expect()"
+      }
+    },
+    "webdriverio": {
+      "languages": ["javascript", "typescript"],
+      "patterns": {
+        "page_object": "ES6 classes with getters",
+        "locators": "$(), $$(), browser.findElement()",
+        "waits": "browser.waitUntil(), waitForDisplayed()",
+        "assertions": "expect from chai/jest"
+      }
+    }
+  },
+  "capabilities": {
+    "source_analysis": true,
+    "page_object_migration": true,
+    "test_data_migration": true,
+    "test_spec_migration": true,
+    "config_migration": true,
+    "self_healing_integration": true,
+    "migration_documentation": true,
+    "locator_upgrade": true
+  },
+  "workflow": {
+    "phases": [
+      {
+        "id": 1,
+        "name": "Source Project Analysis",
+        "description": "Analyze existing project structure, identify framework, catalog components",
+        "requires_user_input": false
+      },
+      {
+        "id": 2,
+        "name": "Present Migration Plan",
+        "description": "Show analysis results and migration plan for user approval",
+        "requires_user_input": true
+      },
+      {
+        "id": 3,
+        "name": "Migrate Page Objects",
+        "description": "Convert Page Object classes to TypeScript with self-healing",
+        "requires_user_input": false
+      },
+      {
+        "id": 4,
+        "name": "Migrate Test Data",
+        "description": "Extract and convert test data to JSON format",
+        "requires_user_input": false
+      },
+      {
+        "id": 5,
+        "name": "Migrate Test Specifications",
+        "description": "Convert test classes to Playwright test format",
+        "requires_user_input": false
+      },
+      {
+        "id": 6,
+        "name": "Generate Framework Infrastructure",
+        "description": "Create config, utilities, and documentation",
+        "requires_user_input": false
+      },
+      {
+        "id": 7,
+        "name": "Generate Migration Report",
+        "description": "Create comprehensive migration documentation",
+        "requires_user_input": false
+      }
+    ]
+  },
+  "locator_migration": {
+    "mapping": {
+      "By.id": "#",
+      "By.name": "[name=\"{value}\"]",
+      "By.className": ".",
+      "By.tagName": "{value}",
+      "By.cssSelector": "{value}",
+      "By.xpath": "{value}",
+      "By.linkText": "a:has-text(\"{value}\")",
+      "By.partialLinkText": "a:has-text(\"{value}\")"
+    },
+    "upgrade_priority": [
+      "data-testid",
+      "data-test",
+      "getByRole",
+      "getByLabel",
+      "getByPlaceholder",
+      "getByText",
+      "id",
+      "css",
+      "xpath"
+    ],
+    "fallback_count": 5
+  },
+  "test_framework_mapping": {
+    "hooks": {
+      "@BeforeClass": "test.beforeAll()",
+      "@BeforeMethod": "test.beforeEach()",
+      "@AfterMethod": "test.afterEach()",
+      "@AfterClass": "test.afterAll()",
+      "@BeforeTest": "test.beforeAll()",
+      "@AfterTest": "test.afterAll()",
+      "before": "test.beforeAll()",
+      "beforeEach": "test.beforeEach()",
+      "afterEach": "test.afterEach()",
+      "after": "test.afterAll()"
+    },
+    "assertions": {
+      "assertEquals": "expect().toBe()",
+      "assertTrue": "expect().toBe(true)",
+      "assertFalse": "expect().toBe(false)",
+      "assertNotNull": "expect().toBeDefined()",
+      "assertNull": "expect().toBeNull()",
+      "assertContains": "expect().toContain()",
+      "assertThat": "expect()"
+    }
+  },
+  "code_generation": {
+    "typescript": {
+      "strict": true,
+      "no_any": true,
+      "async_await": true
+    },
+    "self_healing": {
+      "enabled": true,
+      "framework": "AI Observer",
+      "tiers": [
+        {
+          "tier": 1,
+          "name": "cache",
+          "description": "Check previously healed selectors from cache"
+        },
+        {
+          "tier": 2,
+          "name": "fallbacks",
+          "description": "Try predefined fallback selectors"
+        },
+        {
+          "tier": 3,
+          "name": "ai_visual",
+          "description": "AI-powered visual element detection using Claude Vision"
+        },
+        {
+          "tier": 4,
+          "name": "ai_dom",
+          "description": "AI-powered DOM analysis for element identification"
+        }
+      ],
+      "ai_observer": {
+        "provider": "anthropic",
+        "model": "claude-sonnet-4-20250514",
+        "capabilities": ["screenshot_analysis", "dom_parsing", "selector_generation"],
+        "fallback_without_api": true
+      }
+    },
+    "documentation": {
+      "preserve_original_locators": true,
+      "add_migration_comments": true,
+      "generate_mapping_docs": true
+    }
+  },
+  "output_files": {
+    "pages": {
+      "BasePage.ts": "Base class with common methods",
+      "{PageName}Page.ts": "Migrated page classes"
+    },
+    "tests": {
+      "{module}.spec.ts": "Module test specifications",
+      "e2e/{flow}.e2e.spec.ts": "End-to-end tests",
+      "self-healing-demo.spec.ts": "Self-healing demonstration"
+    },
+    "data": {
+      "{module}Data.json": "Module test data",
+      "users.json": "Test user credentials",
+      "securityPayloads.json": "Security test payloads"
+    },
+    "utils": {
+      "SelfHealingLocator.ts": "Core self-healing engine with 4-tier healing",
+      "AIObserver.ts": "AI-powered element detection using Claude Vision API",
+      "HealingReporter.ts": "Healing statistics and report generation",
+      "ElementRegistry.ts": "Centralized element definitions with fallbacks",
+      "TestHelpers.ts": "Common test utilities",
+      "RetryHandler.ts": "Smart retry logic with exponential backoff"
+    },
+    "migration-docs": {
+      "migration-report.txt": "Comprehensive migration report",
+      "locator-mappings.json": "Old to new locator mappings",
+      "api-mappings.md": "Selenium to Playwright API reference"
+    },
+    "config": {
+      "playwright.config.ts": "Playwright configuration",
+      "tsconfig.json": "TypeScript configuration",
+      "package.json": "Dependencies",
+      ".env.example": "Environment template",
+      ".gitignore": "Git ignore rules",
+      "README.md": "Project documentation"
+    }
+  },
+  "complexity_assessment": {
+    "simple": {
+      "description": "Direct mapping available",
+      "criteria": [
+        "Standard locator strategies (id, class, name)",
+        "Common assertions",
+        "Basic data structures",
+        "No custom extensions"
+      ]
+    },
+    "medium": {
+      "description": "Requires refactoring",
+      "criteria": [
+        "Complex XPath locators",
+        "Custom wait conditions",
+        "Multi-step test setups",
+        "Framework-specific features"
+      ]
+    },
+    "complex": {
+      "description": "Requires redesign",
+      "criteria": [
+        "Parallel execution dependencies",
+        "Custom reporting integration",
+        "Browser-specific workarounds",
+        "Complex data providers"
+      ]
+    }
+  },
+  "guardrail_reference": {
+    "name": "Migration Guardrail",
+    "version": "1.0",
+    "path": "guardrails/migration-guardrail.md"
+  },
+  "files": {
+    "agent_definition": "AGENT.md",
+    "system_prompt": "system-prompt.md",
+    "prompt_templates": "prompt-template.md"
+  }
+}

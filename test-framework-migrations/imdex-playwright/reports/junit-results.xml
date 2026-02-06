@@ -1,54 +1,551 @@
-<testsuites id="" name="" tests="8" failures="0" skipped="1" errors="0" time="65.54466000000001">
-<testsuite name="imdex.spec.ts" timestamp="2025-12-17T12:31:35.174Z" hostname="desktop-chrome" tests="8" failures="0" skipped="1" time="207.938" errors="0">
-<testcase name="IMDEX Search and Filter Module › Basic Search and Filter @smoke › TC_SEARCH_001: Validate Search and Filter Functionality" classname="imdex.spec.ts" time="41.614">
+<testsuites id="" name="" tests="24" failures="5" skipped="1" errors="0" time="183.291165">
+<testsuite name="imdex.spec.ts" timestamp="2026-01-09T12:55:29.975Z" hostname="desktop-chrome" tests="8" failures="0" skipped="1" time="198.222" errors="0">
+<testcase name="IMDEX Search and Filter Module › Basic Search and Filter @smoke › TC_SEARCH_001: Validate Search and Filter Functionality" classname="imdex.spec.ts" time="31.117">
 <system-out>
 <![CDATA[Cookie accepted using: .cookie-consent .action-accept a
 ]]>
 </system-out>
 </testcase>
-<testcase name="IMDEX Search and Filter Module › Data-Driven Search Tests (Examples Table) @smoke @dataDriven › TC_SEARCH_002: Search for mining keyword with Solution filter (Data Driven)" classname="imdex.spec.ts" time="29.357">
+<testcase name="IMDEX Search and Filter Module › Data-Driven Search Tests (Examples Table) @smoke @dataDriven › TC_SEARCH_002: Search for mining keyword with Solution filter (Data Driven)" classname="imdex.spec.ts" time="34.427">
 <system-out>
 <![CDATA[Cookie accepted using: .cookie-consent .action-accept a
 ]]>
 </system-out>
 </testcase>
-<testcase name="IMDEX Search and Filter Module › Data-Driven Search Tests (Examples Table) @smoke @dataDriven › TC_SEARCH_003: Search for fluids optimisation keyword with Solution filter (Data Driven)" classname="imdex.spec.ts" time="40.888">
+<testcase name="IMDEX Search and Filter Module › Data-Driven Search Tests (Examples Table) @smoke @dataDriven › TC_SEARCH_003: Search for fluids optimisation keyword with Solution filter (Data Driven)" classname="imdex.spec.ts" time="30.984">
 <system-out>
 <![CDATA[Cookie accepted using: .cookie-consent .action-accept a
 ]]>
 </system-out>
 </testcase>
-<testcase name="IMDEX Search and Filter Module › Data Provider Search Tests (External JSON) @smoke @dataProvider › TC_SEARCH_004: Search for mining keyword with Content filter (Data Provider)" classname="imdex.spec.ts" time="30.406">
+<testcase name="IMDEX Search and Filter Module › Data Provider Search Tests (External JSON) @smoke @dataProvider › TC_SEARCH_004: Search for mining keyword with Content filter (Data Provider)" classname="imdex.spec.ts" time="31.418">
 <system-out>
 <![CDATA[Cookie accepted using: .cookie-consent .action-accept a
 ]]>
 </system-out>
 </testcase>
-<testcase name="IMDEX Search and Filter Module › Data Provider Search Tests (External JSON) @smoke @dataProvider › TC_SEARCH_005: Search for fluids optimisation keyword with Content filter (Data Provider)" classname="imdex.spec.ts" time="22.102">
+<testcase name="IMDEX Search and Filter Module › Data Provider Search Tests (External JSON) @smoke @dataProvider › TC_SEARCH_005: Search for fluids optimisation keyword with Content filter (Data Provider)" classname="imdex.spec.ts" time="22.613">
 <system-out>
 <![CDATA[Cookie accepted using: .cookie-consent .action-accept a
 ]]>
 </system-out>
 </testcase>
-<testcase name="IMDEX Search and Filter Module › Keyword-Based Search Tests @smoke › Search for keyword: mining (keyword-1)" classname="imdex.spec.ts" time="22.551">
+<testcase name="IMDEX Search and Filter Module › Keyword-Based Search Tests @smoke › Search for keyword: mining (keyword-1)" classname="imdex.spec.ts" time="24.358">
 <system-out>
 <![CDATA[Cookie accepted using: .cookie-consent .action-accept a
 ]]>
 </system-out>
 </testcase>
-<testcase name="IMDEX Search and Filter Module › Keyword-Based Search Tests @smoke › Search for keyword: fluids optimisation (keyword-2)" classname="imdex.spec.ts" time="20.153">
+<testcase name="IMDEX Search and Filter Module › Keyword-Based Search Tests @smoke › Search for keyword: fluids optimisation (keyword-2)" classname="imdex.spec.ts" time="21.753">
 <system-out>
 <![CDATA[Cookie accepted using: .cookie-consent .action-accept a
 ]]>
 </system-out>
 </testcase>
-<testcase name="IMDEX Mobile Search Tests › Mobile: Search functionality on Pixel 7 viewport" classname="imdex.spec.ts" time="0.867">
+<testcase name="IMDEX Mobile Search Tests › Mobile: Search functionality on Pixel 7 viewport" classname="imdex.spec.ts" time="1.552">
 <properties>
 <property name="skip" value="Skip non-mobile projects">
 </property>
 </properties>
 <skipped>
 </skipped>
+</testcase>
+</testsuite>
+<testsuite name="self-healing.spec.ts" timestamp="2026-01-09T12:55:29.975Z" hostname="desktop-chrome" tests="4" failures="2" skipped="0" time="117.015" errors="0">
+<testcase name="Self-Healing Demonstration › Demonstrate self-healing with home page elements" classname="self-healing.spec.ts" time="18.932">
+<failure message="self-healing.spec.ts:28:7 Demonstrate self-healing with home page elements" type="FAILURE">
+<![CDATA[  [desktop-chrome] › self-healing.spec.ts:28:7 › Self-Healing Demonstration › Demonstrate self-healing with home page elements 
+
+    Error: [SelfHealing] Could not locate element: Search text input field where users type their search query
+
+       at ..\utils\SelfHealingLocator.ts:137
+
+      135 |     // All strategies failed
+      136 |     this.recordHealing(description, primary, null, 'failed', originalLocator);
+    > 137 |     throw new Error(`[SelfHealing] Could not locate element: ${description}`);
+          |           ^
+      138 |   }
+      139 |
+      140 |   /**
+        at SelfHealingLocator.locate (D:\Work\ai-test-agents\test-framework-migrations\imdex-playwright\utils\SelfHealingLocator.ts:137:11)
+        at D:\Work\ai-test-agents\test-framework-migrations\imdex-playwright\tests\self-healing.spec.ts:56:25
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\reports\test-artifacts\self-healing-Self-Healing--176a6-ing-with-home-page-elements-desktop-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\reports\test-artifacts\self-healing-Self-Healing--176a6-ing-with-home-page-elements-desktop-chrome\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[Cookie button found and clicked
+[SelfHealing] Primary selector failed: #Search-Menu input[type="search"]
+[SelfHealing] Original Selenium locator: id=searchBox
+======================================================================
+SELF-HEALING LOCATOR REPORT
+======================================================================
+
+Migrated from: Healenium (EPAM) self-healing engine
+
+STATISTICS:
+----------------------------------------------------------------------
+Total Locate Attempts: 3
+Primary Success: 2
+Healed (Cache): 0
+Healed (Fallback): 0
+Healed (AI): 0
+Failed: 1
+
+Healing Success Rate: 0.0%
+
+
+FAILED ELEMENTS:
+----------------------------------------------------------------------
+Element: Search text input field where users type their search query
+  Selector: #Search-Menu input[type="search"]
+  Original: id=searchBox
+----------------------------------------------------------------------
+
+======================================================================
+
+[[ATTACHMENT|test-artifacts\self-healing-Self-Healing--176a6-ing-with-home-page-elements-desktop-chrome\test-failed-1.png]]
+
+[[ATTACHMENT|test-artifacts\self-healing-Self-Healing--176a6-ing-with-home-page-elements-desktop-chrome\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Self-Healing Demonstration › Demonstrate fallback selector healing" classname="self-healing.spec.ts" time="42.233">
+<system-out>
+<![CDATA[[SelfHealing] Primary selector failed: div.search-results__header span
+[SelfHealing] Original Selenium locator: xpath=//div[@class="search-results__header"]/span
+Results heading not found (expected on search page)
+======================================================================
+SELF-HEALING LOCATOR REPORT
+======================================================================
+
+Migrated from: Healenium (EPAM) self-healing engine
+
+STATISTICS:
+----------------------------------------------------------------------
+Total Locate Attempts: 1
+Primary Success: 0
+Healed (Cache): 0
+Healed (Fallback): 0
+Healed (AI): 0
+Failed: 1
+
+Healing Success Rate: 0.0%
+
+
+FAILED ELEMENTS:
+----------------------------------------------------------------------
+Element: Search results header showing the count of results
+  Selector: div.search-results__header span
+  Original: xpath=//div[@class="search-results__header"]/span
+----------------------------------------------------------------------
+
+======================================================================
+======================================================================
+SELF-HEALING LOCATOR REPORT
+======================================================================
+
+Migrated from: Healenium (EPAM) self-healing engine
+
+STATISTICS:
+----------------------------------------------------------------------
+Total Locate Attempts: 1
+Primary Success: 0
+Healed (Cache): 0
+Healed (Fallback): 0
+Healed (AI): 0
+Failed: 1
+
+Healing Success Rate: 0.0%
+
+
+FAILED ELEMENTS:
+----------------------------------------------------------------------
+Element: Search results header showing the count of results
+  Selector: div.search-results__header span
+  Original: xpath=//div[@class="search-results__header"]/span
+----------------------------------------------------------------------
+
+======================================================================
+]]>
+</system-out>
+</testcase>
+<testcase name="Self-Healing Demonstration › Healing cache persistence demonstration" classname="self-healing.spec.ts" time="15.936">
+<system-out>
+<![CDATA[[SelfHealing] Primary selector failed: #Search-Menu input[type="search"]
+[SelfHealing] Original Selenium locator: id=searchBox
+Exported cache: {}
+Stats after cache usage: {
+  total: [33m3[39m,
+  healed: [33m0[39m,
+  failed: [33m1[39m,
+  byMethod: { primary: [33m2[39m, cache: [33m0[39m, fallback: [33m0[39m, ai: [33m0[39m, failed: [33m1[39m }
+}
+======================================================================
+SELF-HEALING LOCATOR REPORT
+======================================================================
+
+Migrated from: Healenium (EPAM) self-healing engine
+
+STATISTICS:
+----------------------------------------------------------------------
+Total Locate Attempts: 3
+Primary Success: 2
+Healed (Cache): 0
+Healed (Fallback): 0
+Healed (AI): 0
+Failed: 1
+
+Healing Success Rate: 0.0%
+
+
+FAILED ELEMENTS:
+----------------------------------------------------------------------
+Element: Search text input field where users type their search query
+  Selector: #Search-Menu input[type="search"]
+  Original: id=searchBox
+----------------------------------------------------------------------
+
+======================================================================
+]]>
+</system-out>
+</testcase>
+<testcase name="Self-Healing E2E Integration › Complete search flow with self-healing" classname="self-healing.spec.ts" time="39.914">
+<failure message="self-healing.spec.ts:135:7 Complete search flow with self-healing" type="FAILURE">
+<![CDATA[  [desktop-chrome] › self-healing.spec.ts:135:7 › Self-Healing E2E Integration › Complete search flow with self-healing 
+
+    TimeoutError: locator.click: Timeout 30000ms exceeded.
+    Call log:
+      - waiting for locator('#search-input')
+        - locator resolved to <button type="button" id="search-input" aria-expanded="false" data-target="Search-Menu" class="header__search nav-item__level-1 mega-menu-toggle">…</button>
+      - attempting click action
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div tabindex="-1" role="dialog" aria-modal="true" id="CookieConsent_8befed7d" class="imdex-modalsection modal cookie-consent modal-auto-activate show">…</div> from <main class="content " id="page-content">…</main> subtree intercepts pointer events
+        - retrying click action
+        - waiting 20ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div tabindex="-1" role="dialog" aria-modal="true" id="CookieConsent_8befed7d" class="imdex-modalsection modal cookie-consent modal-auto-activate show">…</div> from <main class="content " id="page-content">…</main> subtree intercepts pointer events
+        - retrying click action
+          - waiting 100ms
+        43 × waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <div tabindex="-1" role="dialog" aria-modal="true" id="CookieConsent_8befed7d" class="imdex-modalsection modal cookie-consent modal-auto-activate show">…</div> from <main class="content " id="page-content">…</main> subtree intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+
+
+      154 |       timeout: 10000
+      155 |     });
+    > 156 |     await searchBtn.click();
+          |                     ^
+      157 |
+      158 |     // Step 3: Enter search term (with healing)
+      159 |     const searchInput = await healer.locate(HOME_ELEMENTS.searchInputField, {
+        at D:\Work\ai-test-agents\test-framework-migrations\imdex-playwright\tests\self-healing.spec.ts:156:21
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\reports\test-artifacts\self-healing-Self-Healing--3ae55-arch-flow-with-self-healing-desktop-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\reports\test-artifacts\self-healing-Self-Healing--3ae55-arch-flow-with-self-healing-desktop-chrome\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-artifacts\self-healing-Self-Healing--3ae55-arch-flow-with-self-healing-desktop-chrome\test-failed-1.png]]
+
+[[ATTACHMENT|test-artifacts\self-healing-Self-Healing--3ae55-arch-flow-with-self-healing-desktop-chrome\error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="imdex.spec.ts" timestamp="2026-01-09T12:55:29.975Z" hostname="mobile-pixel7" tests="8" failures="0" skipped="0" time="178.706" errors="0">
+<testcase name="IMDEX Search and Filter Module › Basic Search and Filter @smoke › TC_SEARCH_001: Validate Search and Filter Functionality" classname="imdex.spec.ts" time="23.485">
+<system-out>
+<![CDATA[Cookie accepted using: .cookie-consent .action-accept a
+]]>
+</system-out>
+</testcase>
+<testcase name="IMDEX Search and Filter Module › Data-Driven Search Tests (Examples Table) @smoke @dataDriven › TC_SEARCH_002: Search for mining keyword with Solution filter (Data Driven)" classname="imdex.spec.ts" time="23.607">
+<system-out>
+<![CDATA[Cookie accepted using: .cookie-consent .action-accept a
+]]>
+</system-out>
+</testcase>
+<testcase name="IMDEX Search and Filter Module › Data-Driven Search Tests (Examples Table) @smoke @dataDriven › TC_SEARCH_003: Search for fluids optimisation keyword with Solution filter (Data Driven)" classname="imdex.spec.ts" time="23.615">
+<system-out>
+<![CDATA[Cookie accepted using: .cookie-consent .action-accept a
+]]>
+</system-out>
+</testcase>
+<testcase name="IMDEX Search and Filter Module › Data Provider Search Tests (External JSON) @smoke @dataProvider › TC_SEARCH_004: Search for mining keyword with Content filter (Data Provider)" classname="imdex.spec.ts" time="19.48">
+<system-out>
+<![CDATA[Cookie accepted using: .cookie-consent .action-accept a
+]]>
+</system-out>
+</testcase>
+<testcase name="IMDEX Search and Filter Module › Data Provider Search Tests (External JSON) @smoke @dataProvider › TC_SEARCH_005: Search for fluids optimisation keyword with Content filter (Data Provider)" classname="imdex.spec.ts" time="27.037">
+<system-out>
+<![CDATA[Cookie accepted using: .cookie-consent .action-accept a
+]]>
+</system-out>
+</testcase>
+<testcase name="IMDEX Search and Filter Module › Keyword-Based Search Tests @smoke › Search for keyword: mining (keyword-1)" classname="imdex.spec.ts" time="20.631">
+<system-out>
+<![CDATA[Cookie accepted using: .cookie-consent .action-accept a
+]]>
+</system-out>
+</testcase>
+<testcase name="IMDEX Search and Filter Module › Keyword-Based Search Tests @smoke › Search for keyword: fluids optimisation (keyword-2)" classname="imdex.spec.ts" time="19.155">
+<system-out>
+<![CDATA[Cookie accepted using: .cookie-consent .action-accept a
+]]>
+</system-out>
+</testcase>
+<testcase name="IMDEX Mobile Search Tests › Mobile: Search functionality on Pixel 7 viewport" classname="imdex.spec.ts" time="21.696">
+<system-out>
+<![CDATA[Cookie accepted using: .cookie-consent .action-accept a
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="self-healing.spec.ts" timestamp="2026-01-09T12:55:29.975Z" hostname="mobile-pixel7" tests="4" failures="3" skipped="0" time="114.632" errors="0">
+<testcase name="Self-Healing Demonstration › Demonstrate self-healing with home page elements" classname="self-healing.spec.ts" time="25.009">
+<failure message="self-healing.spec.ts:28:7 Demonstrate self-healing with home page elements" type="FAILURE">
+<![CDATA[  [mobile-pixel7] › self-healing.spec.ts:28:7 › Self-Healing Demonstration › Demonstrate self-healing with home page elements 
+
+    Error: [SelfHealing] Could not locate element: Search icon/button that opens the search input field
+
+       at ..\utils\SelfHealingLocator.ts:137
+
+      135 |     // All strategies failed
+      136 |     this.recordHealing(description, primary, null, 'failed', originalLocator);
+    > 137 |     throw new Error(`[SelfHealing] Could not locate element: ${description}`);
+          |           ^
+      138 |   }
+      139 |
+      140 |   /**
+        at SelfHealingLocator.locate (D:\Work\ai-test-agents\test-framework-migrations\imdex-playwright\utils\SelfHealingLocator.ts:137:11)
+        at D:\Work\ai-test-agents\test-framework-migrations\imdex-playwright\tests\self-healing.spec.ts:48:26
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\reports\test-artifacts\self-healing-Self-Healing--176a6-ing-with-home-page-elements-mobile-pixel7\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\reports\test-artifacts\self-healing-Self-Healing--176a6-ing-with-home-page-elements-mobile-pixel7\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[Cookie button found and clicked
+[SelfHealing] Primary selector failed: #search-input
+[SelfHealing] Original Selenium locator: xpath=//*[@id="search-input"]/span
+======================================================================
+SELF-HEALING LOCATOR REPORT
+======================================================================
+
+Migrated from: Healenium (EPAM) self-healing engine
+
+STATISTICS:
+----------------------------------------------------------------------
+Total Locate Attempts: 2
+Primary Success: 1
+Healed (Cache): 0
+Healed (Fallback): 0
+Healed (AI): 0
+Failed: 1
+
+Healing Success Rate: 0.0%
+
+
+FAILED ELEMENTS:
+----------------------------------------------------------------------
+Element: Search icon/button that opens the search input field
+  Selector: #search-input
+  Original: xpath=//*[@id="search-input"]/span
+----------------------------------------------------------------------
+
+======================================================================
+
+[[ATTACHMENT|test-artifacts\self-healing-Self-Healing--176a6-ing-with-home-page-elements-mobile-pixel7\test-failed-1.png]]
+
+[[ATTACHMENT|test-artifacts\self-healing-Self-Healing--176a6-ing-with-home-page-elements-mobile-pixel7\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Self-Healing Demonstration › Demonstrate fallback selector healing" classname="self-healing.spec.ts" time="43.183">
+<system-out>
+<![CDATA[[SelfHealing] Primary selector failed: div.search-results__header span
+[SelfHealing] Original Selenium locator: xpath=//div[@class="search-results__header"]/span
+Results heading not found (expected on search page)
+======================================================================
+SELF-HEALING LOCATOR REPORT
+======================================================================
+
+Migrated from: Healenium (EPAM) self-healing engine
+
+STATISTICS:
+----------------------------------------------------------------------
+Total Locate Attempts: 1
+Primary Success: 0
+Healed (Cache): 0
+Healed (Fallback): 0
+Healed (AI): 0
+Failed: 1
+
+Healing Success Rate: 0.0%
+
+
+FAILED ELEMENTS:
+----------------------------------------------------------------------
+Element: Search results header showing the count of results
+  Selector: div.search-results__header span
+  Original: xpath=//div[@class="search-results__header"]/span
+----------------------------------------------------------------------
+
+======================================================================
+======================================================================
+SELF-HEALING LOCATOR REPORT
+======================================================================
+
+Migrated from: Healenium (EPAM) self-healing engine
+
+STATISTICS:
+----------------------------------------------------------------------
+Total Locate Attempts: 1
+Primary Success: 0
+Healed (Cache): 0
+Healed (Fallback): 0
+Healed (AI): 0
+Failed: 1
+
+Healing Success Rate: 0.0%
+
+
+FAILED ELEMENTS:
+----------------------------------------------------------------------
+Element: Search results header showing the count of results
+  Selector: div.search-results__header span
+  Original: xpath=//div[@class="search-results__header"]/span
+----------------------------------------------------------------------
+
+======================================================================
+]]>
+</system-out>
+</testcase>
+<testcase name="Self-Healing Demonstration › Healing cache persistence demonstration" classname="self-healing.spec.ts" time="24.558">
+<failure message="self-healing.spec.ts:93:7 Healing cache persistence demonstration" type="FAILURE">
+<![CDATA[  [mobile-pixel7] › self-healing.spec.ts:93:7 › Self-Healing Demonstration › Healing cache persistence demonstration 
+
+    Error: [SelfHealing] Could not locate element: Search icon/button that opens the search input field
+
+       at ..\utils\SelfHealingLocator.ts:137
+
+      135 |     // All strategies failed
+      136 |     this.recordHealing(description, primary, null, 'failed', originalLocator);
+    > 137 |     throw new Error(`[SelfHealing] Could not locate element: ${description}`);
+          |           ^
+      138 |   }
+      139 |
+      140 |   /**
+        at SelfHealingLocator.locate (D:\Work\ai-test-agents\test-framework-migrations\imdex-playwright\utils\SelfHealingLocator.ts:137:11)
+        at D:\Work\ai-test-agents\test-framework-migrations\imdex-playwright\tests\self-healing.spec.ts:118:26
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\reports\test-artifacts\self-healing-Self-Healing--75049-e-persistence-demonstration-mobile-pixel7\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\reports\test-artifacts\self-healing-Self-Healing--75049-e-persistence-demonstration-mobile-pixel7\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[[SelfHealing] Primary selector failed: #search-input
+[SelfHealing] Original Selenium locator: xpath=//*[@id="search-input"]/span
+Exported cache: {}
+[SelfHealing] Primary selector failed: #search-input
+[SelfHealing] Original Selenium locator: xpath=//*[@id="search-input"]/span
+======================================================================
+SELF-HEALING LOCATOR REPORT
+======================================================================
+
+Migrated from: Healenium (EPAM) self-healing engine
+
+STATISTICS:
+----------------------------------------------------------------------
+Total Locate Attempts: 2
+Primary Success: 0
+Healed (Cache): 0
+Healed (Fallback): 0
+Healed (AI): 0
+Failed: 2
+
+Healing Success Rate: 0.0%
+
+
+FAILED ELEMENTS:
+----------------------------------------------------------------------
+Element: Search icon/button that opens the search input field
+  Selector: #search-input
+  Original: xpath=//*[@id="search-input"]/span
+----------------------------------------------------------------------
+Element: Search icon/button that opens the search input field
+  Selector: #search-input
+  Original: xpath=//*[@id="search-input"]/span
+----------------------------------------------------------------------
+
+======================================================================
+
+[[ATTACHMENT|test-artifacts\self-healing-Self-Healing--75049-e-persistence-demonstration-mobile-pixel7\test-failed-1.png]]
+
+[[ATTACHMENT|test-artifacts\self-healing-Self-Healing--75049-e-persistence-demonstration-mobile-pixel7\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Self-Healing E2E Integration › Complete search flow with self-healing" classname="self-healing.spec.ts" time="21.882">
+<failure message="self-healing.spec.ts:135:7 Complete search flow with self-healing" type="FAILURE">
+<![CDATA[  [mobile-pixel7] › self-healing.spec.ts:135:7 › Self-Healing E2E Integration › Complete search flow with self-healing 
+
+    Error: [SelfHealing] Could not locate element: Search icon/button that opens the search input field
+
+       at ..\utils\SelfHealingLocator.ts:137
+
+      135 |     // All strategies failed
+      136 |     this.recordHealing(description, primary, null, 'failed', originalLocator);
+    > 137 |     throw new Error(`[SelfHealing] Could not locate element: ${description}`);
+          |           ^
+      138 |   }
+      139 |
+      140 |   /**
+        at SelfHealingLocator.locate (D:\Work\ai-test-agents\test-framework-migrations\imdex-playwright\utils\SelfHealingLocator.ts:137:11)
+        at D:\Work\ai-test-agents\test-framework-migrations\imdex-playwright\tests\self-healing.spec.ts:153:23
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\reports\test-artifacts\self-healing-Self-Healing--3ae55-arch-flow-with-self-healing-mobile-pixel7\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\reports\test-artifacts\self-healing-Self-Healing--3ae55-arch-flow-with-self-healing-mobile-pixel7\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[[SelfHealing] Primary selector failed: #search-input
+[SelfHealing] Original Selenium locator: xpath=//*[@id="search-input"]/span
+
+[[ATTACHMENT|test-artifacts\self-healing-Self-Healing--3ae55-arch-flow-with-self-healing-mobile-pixel7\test-failed-1.png]]
+
+[[ATTACHMENT|test-artifacts\self-healing-Self-Healing--3ae55-arch-flow-with-self-healing-mobile-pixel7\error-context.md]]
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>
