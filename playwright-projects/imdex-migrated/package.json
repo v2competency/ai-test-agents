@@ -1,0 +1,58 @@
+{
+  "name": "imdex-playwright-tests",
+  "version": "1.0.0",
+  "description": "Playwright test automation for Imdex - Migrated from QAF Selenium",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:headed": "npx playwright test --headed",
+    "test:debug": "npx playwright test --debug",
+    "test:ui": "npx playwright test --ui",
+    "test:desktop": "npx playwright test --project=desktop-chrome",
+    "test:mobile": "npx playwright test --project=mobile-chrome",
+    "test:all-browsers": "npx playwright test --project=desktop-chrome --project=desktop-firefox --project=desktop-safari",
+    "test:healing": "npx playwright test tests/self-healing-demo.spec.ts --headed",
+    "report": "npx playwright show-report reports/playwright-report",
+    "report:open": "npx playwright show-report reports/playwright-report",
+    "trace": "npx playwright show-trace",
+    "codegen": "npx playwright codegen",
+    "install:browsers": "npx playwright install",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "clean": "rimraf reports dist",
+    "clean:reports": "rimraf reports"
+  },
+  "keywords": [
+    "playwright",
+    "testing",
+    "automation",
+    "e2e",
+    "imdex",
+    "self-healing",
+    "migrated-from-selenium"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "dotenv": "^16.3.1",
+    "eslint": "^8.55.0",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.10.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "_migration": {
+    "sourceFramework": "QAF (QMetry Automation Framework) with Selenium",
+    "sourceLanguage": "Java",
+    "migratedDate": "2024",
+    "originalProject": "test-framework-migrations/Imdex-selenium"
+  }
+}

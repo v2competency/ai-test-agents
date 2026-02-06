@@ -1,0 +1,86 @@
+{
+  "_metadata": {
+    "module": "Search",
+    "migratedFrom": "resources/testdata/keywords.json + scenarios/imdex.feature",
+    "migratedDate": "2024",
+    "sourceFramework": "QAF BDD with Gherkin",
+    "originalScenarios": 3,
+    "description": "Search test data for Imdex application"
+  },
+
+  "inlineExamples": [
+    {
+      "recid": "002",
+      "keyword": "mining",
+      "description": "Search with mining keyword (inline example 1)",
+      "originalTestId": "Scenario Outline Example 1"
+    },
+    {
+      "recid": "003",
+      "keyword": "fluids optimisation",
+      "description": "Search with fluids optimisation keyword (inline example 2)",
+      "originalTestId": "Scenario Outline Example 2"
+    }
+  ],
+
+  "jsonDataProvider": [
+    {
+      "testId": "004",
+      "recid": "keyword-1",
+      "keyword": "mining",
+      "description": "Search with mining keyword (JSON data provider)",
+      "originalTestId": "keywords.json - keyword-1"
+    },
+    {
+      "testId": "005",
+      "recid": "keyword-2",
+      "keyword": "fluids optimisation",
+      "description": "Search with fluids optimisation keyword (JSON data provider)",
+      "originalTestId": "keywords.json - keyword-2"
+    }
+  ],
+
+  "filterOptions": {
+    "type": ["Product", "Solution", "Content"],
+    "date": ["Last Year", "All Time", "Last Month"],
+    "sortBy": ["Newest", "Oldest", "Relevance"]
+  },
+
+  "filterScenarios": [
+    {
+      "testId": "TC_FILTER_001",
+      "description": "Basic filter scenario from Scenario 1",
+      "filters": {
+        "Type": "Product",
+        "Date": "Last Year",
+        "SortBy": "Newest"
+      },
+      "originalScenario": "Validate Search and Filter Functionality"
+    },
+    {
+      "testId": "TC_FILTER_002",
+      "description": "Filter scenario from Data Driven Scenario Outline",
+      "filters": {
+        "Type": "Solution",
+        "Date": "All Time",
+        "SortBy": "Oldest"
+      },
+      "originalScenario": "Validate Search and Filter Functionality (Data Driven)"
+    },
+    {
+      "testId": "TC_FILTER_003",
+      "description": "Filter scenario from Data Provider Scenario Outline",
+      "filters": {
+        "Type": "Content",
+        "Date": "Last Month",
+        "SortBy": "Relevance"
+      },
+      "originalScenario": "Validate Search and Filter Functionality (Data Provider)"
+    }
+  ],
+
+  "expectedResults": {
+    "searchHeading": "Refine your search",
+    "resultsSelector": ".search-results__header span"
+  }
+}
