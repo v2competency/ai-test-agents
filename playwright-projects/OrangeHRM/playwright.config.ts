@@ -62,6 +62,6 @@ export default defineConfig({
   outputDir: 'reports/test-artifacts/',
 
   // Global setup/teardown
-  // globalSetup: require.resolve('./config/global-setup'),
+  globalSetup: require.resolve('./config/global-setup'),
   // globalTeardown: require.resolve('./config/global-teardown'),
 });
