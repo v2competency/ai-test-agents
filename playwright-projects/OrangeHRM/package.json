@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "npx playwright test",
+    "test:ai": "cross-env AI_HEALING_ENABLED=true npx playwright test",
+    "test:standard": "cross-env AI_HEALING_ENABLED=false npx playwright test",
     "test:headed": "npx playwright test --headed",
     "test:debug": "npx playwright test --debug",
     "test:ui": "npx playwright test --ui",
@@ -19,6 +21,7 @@
     "test:auth": "npx playwright test tests/auth.spec.ts",
     "test:dashboard": "npx playwright test tests/dashboard.spec.ts",
     "test:leave": "npx playwright test tests/apply-leave.spec.ts tests/leave-list.spec.ts tests/assign-leave.spec.ts",
+    "test:leave-apply": "npx playwright test tests/apply-leave.spec.ts",
     "test:config": "npx playwright test tests/leave-config.spec.ts",
     "test:report": "npx playwright test tests/reports.spec.ts",
     "test:entitlements": "npx playwright test tests/entitlements.spec.ts",
@@ -49,6 +52,7 @@
     "allure-playwright": "^3.4.4",
     "dotenv": "^16.3.1",
     "rimraf": "^5.0.5",
+    "cross-env": "^7.0.3",
     "typescript": "^5.3.0"
   }
 }

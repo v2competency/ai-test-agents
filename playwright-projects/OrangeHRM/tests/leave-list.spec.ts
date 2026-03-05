@@ -1,22 +1,25 @@
 // tests/leave-list.spec.ts
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
+import { DashboardPage } from '../pages/DashboardPage';
 import { LeaveListPage } from '../pages/LeaveListPage';
 import leaveListData from '../data/leaveListData.json';
 import users from '../data/users.json';
 
 test.describe('Leave List - OrangeHRM', () => {
   let loginPage: LoginPage;
+  let dashboardPage: DashboardPage;
   let leaveListPage: LeaveListPage;
 
   test.beforeEach(async ({ page }) => {
     loginPage = new LoginPage(page);
+    dashboardPage = new DashboardPage(page);
     leaveListPage = new LeaveListPage(page);
 
-    // Login and navigate to Leave List
+    // Login and navigate to Leave List via dashboard shortcut
     await loginPage.navigate();
     await loginPage.login(users.admin.username, users.admin.password);
-    await leaveListPage.navigate();
+    await dashboardPage.clickLeaveListShortcut();
   });
 
   // ============================================================================

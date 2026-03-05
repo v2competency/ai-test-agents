@@ -5,7 +5,6 @@ import { SidebarNav } from './components/SidebarNav';
 import { ElementDefinition } from '../utils/SelfHealingLocator';
 
 export class LeaveListPage extends BasePage {
-  readonly pageUrl = '/web/index.php/leave/viewLeaveList';
   readonly sidebar: SidebarNav;
 
   // Filter element definitions
@@ -194,11 +193,11 @@ export class LeaveListPage extends BasePage {
   }
 
   /**
-   * Navigate to Leave List page
+   * Navigate to Leave List via sidebar
    */
-  async navigate(): Promise<void> {
-    await this.page.goto(this.pageUrl);
-    await this.waitForPageLoad();
+  async navigateToLeaveList(): Promise<void> {
+    await this.sidebar.navigateTo('leave');
+    await this.clickLeaveListTab();
   }
 
   /**

@@ -1,10 +1,11 @@
 // pages/BasePage.ts
-import { Page, Locator } from '@playwright/test';
-import { SelfHealingLocator, ElementDefinition } from '../utils/SelfHealingLocator';
+import { Page } from '@playwright/test';
+import { ElementDefinition } from '../utils/SelfHealingLocator';
+import { ILocatorStrategy, createLocatorStrategy } from '../utils/LocatorStrategy';
 
 export abstract class BasePage {
   readonly page: Page;
-  readonly healer: SelfHealingLocator;
+  readonly healer: ILocatorStrategy;
 
   // Common element definitions
   protected readonly loadingSpinnerDef: ElementDefinition = {
@@ -41,7 +42,7 @@ export abstract class BasePage {
 
   constructor(page: Page) {
     this.page = page;
-    this.healer = new SelfHealingLocator(page);
+    this.healer = createLocatorStrategy(page);
   }
 
   /**

@@ -2,6 +2,7 @@
 import { Page, Locator } from '@playwright/test';
 import { AIObserver } from './AIObserver';
 import { HealingReporter } from './HealingReporter';
+import { ILocatorStrategy } from './LocatorStrategy';
 
 export interface ElementDefinition {
   name: string;
@@ -13,7 +14,7 @@ export interface ElementDefinition {
 
 export type HealingMethod = 'primary' | 'cache' | 'fallback' | 'ai_visual' | 'ai_dom' | 'failed';
 
-export class SelfHealingLocator {
+export class SelfHealingLocator implements ILocatorStrategy {
   private page: Page;
   private cache: Map<string, string> = new Map();
   private aiObserver: AIObserver;

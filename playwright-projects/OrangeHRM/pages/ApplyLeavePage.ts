@@ -4,8 +4,6 @@ import { BasePage } from './BasePage';
 import { ElementDefinition } from '../utils/SelfHealingLocator';
 
 export class ApplyLeavePage extends BasePage {
-  readonly pageUrl = '/orangehrm/web/index.php/leave/applyLeave';
-
   // Element definitions
   private readonly leaveTypeDropdownDef: ElementDefinition = {
     name: 'leaveTypeDropdown',
@@ -34,10 +32,10 @@ export class ApplyLeavePage extends BasePage {
   private readonly fromDateInputDef: ElementDefinition = {
     name: 'fromDateInput',
     description: 'From Date input field',
-    primary: '.oxd-form-row:has-text("From Date") input',
+    primary: '.oxd-input-group:has(label:has-text("From Date")) input',
     fallbacks: [
-      'input[placeholder="yyyy-mm-dd"]:first-of-type',
-      '.oxd-date-input input:first-of-type'
+      '.oxd-form-row:has-text("From Date") .oxd-date-input:first-of-type input',
+      'input[placeholder="yyyy-mm-dd"]:first-of-type'
     ],
     type: 'input'
   };
@@ -45,10 +43,10 @@ export class ApplyLeavePage extends BasePage {
   private readonly toDateInputDef: ElementDefinition = {
     name: 'toDateInput',
     description: 'To Date input field',
-    primary: '.oxd-form-row:has-text("To Date") input',
+    primary: '.oxd-input-group:has(label:has-text("To Date")) input',
     fallbacks: [
-      'input[placeholder="yyyy-mm-dd"]:last-of-type',
-      '.oxd-date-input input:last-of-type'
+      '.oxd-form-row:has-text("To Date") .oxd-date-input:last-of-type input',
+      'input[placeholder="yyyy-mm-dd"]:last-of-type'
     ],
     type: 'input'
   };
@@ -119,14 +117,6 @@ export class ApplyLeavePage extends BasePage {
 
   constructor(page: Page) {
     super(page);
-  }
-
-  /**
-   * Navigate to Apply Leave page
-   */
-  async navigate(): Promise<void> {
-    await this.page.goto(this.pageUrl);
-    await this.waitForPageLoad();
   }
 
   /**

@@ -4,8 +4,6 @@ import { BasePage } from './BasePage';
 import { ElementDefinition } from '../utils/SelfHealingLocator';
 
 export class AssignLeavePage extends BasePage {
-  readonly pageUrl = '/web/index.php/leave/assignLeave';
-
   // Element definitions
   private readonly employeeNameInputDef: ElementDefinition = {
     name: 'employeeNameInput',
@@ -123,14 +121,6 @@ export class AssignLeavePage extends BasePage {
 
   constructor(page: Page) {
     super(page);
-  }
-
-  /**
-   * Navigate to Assign Leave page
-   */
-  async navigate(): Promise<void> {
-    await this.page.goto(this.pageUrl);
-    await this.waitForPageLoad();
   }
 
   /**

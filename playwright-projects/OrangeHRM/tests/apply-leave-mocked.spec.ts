@@ -1,27 +1,30 @@
 // tests/apply-leave-mocked.spec.ts
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
+import { DashboardPage } from '../pages/DashboardPage';
 import { ApplyLeavePage } from '../pages/ApplyLeavePage';
 import { MockHandler } from '../mocks/mockHandler';
 import users from '../data/users.json';
 
 test.describe('Leave Application - OrangeHRM (Mocked) @mocked', () => {
   let loginPage: LoginPage;
+  let dashboardPage: DashboardPage;
   let applyLeavePage: ApplyLeavePage;
   let mockHandler: MockHandler;
 
   test.beforeEach(async ({ page }) => {
     loginPage = new LoginPage(page);
+    dashboardPage = new DashboardPage(page);
     applyLeavePage = new ApplyLeavePage(page);
     mockHandler = new MockHandler(page);
 
     // Setup default mocks before navigation
     await mockHandler.setupLeaveMocks();
 
-    // Login and navigate to Apply Leave
+    // Login and navigate to Apply Leave via dashboard shortcut
     await loginPage.navigate();
     await loginPage.login(users.admin.username, users.admin.password);
-    await applyLeavePage.navigate();
+    await dashboardPage.clickApplyLeaveShortcut();
   });
 
   test.afterEach(async () => {

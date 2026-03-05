@@ -25,8 +25,8 @@ test.describe('End-to-End Flows - OrangeHRM', () => {
     await loginPage.login(users.admin.username, users.admin.password);
     expect(await dashboardPage.isOnDashboard()).toBe(true);
 
-    // Step 2: Navigate to Apply Leave
-    await applyLeavePage.navigate();
+    // Step 2: Navigate to Apply Leave via dashboard shortcut
+    await dashboardPage.clickApplyLeaveShortcut();
     expect(await applyLeavePage.isOnApplyLeavePage()).toBe(true);
 
     // Step 3: Check leave balance and apply if available
@@ -46,7 +46,7 @@ test.describe('End-to-End Flows - OrangeHRM', () => {
     }
 
     // Step 4: Navigate to My Leave to verify
-    await leaveListPage.navigate();
+    await leaveListPage.navigateToLeaveList();
     await leaveListPage.clickMyLeaveTab();
     expect(page.url()).toContain('viewMyLeaveList');
 
@@ -76,7 +76,7 @@ test.describe('End-to-End Flows - OrangeHRM', () => {
     await expect(page).toHaveURL(/applyLeave/);
 
     // Step 4: Return to Dashboard
-    await dashboardPage.navigate();
+    await dashboardPage.navigateToDashboard();
     expect(await dashboardPage.isOnDashboard()).toBe(true);
 
     // Step 5: Click Leave List shortcut
@@ -84,7 +84,7 @@ test.describe('End-to-End Flows - OrangeHRM', () => {
     await expect(page).toHaveURL(/viewLeaveList/);
 
     // Step 6: Return to Dashboard
-    await dashboardPage.navigate();
+    await dashboardPage.navigateToDashboard();
     expect(await dashboardPage.isOnDashboard()).toBe(true);
   });
 
@@ -99,8 +99,8 @@ test.describe('End-to-End Flows - OrangeHRM', () => {
     await loginPage.navigate();
     await loginPage.login(users.admin.username, users.admin.password);
 
-    // Step 2: Navigate to Leave List
-    await leaveListPage.navigate();
+    // Step 2: Navigate to Leave List via sidebar
+    await leaveListPage.navigateToLeaveList();
     expect(await leaveListPage.isOnLeaveListPage()).toBe(true);
 
     // Step 3: Apply date filter
@@ -197,8 +197,8 @@ test.describe('End-to-End Flows - OrangeHRM', () => {
     await entitlementsPage.navigateToMyEntitlements();
     expect(await entitlementsPage.isOnMyEntitlementsPage()).toBe(true);
 
-    // Step 3: Navigate to Apply Leave
-    await applyLeavePage.navigate();
+    // Step 3: Navigate to Apply Leave via dashboard shortcut
+    await dashboardPage.clickApplyLeaveShortcut();
     expect(await applyLeavePage.isOnApplyLeavePage()).toBe(true);
 
     // Step 4: Navigate to My Leave Report

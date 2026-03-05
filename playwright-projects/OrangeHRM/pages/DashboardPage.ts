@@ -5,7 +5,6 @@ import { SidebarNav } from './components/SidebarNav';
 import { ElementDefinition } from '../utils/SelfHealingLocator';
 
 export class DashboardPage extends BasePage {
-  readonly pageUrl = '/web/index.php/dashboard/index';
   readonly sidebar: SidebarNav;
 
   // Element definitions
@@ -92,10 +91,10 @@ export class DashboardPage extends BasePage {
   // Quick Launch buttons
   private readonly assignLeaveShortcutDef: ElementDefinition = {
     name: 'assignLeaveShortcut',
-    description: 'Assign Leave quick launch button',
-    primary: 'button:has-text("Assign Leave")',
+    description: 'Assign Leave quick launch button in Quick Launch widget',
+    primary: '.orangehrm-quick-launch-card:has-text("Assign Leave")',
     fallbacks: [
-      '.orangehrm-quick-launch-card:has-text("Assign Leave")',
+      'button:has-text("Assign Leave")',
       '[title="Assign Leave"]'
     ],
     type: 'button'
@@ -103,10 +102,10 @@ export class DashboardPage extends BasePage {
 
   private readonly leaveListShortcutDef: ElementDefinition = {
     name: 'leaveListShortcut',
-    description: 'Leave List quick launch button',
-    primary: 'button:has-text("Leave List")',
+    description: 'Leave List quick launch button in Quick Launch widget',
+    primary: '.orangehrm-quick-launch-card:has-text("Leave List")',
     fallbacks: [
-      '.orangehrm-quick-launch-card:has-text("Leave List")',
+      'button:has-text("Leave List")',
       '[title="Leave List"]'
     ],
     type: 'button'
@@ -114,10 +113,10 @@ export class DashboardPage extends BasePage {
 
   private readonly applyLeaveShortcutDef: ElementDefinition = {
     name: 'applyLeaveShortcut',
-    description: 'Apply Leave quick launch button',
-    primary: 'button:has-text("Apply Leave")',
+    description: 'Apply Leave quick launch button in Quick Launch widget',
+    primary: '.orangehrm-quick-launch-card:has-text("Apply Leave")',
     fallbacks: [
-      '.orangehrm-quick-launch-card:has-text("Apply Leave")',
+      'button:has-text("Apply Leave")',
       '[title="Apply Leave"]'
     ],
     type: 'button'
@@ -125,10 +124,10 @@ export class DashboardPage extends BasePage {
 
   private readonly myLeaveShortcutDef: ElementDefinition = {
     name: 'myLeaveShortcut',
-    description: 'My Leave quick launch button',
-    primary: 'button:has-text("My Leave")',
+    description: 'My Leave quick launch button in Quick Launch widget',
+    primary: '.orangehrm-quick-launch-card:has-text("My Leave")',
     fallbacks: [
-      '.orangehrm-quick-launch-card:has-text("My Leave")',
+      'button:has-text("My Leave")',
       '[title="My Leave"]'
     ],
     type: 'button'
@@ -140,11 +139,10 @@ export class DashboardPage extends BasePage {
   }
 
   /**
-   * Navigate to dashboard
+   * Navigate to dashboard via sidebar
    */
-  async navigate(): Promise<void> {
-    await this.page.goto(this.pageUrl);
-    await this.waitForPageLoad();
+  async navigateToDashboard(): Promise<void> {
+    await this.sidebar.navigateTo('dashboard');
   }
 
   /**

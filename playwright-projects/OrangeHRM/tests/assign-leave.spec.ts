@@ -1,22 +1,25 @@
 // tests/assign-leave.spec.ts
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
+import { DashboardPage } from '../pages/DashboardPage';
 import { AssignLeavePage } from '../pages/AssignLeavePage';
 import assignLeaveData from '../data/assignLeaveData.json';
 import users from '../data/users.json';
 
 test.describe('Leave Assignment - OrangeHRM', () => {
   let loginPage: LoginPage;
+  let dashboardPage: DashboardPage;
   let assignLeavePage: AssignLeavePage;
 
   test.beforeEach(async ({ page }) => {
     loginPage = new LoginPage(page);
+    dashboardPage = new DashboardPage(page);
     assignLeavePage = new AssignLeavePage(page);
 
-    // Login and navigate to Assign Leave
+    // Login and navigate to Assign Leave via dashboard shortcut
     await loginPage.navigate();
     await loginPage.login(users.admin.username, users.admin.password);
-    await assignLeavePage.navigate();
+    await dashboardPage.clickAssignLeaveShortcut();
   });
 
   // ============================================================================

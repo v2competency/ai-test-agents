@@ -87,12 +87,12 @@ test.describe('Dashboard - OrangeHRM', () => {
       await expect(page).toHaveURL(/leave/);
 
       // Navigate back and test Admin
-      await dashboardPage.navigate();
+      await dashboardPage.navigateToDashboard();
       await dashboardPage.navigateToAdmin();
       await expect(page).toHaveURL(/admin/);
 
       // Navigate back and test PIM
-      await dashboardPage.navigate();
+      await dashboardPage.navigateToDashboard();
       await dashboardPage.navigateToPIM();
       await expect(page).toHaveURL(/pim/);
     });

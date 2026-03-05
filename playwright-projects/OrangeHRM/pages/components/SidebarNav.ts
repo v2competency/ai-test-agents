@@ -1,10 +1,11 @@
 // pages/components/SidebarNav.ts
 import { Page } from '@playwright/test';
-import { SelfHealingLocator, ElementDefinition } from '../../utils/SelfHealingLocator';
+import { ElementDefinition } from '../../utils/SelfHealingLocator';
+import { ILocatorStrategy, createLocatorStrategy } from '../../utils/LocatorStrategy';
 
 export class SidebarNav {
   private page: Page;
-  private healer: SelfHealingLocator;
+  private healer: ILocatorStrategy;
 
   // Menu item definitions
   private readonly menuItems: Record<string, ElementDefinition> = {
@@ -111,7 +112,7 @@ export class SidebarNav {
 
   constructor(page: Page) {
     this.page = page;
-    this.healer = new SelfHealingLocator(page);
+    this.healer = createLocatorStrategy(page);
   }
 
   /**
