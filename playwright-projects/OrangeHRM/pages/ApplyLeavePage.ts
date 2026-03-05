@@ -8,11 +8,9 @@ export class ApplyLeavePage extends BasePage {
   private readonly leaveTypeDropdownDef: ElementDefinition = {
     name: 'leaveTypeDropdown',
     description: 'Leave Type dropdown selector',
-    primary: '.1oxd-select-wrapper',
+    primary: '.oxd-select-wrapper',
     fallbacks: [
-      '.1oxd-select-text-input',
-      '.1oxd-select-wrapper:first-of-type',
-      '[class*="1select"]:has-text("Select")'
+      '.oxd-select-wrapper'
     ],
     type: 'dropdown'
   };
