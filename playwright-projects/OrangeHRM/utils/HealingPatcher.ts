@@ -74,7 +74,7 @@ export function saveBrokenFallbacks(record: BrokenFallbackRecord): void {
 
 /**
  * Apply broken fallback fixes back to page object source files
- * Removes broken fallbacks from the fallbacks array in source
+ * Removes broken fallbacks and adds the working selector as a new fallback
  */
 export function applyFallbackFixes(): { patched: number; details: string[] } {
   if (!fs.existsSync(BROKEN_FALLBACKS_FILE)) {
@@ -103,10 +103,12 @@ export function applyFallbackFixes(): { patched: number; details: string[] } {
       const relFile = path.relative(path.join(__dirname, '..'), file);
       let modified = false;
 
+      // Check this file contains the element definition
+      const elementCheck = new RegExp(`name:\\s*['"]${escapeRegex(record.elementName)}['"]`);
+      if (!elementCheck.test(content)) continue;
+
       // Remove each broken fallback string from the file
       for (const broken of record.brokenFallbacks) {
-        // Match the fallback as a quoted string in an array, with optional trailing comma
-        // Handles both: 'selector',  and  'selector'\n    ]
         const patterns = [
           new RegExp(`\\n\\s*'${escapeRegex(broken)}'\\s*,?`, 'g'),
           new RegExp(`\\n\\s*"${escapeRegex(broken)}"\\s*,?`, 'g'),
@@ -121,11 +123,60 @@ export function applyFallbackFixes(): { patched: number; details: string[] } {
         }
       }
 
+      // Fix any trailing commas before closing bracket
+      content = content.replace(/,(\s*\])/g, '$1');
+      // Collapse empty arrays with blank lines: [\n\n  ] → []
+      content = content.replace(/\[\s*\]/g, '[]');
+
+      // Add the working selector as a fallback if we have one and it's not already the primary
+      if (record.workingSelector) {
+        // Find the fallbacks array for this element: fallbacks: [...] or fallbacks: []
+        const fallbacksPattern = new RegExp(
+          `(name:\\s*['"]${escapeRegex(record.elementName)}['"][\\s\\S]*?fallbacks:\\s*)(\\[[^\\]]*\\])`,
+        );
+        const fallbackMatch = content.match(fallbacksPattern);
+
+        if (fallbackMatch) {
+          const currentArray = fallbackMatch[2];
+          const escapedWorking = record.workingSelector.replace(/'/g, "\\'");
+
+          // Only add if not already present
+          if (!currentArray.includes(record.workingSelector)) {
+            let newArray: string;
+            if (currentArray === '[]') {
+              // Empty array — add the working selector with proper indentation
+              // Detect indentation from context: find the line with 'fallbacks:'
+              const indentMatch = content.match(new RegExp(`([ \\t]*)fallbacks:\\s*\\[`));
+              const baseIndent = indentMatch ? indentMatch[1] : '    ';
+              const itemIndent = baseIndent + '  ';
+              newArray = `[\n${itemIndent}'${escapedWorking}'\n${baseIndent}]`;
+            } else {
+              // Has existing entries — add before closing bracket
+              const indentMatch = currentArray.match(/\n(\s*)\]/);
+              const baseIndent = indentMatch ? indentMatch[1] : '    ';
+              const itemIndent = baseIndent + '  ';
+              newArray = currentArray.replace(
+                /(\s*)\]/,
+                `,\n${itemIndent}'${escapedWorking}'$1]`
+              );
+            }
+
+            content = content.replace(fallbacksPattern, `$1${newArray}`);
+            modified = true;
+          }
+        }
+      }
+
       if (modified) {
-        // Fix any trailing commas before closing bracket: ,\n    ] → \n    ]
-        content = content.replace(/,(\s*\])/g, '$1');
         fs.writeFileSync(file, content);
-        details.push(`Removed ${record.brokenFallbacks.length} broken fallback(s) for "${record.elementName}" in ${relFile}`);
+        const actions: string[] = [];
+        if (record.brokenFallbacks.length > 0) {
+          actions.push(`removed ${record.brokenFallbacks.length} broken`);
+        }
+        if (record.workingSelector) {
+          actions.push(`added '${record.workingSelector}'`);
+        }
+        details.push(`Fallbacks for "${record.elementName}" in ${relFile}: ${actions.join(', ')}`);
         patched++;
         break;
       }
