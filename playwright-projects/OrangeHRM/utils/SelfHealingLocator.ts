@@ -33,13 +33,14 @@ export class SelfHealingLocator implements ILocatorStrategy {
    * Tier 3: AI Visual Analysis
    * Tier 4: AI DOM Analysis
    */
-  async locate(element: ElementDefinition, timeout = 5000): Promise<Locator> {
+  async locate(element: ElementDefinition, timeout = 15000): Promise<Locator> {
     const start = Date.now();
+    const healingTimeout = 5000; // shorter timeout for fallback/AI tiers
 
-    // Try primary selector first
+    // Try primary selector first (gets the full timeout, same as StandardLocator)
     try {
       const locator = this.page.locator(element.primary);
-      await locator.waitFor({ state: 'visible', timeout: timeout / 4 });
+      await locator.waitFor({ state: 'visible', timeout });
       this.reporter.record(element.name, element.primary, element.primary, 'primary', Date.now() - start);
       return locator;
     } catch {
@@ -51,7 +52,7 @@ export class SelfHealingLocator implements ILocatorStrategy {
     if (cached) {
       try {
         const locator = this.page.locator(cached);
-        await locator.waitFor({ state: 'visible', timeout: timeout / 4 });
+        await locator.waitFor({ state: 'visible', timeout: healingTimeout });
         this.reporter.record(element.name, element.primary, cached, 'cache', Date.now() - start);
         return locator;
       } catch {
@@ -64,7 +65,7 @@ export class SelfHealingLocator implements ILocatorStrategy {
     for (const fallback of element.fallbacks) {
       try {
         const locator = this.page.locator(fallback);
-        await locator.waitFor({ state: 'visible', timeout: timeout / 6 });
+        await locator.waitFor({ state: 'visible', timeout: healingTimeout / element.fallbacks.length });
         this.cache.set(element.name, fallback);
         this.reporter.record(element.name, element.primary, fallback, 'fallback', Date.now() - start);
         return locator;
@@ -73,7 +74,7 @@ export class SelfHealingLocator implements ILocatorStrategy {
       }
     }
 
-    // TIER 3 & 4: AI-powered healing
+    // TIER 3 & 4: AI-powered healing (only reached if primary + fallbacks all failed)
     if (this.aiObserver.isEnabled()) {
       // Tier 3: Visual analysis using screenshot
       const screenshot = await this.page.screenshot({ type: 'png' });
@@ -82,7 +83,7 @@ export class SelfHealingLocator implements ILocatorStrategy {
       if (aiSelector) {
         try {
           const locator = this.page.locator(aiSelector);
-          await locator.waitFor({ state: 'visible', timeout: timeout / 4 });
+          await locator.waitFor({ state: 'visible', timeout: healingTimeout });
           this.cache.set(element.name, aiSelector);
           this.reporter.record(element.name, element.primary, aiSelector, 'ai_visual', Date.now() - start);
           return locator;
@@ -98,7 +99,7 @@ export class SelfHealingLocator implements ILocatorStrategy {
       if (aiSelector) {
         try {
           const locator = this.page.locator(aiSelector);
-          await locator.waitFor({ state: 'visible', timeout: timeout / 4 });
+          await locator.waitFor({ state: 'visible', timeout: healingTimeout });
           this.cache.set(element.name, aiSelector);
           this.reporter.record(element.name, element.primary, aiSelector, 'ai_dom', Date.now() - start);
           return locator;
@@ -138,15 +139,45 @@ export class SelfHealingLocator implements ILocatorStrategy {
   }
 
   /**
-   * Check if element is visible with self-healing
+   * Check if element is visible (skips AI healing to avoid slow API calls for existence checks)
    */
   async isVisible(element: ElementDefinition, timeout = 3000): Promise<boolean> {
+    const perTierTimeout = Math.max(timeout / 3, 1000);
+
+    // Try primary selector
     try {
-      const locator = await this.locate(element, timeout);
-      return await locator.isVisible();
+      const locator = this.page.locator(element.primary);
+      await locator.waitFor({ state: 'visible', timeout: perTierTimeout });
+      return true;
     } catch {
-      return false;
+      // Primary failed
     }
+
+    // Try cache
+    const cached = this.cache.get(element.name);
+    if (cached) {
+      try {
+        const locator = this.page.locator(cached);
+        await locator.waitFor({ state: 'visible', timeout: perTierTimeout });
+        return true;
+      } catch {
+        this.cache.delete(element.name);
+      }
+    }
+
+    // Try fallbacks
+    for (const fallback of element.fallbacks) {
+      try {
+        const locator = this.page.locator(fallback);
+        await locator.waitFor({ state: 'visible', timeout: perTierTimeout / element.fallbacks.length });
+        this.cache.set(element.name, fallback);
+        return true;
+      } catch {
+        continue;
+      }
+    }
+
+    return false;
   }
 
   /**
