@@ -1,0 +1,16 @@
+Property,Value
+Application_Name,IMDEX HUB-IQ
+Application_URL,https://iq.dev.imdexhub.com
+Application_Type,Mining/Drilling Data Management Platform (SaaS)
+Generated_Date,2026-03-05
+Total_Test_Cases,96
+Modules,"Authentication,Dashboard,View Data,Add Project,Add Drillhole,Assign Core Orientations,Approve Surveys,E2E"
+Positive_Tests,43
+Negative_Tests,27
+Boundary_Tests,16
+Security_Tests,14
+E2E_Tests,4
+High_Priority,48
+Medium_Priority,36
+Low_Priority,12
+Generator_Version,Test Case Generator Agent v1.0
