@@ -18,7 +18,14 @@ export interface ILocatorStrategy {
   clearCache(): void;
 }
 
+let _loggedMode = false;
+
 export function createLocatorStrategy(page: Page): ILocatorStrategy {
   const aiEnabled = process.env.AI_HEALING_ENABLED === 'true';
+  if (!_loggedMode) {
+    const model = process.env.AI_MODEL || 'claude-sonnet-4-20250514';
+    console.log(`[SelfHealing] AI Mode: ${aiEnabled}${aiEnabled ? ` | Model: ${model}` : ''}`);
+    _loggedMode = true;
+  }
   return aiEnabled ? new SelfHealingLocator(page) : new StandardLocator(page);
 }

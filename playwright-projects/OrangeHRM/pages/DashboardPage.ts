@@ -95,7 +95,7 @@ export class DashboardPage extends BasePage {
     primary: '.orangehrm-quick-launch-card:has-text("Assign Leave")',
     fallbacks: [
       'button:has-text("Assign Leave")',
-      '[title="Assign Leave"]'
+      'button[title="Assign Leave"]'
     ],
     type: 'button'
   };
@@ -106,7 +106,7 @@ export class DashboardPage extends BasePage {
     primary: '.orangehrm-quick-launch-card:has-text("Leave List")',
     fallbacks: [
       'button:has-text("Leave List")',
-      '[title="Leave List"]'
+      'button[title="Leave List"]'
     ],
     type: 'button'
   };
@@ -117,7 +117,7 @@ export class DashboardPage extends BasePage {
     primary: '.orangehrm-quick-launch-card:has-text("Apply Leave")',
     fallbacks: [
       'button:has-text("Apply Leave")',
-      '[title="Apply Leave"]'
+      'button[title="Apply Leave"]'
     ],
     type: 'button'
   };
@@ -128,7 +128,7 @@ export class DashboardPage extends BasePage {
     primary: '.orangehrm-quick-launch-card:has-text("My Leave")',
     fallbacks: [
       'button:has-text("My Leave")',
-      '[title="My Leave"]'
+      'button[title="My Leave"]'
     ],
     type: 'button'
   };

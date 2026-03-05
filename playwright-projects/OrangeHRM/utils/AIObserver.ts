@@ -13,9 +13,6 @@ export class AIObserver {
     if (hasKey && aiEnabled) {
       this.client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
       this.enabled = true;
-      console.log(`[AIObserver] Initialized with model: ${process.env.AI_MODEL || 'claude-sonnet-4-20250514'}`);
-    } else {
-      console.log(`[AIObserver] Disabled (API key: ${hasKey}, AI_HEALING_ENABLED: ${process.env.AI_HEALING_ENABLED})`);
     }
     this.model = process.env.AI_MODEL || 'claude-sonnet-4-20250514';
   }
