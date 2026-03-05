@@ -133,6 +133,8 @@ export class ApplyLeavePage extends BasePage {
     await this.healer.click(this.leaveTypeDropdownDef);
     await this.page.locator(`.oxd-select-option:has-text("${leaveType}")`).click();
     await this.waitForSpinnerToDisappear();
+    await this.waitForPageLoad();
+    await this.page.waitForTimeout(2000); // Wait for balance to update after selecting leave type
   }
 
   /**

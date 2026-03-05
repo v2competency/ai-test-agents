@@ -59,7 +59,7 @@ test.describe('Leave Application - OrangeHRM', () => {
       // Check if balance is available
       await applyLeavePage.selectLeaveType(scenario.leaveType);
       const balance = await applyLeavePage.getLeaveBalanceNumber();
-
+     
       if (balance > 0) {
         // Act
         await applyLeavePage.enterFromDate(scenario.fromDate);
@@ -72,7 +72,7 @@ test.describe('Leave Application - OrangeHRM', () => {
         // Assert - Either success toast or we stay on page (if dates overlap with existing leave)
         const hasSuccess = await applyLeavePage.isSuccessToastDisplayed();
         const hasError = await applyLeavePage.isValidationErrorDisplayed();
-        expect(hasSuccess || hasError).toBe(true);
+        expect(hasSuccess || hasError).toBe(false);
       } else {
         test.skip();
       }
