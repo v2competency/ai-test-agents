@@ -1,5 +1,5 @@
 // config/global-teardown.ts
-import { applyHealedSelectors } from '../utils/HealingPatcher';
+import { applyHealedSelectors, applyFallbackFixes } from '../utils/HealingPatcher';
 import { HealingReporter } from '../utils/HealingReporter';
 import * as path from 'path';
 
@@ -16,11 +16,23 @@ async function globalTeardown() {
   const { patched, details } = applyHealedSelectors();
 
   if (patched > 0) {
-    console.log(`\n[SelfHealing] Patched ${patched} selector(s) in source files:`);
+    console.log(`\n[SelfHealing] Patched ${patched} primary selector(s) in source files:`);
     for (const detail of details) {
       console.log(`  ${detail}`);
     }
-    console.log(`[SelfHealing] Re-run tests to verify the patched selectors.\n`);
+  }
+
+  // Remove broken fallbacks from source files
+  const fallbackResult = applyFallbackFixes();
+  if (fallbackResult.patched > 0) {
+    console.log(`\n[SelfHealing] Fixed ${fallbackResult.patched} fallback issue(s) in source files:`);
+    for (const detail of fallbackResult.details) {
+      console.log(`  ${detail}`);
+    }
+  }
+
+  if (patched > 0 || fallbackResult.patched > 0) {
+    console.log(`\n[SelfHealing] Re-run tests to verify the patched selectors.\n`);
   }
 }
 

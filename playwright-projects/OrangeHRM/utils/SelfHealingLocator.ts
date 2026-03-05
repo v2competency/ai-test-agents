@@ -4,7 +4,7 @@ import * as path from 'path';
 import { AIObserver } from './AIObserver';
 import { HealingReporter } from './HealingReporter';
 import { ILocatorStrategy } from './LocatorStrategy';
-import { saveHealedSelector } from './HealingPatcher';
+import { saveHealedSelector, saveBrokenFallbacks } from './HealingPatcher';
 
 export interface ElementDefinition {
   name: string;
@@ -75,6 +75,10 @@ export class SelfHealingLocator implements ILocatorStrategy {
         this.cache.set(element.name, selector);
       }
       this.reporter.record(element.name, element.primary, selector, method, Date.now() - start);
+
+      // Validate all other selectors in the background (non-blocking)
+      this.validateFallbacks(element, selector).catch(() => { /* ignore */ });
+
       return locator;
     }
 
@@ -200,6 +204,43 @@ export class SelfHealingLocator implements ILocatorStrategy {
         }
       });
     });
+  }
+
+  /**
+   * Validate all selectors (primary + fallbacks) against the current page.
+   * Records broken fallbacks for patching in global teardown.
+   */
+  private async validateFallbacks(element: ElementDefinition, workingSelector: string): Promise<void> {
+    const allSelectors = [element.primary, ...element.fallbacks];
+    const brokenFallbacks: string[] = [];
+
+    for (const selector of allSelectors) {
+      // Skip the one that just worked
+      if (selector === workingSelector) continue;
+
+      try {
+        const count = await this.page.locator(selector).count();
+        if (count === 0) {
+          brokenFallbacks.push(selector);
+        }
+      } catch {
+        brokenFallbacks.push(selector);
+      }
+    }
+
+    if (brokenFallbacks.length > 0) {
+      // Only save fallback-level broken selectors (not primary — primary is handled by saveHealedSelector)
+      const brokenFallbacksOnly = brokenFallbacks.filter(s => element.fallbacks.includes(s));
+      if (brokenFallbacksOnly.length > 0) {
+        console.log(`[SelfHealing] Broken fallbacks for "${element.name}": ${brokenFallbacksOnly.join(', ')}`);
+        saveBrokenFallbacks({
+          elementName: element.name,
+          brokenFallbacks: brokenFallbacksOnly,
+          workingSelector,
+          timestamp: new Date().toISOString()
+        });
+      }
+    }
   }
 
   /**

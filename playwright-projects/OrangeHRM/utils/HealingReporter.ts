@@ -196,7 +196,7 @@ Element: ${record.elementName}
   }
 
   /**
-   * Load records from file and generate a full report
+   * Load records from file and generate a full report (includes broken fallbacks if present)
    */
   static generateReportFromFile(filePath: string): string | null {
     if (!fs.existsSync(filePath)) return null;
@@ -213,19 +213,52 @@ Element: ${record.elementName}
     const reporter = new HealingReporter();
     reporter.records = records;
 
-    // Save the full report as JSON alongside
+    // Load broken fallbacks if available
+    const brokenFallbacksFile = path.join(path.dirname(filePath), 'broken-fallbacks.json');
+    let brokenFallbacks: { elementName: string; brokenFallbacks: string[]; workingSelector: string }[] = [];
+    if (fs.existsSync(brokenFallbacksFile)) {
+      try {
+        brokenFallbacks = JSON.parse(fs.readFileSync(brokenFallbacksFile, 'utf-8'));
+      } catch { /* ignore */ }
+    }
+
+    // Save only non-primary (healed/failed) records to the full report
+    const failureRecords = records.filter(r => r.method !== 'primary');
     const jsonPath = filePath.replace('.json', '-full.json');
     const report = {
       generatedAt: new Date().toISOString(),
       statistics: reporter.getStatistics(),
-      records
+      records: failureRecords,
+      brokenFallbacks
     };
     fs.writeFileSync(jsonPath, JSON.stringify(report, null, 2));
 
     // Clean up the raw records file
     fs.unlinkSync(filePath);
 
-    return reporter.generateReport();
+    // Generate human-readable report with broken fallbacks section
+    let textReport = reporter.generateReport();
+
+    if (brokenFallbacks.length > 0) {
+      let fallbackSection = `
+BROKEN FALLBACKS (Will be removed from source)
+------------------------------------------------
+`;
+      for (const entry of brokenFallbacks) {
+        fallbackSection += `
+Element: ${entry.elementName}
+  Working:  ${entry.workingSelector}
+  Broken:   ${entry.brokenFallbacks.join(', ')}
+`;
+      }
+      // Insert before the closing separator
+      textReport = textReport.replace(
+        /\n========================================\n$/,
+        fallbackSection + '\n========================================\n'
+      );
+    }
+
+    return textReport;
   }
 
   /**

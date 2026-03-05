@@ -10,7 +10,15 @@ interface HealedSelector {
   timestamp: string;
 }
 
+interface BrokenFallbackRecord {
+  elementName: string;
+  brokenFallbacks: string[];
+  workingSelector: string;
+  timestamp: string;
+}
+
 const HEALED_FILE = path.join(__dirname, '..', 'reports', 'healed-selectors.json');
+const BROKEN_FALLBACKS_FILE = path.join(__dirname, '..', 'reports', 'broken-fallbacks.json');
 
 /**
  * Save a healed selector to the shared JSON file (called during test execution)
@@ -35,6 +43,101 @@ export function saveHealedSelector(record: HealedSelector): void {
   records.push(record);
 
   fs.writeFileSync(HEALED_FILE, JSON.stringify(records, null, 2));
+}
+
+/**
+ * Save broken fallbacks to the shared JSON file (called during test execution)
+ */
+export function saveBrokenFallbacks(record: BrokenFallbackRecord): void {
+  if (record.brokenFallbacks.length === 0) return;
+
+  const dir = path.dirname(BROKEN_FALLBACKS_FILE);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+
+  let records: BrokenFallbackRecord[] = [];
+  if (fs.existsSync(BROKEN_FALLBACKS_FILE)) {
+    try {
+      records = JSON.parse(fs.readFileSync(BROKEN_FALLBACKS_FILE, 'utf-8'));
+    } catch {
+      records = [];
+    }
+  }
+
+  // Deduplicate — keep latest per element
+  records = records.filter(r => r.elementName !== record.elementName);
+  records.push(record);
+
+  fs.writeFileSync(BROKEN_FALLBACKS_FILE, JSON.stringify(records, null, 2));
+}
+
+/**
+ * Apply broken fallback fixes back to page object source files
+ * Removes broken fallbacks from the fallbacks array in source
+ */
+export function applyFallbackFixes(): { patched: number; details: string[] } {
+  if (!fs.existsSync(BROKEN_FALLBACKS_FILE)) {
+    return { patched: 0, details: [] };
+  }
+
+  let records: BrokenFallbackRecord[];
+  try {
+    records = JSON.parse(fs.readFileSync(BROKEN_FALLBACKS_FILE, 'utf-8'));
+  } catch {
+    return { patched: 0, details: ['Failed to parse broken-fallbacks.json.'] };
+  }
+
+  if (records.length === 0) {
+    return { patched: 0, details: [] };
+  }
+
+  const pagesDir = path.join(__dirname, '..', 'pages');
+  const pageFiles = getAllTsFiles(pagesDir);
+  const details: string[] = [];
+  let patched = 0;
+
+  for (const record of records) {
+    for (const file of pageFiles) {
+      let content = fs.readFileSync(file, 'utf-8');
+      const relFile = path.relative(path.join(__dirname, '..'), file);
+      let modified = false;
+
+      // Remove each broken fallback string from the file
+      for (const broken of record.brokenFallbacks) {
+        // Match the fallback as a quoted string in an array, with optional trailing comma
+        // Handles both: 'selector',  and  'selector'\n    ]
+        const patterns = [
+          new RegExp(`\\n\\s*'${escapeRegex(broken)}'\\s*,?`, 'g'),
+          new RegExp(`\\n\\s*"${escapeRegex(broken)}"\\s*,?`, 'g'),
+        ];
+
+        for (const pattern of patterns) {
+          const newContent = content.replace(pattern, '');
+          if (newContent !== content) {
+            content = newContent;
+            modified = true;
+          }
+        }
+      }
+
+      if (modified) {
+        // Fix any trailing commas before closing bracket: ,\n    ] → \n    ]
+        content = content.replace(/,(\s*\])/g, '$1');
+        fs.writeFileSync(file, content);
+        details.push(`Removed ${record.brokenFallbacks.length} broken fallback(s) for "${record.elementName}" in ${relFile}`);
+        patched++;
+        break;
+      }
+    }
+  }
+
+  // Clean up
+  if (patched > 0) {
+    try { fs.unlinkSync(BROKEN_FALLBACKS_FILE); } catch { /* ignore */ }
+  }
+
+  return { patched, details };
 }
 
 /**
