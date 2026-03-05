@@ -1,8 +1,10 @@
 // utils/SelfHealingLocator.ts
 import { Page, Locator } from '@playwright/test';
+import * as path from 'path';
 import { AIObserver } from './AIObserver';
 import { HealingReporter } from './HealingReporter';
 import { ILocatorStrategy } from './LocatorStrategy';
+import { saveHealedSelector } from './HealingPatcher';
 
 export interface ElementDefinition {
   name: string;
@@ -20,10 +22,17 @@ export class SelfHealingLocator implements ILocatorStrategy {
   private aiObserver: AIObserver;
   private reporter: HealingReporter;
 
+  private static readonly RECORDS_FILE = path.join(__dirname, '..', 'reports', 'healing-records.json');
+
   constructor(page: Page) {
     this.page = page;
     this.aiObserver = new AIObserver();
     this.reporter = new HealingReporter();
+
+    // Persist healing records when the page closes (end of each test)
+    page.on('close', () => {
+      this.reporter.persistRecords(SelfHealingLocator.RECORDS_FILE);
+    });
   }
 
   /**
@@ -90,6 +99,13 @@ export class SelfHealingLocator implements ILocatorStrategy {
           console.log(`[SelfHealing] AI Vision healed "${element.name}" with: ${aiSelector}`);
           this.cache.set(element.name, aiSelector);
           this.reporter.record(element.name, element.primary, aiSelector, 'ai_visual', Date.now() - start);
+          saveHealedSelector({
+            elementName: element.name,
+            originalSelector: element.primary,
+            healedSelector: aiSelector,
+            method: 'ai_visual',
+            timestamp: new Date().toISOString()
+          });
           return locator.first();
         } else {
           console.log(`[SelfHealing] AI Vision returned no selector for "${element.name}"`);
@@ -111,6 +127,13 @@ export class SelfHealingLocator implements ILocatorStrategy {
           console.log(`[SelfHealing] AI DOM healed "${element.name}" with: ${aiSelector}`);
           this.cache.set(element.name, aiSelector);
           this.reporter.record(element.name, element.primary, aiSelector, 'ai_dom', Date.now() - start);
+          saveHealedSelector({
+            elementName: element.name,
+            originalSelector: element.primary,
+            healedSelector: aiSelector,
+            method: 'ai_dom',
+            timestamp: new Date().toISOString()
+          });
           return locator.first();
         } else {
           console.log(`[SelfHealing] AI DOM returned no selector for "${element.name}"`);

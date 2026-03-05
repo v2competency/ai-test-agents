@@ -63,5 +63,5 @@ export default defineConfig({
 
   // Global setup/teardown
   globalSetup: require.resolve('./config/global-setup'),
-  // globalTeardown: require.resolve('./config/global-teardown'),
+  globalTeardown: require.resolve('./config/global-teardown'),
 });

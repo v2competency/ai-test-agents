@@ -172,6 +172,63 @@ Element: ${record.elementName}
   }
 
   /**
+   * Append current records to a shared file (safe for multi-worker)
+   */
+  persistRecords(filePath: string): void {
+    if (this.records.length === 0) return;
+
+    const dir = path.dirname(filePath);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+
+    let existing: HealingRecord[] = [];
+    if (fs.existsSync(filePath)) {
+      try {
+        existing = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+      } catch {
+        existing = [];
+      }
+    }
+
+    existing.push(...this.records);
+    fs.writeFileSync(filePath, JSON.stringify(existing, null, 2));
+  }
+
+  /**
+   * Load records from file and generate a full report
+   */
+  static generateReportFromFile(filePath: string): string | null {
+    if (!fs.existsSync(filePath)) return null;
+
+    let records: HealingRecord[];
+    try {
+      records = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+    } catch {
+      return null;
+    }
+
+    if (records.length === 0) return null;
+
+    const reporter = new HealingReporter();
+    reporter.records = records;
+
+    // Save the full report as JSON alongside
+    const jsonPath = filePath.replace('.json', '-full.json');
+    const report = {
+      generatedAt: new Date().toISOString(),
+      statistics: reporter.getStatistics(),
+      records
+    };
+    fs.writeFileSync(jsonPath, JSON.stringify(report, null, 2));
+
+    // Clean up the raw records file
+    fs.unlinkSync(filePath);
+
+    return reporter.generateReport();
+  }
+
+  /**
    * Clear all records
    */
   clear(): void {
