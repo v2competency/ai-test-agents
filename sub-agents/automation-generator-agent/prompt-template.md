@@ -14,9 +14,10 @@ Base URL: {YOUR_APP_URL}
 
 Please:
 1. Parse the CSV test cases
-2. Show me what will be generated (pages, tests, data files, self-healing utilities)
-3. After my confirmation, generate the complete Playwright automation framework with AI Observer
-4. Save to playwright-projects/{AppName}/
+2. Show me what will be generated (pages, tests, data files)
+3. After my confirmation, generate the complete Playwright automation framework
+4. Copy all utils/ and config/ files verbatim from reference implementation
+5. Save to playwright-projects/{AppName}/
 ```
 
 ---
@@ -33,24 +34,22 @@ INPUT:
 - Application Type: {Web App / E-Commerce / SaaS / CMS / etc.}
 
 REQUIREMENTS:
-1. Parse all test cases from CSV (columns: Test_ID, Module, Test_Title, Test_Type, Priority, Precondition, Test_Data, Steps, Expected_Result, Tags)
-2. Generate Page Object Model classes with self-healing integration
-3. Create data-driven test specifications from parsed Test_Data
+1. Parse all test cases from CSV
+2. Generate Page Object Model classes with ElementDefinition pattern:
+   - private readonly {name}Def: ElementDefinition at page level
+   - primary + fallbacks[] for each element
+   - Methods using this.healer.fill/click/getText/isVisible/locate
+3. Create data-driven test specifications with login in beforeEach
 4. Include JSON test data files organized by test type
-5. Generate 4-tier self-healing framework (Cache → Fallbacks → AI Visual → AI DOM)
-6. Generate all configuration files including .env.example for API key
+5. Copy all utils/ files verbatim (SelfHealingLocator, AIObserver, HealingReporter, HealingPatcher, LocatorStrategy, StandardLocator, TestHelpers)
+6. Copy config/ files verbatim (global-setup.ts, global-teardown.ts)
+7. Copy BasePage.ts verbatim
+8. Generate playwright.config.ts (update baseURL only)
+9. Generate package.json with @anthropic-ai/sdk@^0.78.0
 
 OUTPUT:
 - Complete Playwright project in: playwright-projects/{AppName}/
 - Project should be ready to run with: npm install && npm test
-- Self-healing utilities in: utils/ folder
-
-PREFERENCES:
-- Browser: Chromium only
-- TypeScript strict mode
-- Include AI Observer self-healing: Yes
-- Generate healing reports: Yes
-- Generate README: Yes
 ```
 
 ---
@@ -64,10 +63,9 @@ Input: manual-tests/{AppName}_Manual_Test_Cases.csv
 Focus: Rows where Module = "{MODULE_NAME}"
 
 Generate:
-- {ModuleName}Page.ts (with self-healing integration)
-- {module}.spec.ts
-- {module}Data.json
-- Element definitions in ElementRegistry.ts
+- {ModuleName}Page.ts with ElementDefinition fields (private readonly {name}Def)
+- {module}.spec.ts with login in beforeEach
+- {module}Data.json with _metadata, validScenarios, invalidScenarios
 
 Skip other modules for now.
 ```
@@ -79,14 +77,14 @@ Skip other modules for now.
 ```
 I have an existing Playwright project at: playwright-projects/{AppName}/
 
-New test cases have been added to: manual-tests/{AppName}_Manual_Test_Cases.txt
+New test cases have been added to: manual-tests/{AppName}_Manual_Test_Cases.csv
 
 Please:
 1. Identify new test cases (not yet automated)
-2. Update existing page objects if needed
+2. Update existing page objects with new ElementDefinition fields if needed
 3. Add new test data to existing JSON files
 4. Generate new test specs for new tests
-5. Preserve existing code
+5. Preserve existing code and the same patterns
 ```
 
 ---
@@ -100,259 +98,26 @@ Generate Playwright automation with full AI-powered self-healing.
 Input: manual-tests/{AppName}_Manual_Test_Cases.csv
 
 Options:
-- Self-healing: Full 4-tier (Cache → Fallbacks → AI Visual → AI DOM)
+- Self-healing: Full 4-tier (parallel race primary+cache+fallbacks, then AI Visual, then AI DOM)
 - AI Observer: Enabled (requires ANTHROPIC_API_KEY)
-- Healing reports: Yes
-- Fallback selectors: 5+ per element
+- Auto-patching: Global teardown patches healed selectors back to source
+- Standard mode: Available via AI_HEALING_ENABLED=false
 
-Generate robust page objects with complete self-healing capabilities.
+Generate with the OrangeHRM reference project structure.
 ```
 
-### Without AI Healing (Fallbacks Only)
+### Without AI Healing (Standard Mode)
 ```
-Generate Playwright automation with fallback-only self-healing.
+Generate Playwright automation in standard mode (fallbacks only).
 
 Input: manual-tests/{AppName}_Manual_Test_Cases.csv
 
 Options:
-- Self-healing: 2-tier only (Cache → Fallbacks)
-- AI Observer: Disabled (no API key required)
-- Standard Playwright locators with fallbacks
-
-Generate page objects with fallback selectors but no AI integration.
-```
-
-### Multi-Browser Support
-```
-Generate Playwright automation with multi-browser support.
-
-Input: manual-tests/{AppName}_Manual_Test_Cases.csv
-
-Configure for:
-- Chromium
-- Firefox
-- WebKit (Safari)
-
-Include self-healing that works across all browsers.
-Update playwright.config.ts to run tests on all browsers.
-```
-
-### With Custom Output Location
-```
-Generate Playwright automation to a custom location.
-
-Input: manual-tests/{AppName}_Manual_Test_Cases.csv
-Output: {CUSTOM_PATH}/{project-name}/
-
-Generate complete project structure with self-healing at the specified location.
-```
-
-### Tag-Based Test Organization
-```
-Generate Playwright automation with tag-based test filtering.
-
-Input: manual-tests/{AppName}_Manual_Test_Cases.csv
-
-Organize tests by Tags column from CSV:
-- smoke tests: @smoke
-- regression tests: @regression
-- security tests: @security
-
-Generate npm scripts for tag-based execution:
-- npm run test:smoke
-- npm run test:regression
-- npm run test:security
-```
-
----
-
-## Review Before Generation
-
-```
-Before generating any code, please analyze and show me:
-
-Input: manual-tests/{AppName}_Manual_Test_Cases.csv
-
-Analysis Required:
-1. Summary of test cases parsed from CSV
-2. List of pages/modules identified (from Module column)
-3. Test distribution by Test_Type
-4. Tags summary for test organization
-5. Files that will be generated (including self-healing utilities)
-6. Element definitions planned for ElementRegistry
-7. Any potential issues or gaps
-
-Wait for my approval before proceeding with code generation.
-```
-
----
-
-## Generate Only Specific File Types
-
-### Self-Healing Utilities Only
-```
-Generate only self-healing framework files.
-
-Output: playwright-projects/{AppName}/utils/
-
-Generate:
-- SelfHealingLocator.ts (4-tier healing engine)
-- AIObserver.ts (Claude Vision integration)
-- HealingReporter.ts (statistics and reports)
-- ElementRegistry.ts (element definitions template)
-
-I'll integrate these into my existing page objects.
-```
-
-### Page Objects Only
-```
-Generate only Page Object files from: manual-tests/{AppName}_Manual_Test_Cases.csv
-
-Output: playwright-projects/{AppName}/pages/
-
-Include self-healing integration in page objects.
-I'll create the test specs myself.
-```
-
-### Test Data Only
-```
-Generate only JSON test data files from: manual-tests/{AppName}_Manual_Test_Cases.csv
-
-Output: playwright-projects/{AppName}/data/
-
-Parse Test_Data column from CSV into properly structured JSON files.
-Organize by Test_Type (validScenarios, invalidScenarios, etc.)
-```
-
-### Test Specs Only
-```
-I already have page objects at: playwright-projects/{AppName}/pages/
-
-Generate only test specifications from: manual-tests/{AppName}_Manual_Test_Cases.csv
-
-Output: playwright-projects/{AppName}/tests/
-
-Import from existing page objects.
-Include healing report generation in afterAll hooks.
-```
-
-### Element Registry Only
-```
-Analyze: manual-tests/{AppName}_Manual_Test_Cases.csv
-
-Generate only ElementRegistry.ts with:
-- Element definitions for each identified page
-- Primary selectors based on Steps column
-- 5+ fallback selectors per element
-- Element descriptions for AI healing
-
-Output: playwright-projects/{AppName}/utils/ElementRegistry.ts
-```
-
----
-
-## E-Commerce Specific
-
-```
-Generate e-commerce automation framework.
-
-Input: manual-tests/{StoreName}_Manual_Test_Cases.txt
-Base URL: {STORE_URL}
-
-Expected modules:
-- Product catalog (TC_PROD_*)
-- Shopping cart (TC_CART_*)
-- Checkout flow (TC_CHKOUT_*)
-- Payment (TC_PAY_*)
-- User account (TC_AUTH_*, TC_PROF_*)
-
-Generate with:
-- Multi-step checkout page objects
-- Cart state management helpers
-- Product data fixtures
-- E2E purchase flow tests
-```
-
----
-
-## SaaS Dashboard Specific
-
-```
-Generate SaaS dashboard automation framework.
-
-Input: manual-tests/{AppName}_Manual_Test_Cases.txt
-Base URL: {APP_URL}
-
-Expected modules:
-- Authentication with SSO
-- Dashboard widgets
-- Data tables with CRUD
-- Settings/Configuration
-- Reports/Analytics
-
-Include:
-- Table component helpers
-- Filter/Sort utilities
-- Data export verification
-- Chart/Widget assertions
-```
-
----
-
-## CI/CD Ready Generation
-
-```
-Generate CI/CD ready Playwright project.
-
-Input: manual-tests/{AppName}_Manual_Test_Cases.txt
-
-Include:
-- GitHub Actions workflow file
-- Docker configuration
-- Environment-specific configs (dev, staging, prod)
-- Parallel test execution setup
-- Report artifacts configuration
-
-Output structure should be ready for immediate CI integration.
-```
-
----
-
-## Modification Requests
-
-### After Generation - Add More Tests
-```
-The automation project at playwright-projects/{AppName}/ is generated.
-
-Please add tests for these new manual test cases:
-[Paste new test cases or reference updated file]
-
-Update:
-- Existing page objects if new elements needed
-- Add to existing test data JSON
-- Create new test specs
-```
-
-### After Generation - Refactor Page Object
-```
-Please refactor {PageName}Page.ts at: playwright-projects/{AppName}/pages/
-
-Changes needed:
-- Add method for {new_action}
-- Add locator for {new_element}
-- Improve error handling in {method_name}
-```
-
-### After Generation - Fix Locators
-```
-Some locators in the generated code aren't working.
-
-Page: {PageName}Page.ts
-Issue: {element} locator not finding element
-
-Actual element HTML: {paste_html}
-
-Please update the locator strategy for this element.
+- Self-healing: Standard mode (primary selector only)
+- AI Observer: Disabled (set AI_HEALING_ENABLED=false)
+- Still includes all utils/ files for future AI enablement
+
+Note: The same codebase supports both modes via environment variable toggle.
 ```
 
 ---
@@ -363,7 +128,7 @@ Please update the locator strategy for this element.
 ```
 I have manual test cases ready. Please generate complete Playwright automation.
 
-File: manual-tests/SampleApp_Manual_Test_Cases.txt
+File: manual-tests/SampleApp_Manual_Test_Cases.csv
 URL: https://sample-app.example.com
 
 Generate everything and show me how to run it.
@@ -375,29 +140,41 @@ I've analyzed the manual test cases. Here's what I'll generate:
 
 ## Generation Plan
 
-### Pages (3 files)
-- BasePage.ts - Common methods
+### Framework Files (Copied Verbatim)
+- config/global-setup.ts
+- config/global-teardown.ts
+- utils/SelfHealingLocator.ts
+- utils/AIObserver.ts
+- utils/HealingReporter.ts
+- utils/HealingPatcher.ts
+- utils/LocatorStrategy.ts
+- utils/StandardLocator.ts
+- utils/TestHelpers.ts
+- pages/BasePage.ts
+
+### Pages (Generated)
 - LoginPage.ts - Authentication page
-- RegistrationPage.ts - Registration page
+- DashboardPage.ts - Dashboard page
+- {Module}Page.ts - Per module
 
-### Tests (2 files)
+### Tests (Generated)
 - auth.spec.ts - 20 test cases
-- registration.spec.ts - 12 test cases
+- dashboard.spec.ts - 10 test cases
+- {module}.spec.ts - Per module
 
-### Data (2 files)
-- authData.json - Login test data
-- registrationData.json - Registration test data
+### Data (Generated)
+- authData.json
+- dashboardData.json
+- {module}Data.json
+- users.json
+- e2eData.json
 
-### Utilities (3 files)
-- SelfHealingLocator.ts
-- AIObserver.ts
-- TestHelpers.ts
-
-### Config (5 files)
+### Config (Generated from templates)
 - playwright.config.ts
-- tsconfig.json
 - package.json
+- tsconfig.json
 - .env.example
+- .gitignore
 - README.md
 
 **Proceed with generation?**
@@ -405,7 +182,7 @@ I've analyzed the manual test cases. Here's what I'll generate:
 
 ### After Confirmation
 ```
-✅ Playwright automation generated successfully!
+Playwright automation generated successfully!
 
 Location: playwright-projects/SampleApp/
 
@@ -414,17 +191,22 @@ Location: playwright-projects/SampleApp/
 cd playwright-projects/SampleApp
 npm install
 npx playwright install
-npm test
 
-## Project Structure
-[Shows generated structure]
+# Configure environment
+cp .env.example .env
+# Edit .env with your credentials and API key
 
-## Test Coverage
-- Total tests: 32
-- Authentication: 20 tests
-- Registration: 12 tests
+# Run tests
+npm test                    # All tests
+npm run test:ai             # With AI healing enabled
+npm run test:standard       # Without AI healing
+npm run test:headed         # With browser visible
+npm run test:smoke          # Smoke tests only
+npm run test:regression     # Regression suite
 
-All test case IDs from manual tests are preserved in automation.
+# View reports
+npm run report              # HTML report
+npm run allure:serve        # Allure report
 ```
 
 ---
@@ -436,17 +218,8 @@ All test case IDs from manual tests are preserved in automation.
 3. **Review generation plan** - Check the plan before confirming generation
 4. **Test incrementally** - Generate and test one module at a time for large projects
 5. **Configure ANTHROPIC_API_KEY** - For full AI-powered self-healing capabilities
-6. **Run healing demo first** - Use `npm run test:healing` to verify self-healing works
-7. **Review healing reports** - Check `reports/healing/` for maintenance insights
-8. **Add real test data** - Replace placeholder values with actual test credentials
-9. **Run in headed mode first** - Use `npm run test:headed` to verify visually
-
----
-
-## Self-Healing Best Practices
-
-1. **Element Descriptions** - Provide clear, unique descriptions for AI to identify elements
-2. **Fallback Diversity** - Use different selector strategies (id, class, text, aria-label)
-3. **Regular Report Review** - Monitor healing reports to identify fragile selectors
-4. **Update Primary Selectors** - When healing consistently uses a fallback, update the primary
-5. **Test Without API** - Verify tests work with AI disabled (fallbacks only mode)
+6. **Run standard mode first** - Use `npm run test:standard` to verify basic selectors work
+7. **Then enable AI mode** - Use `npm run test:ai` to test with full healing
+8. **Review healing reports** - Check console output for healing statistics
+9. **Auto-patching** - After AI heals selectors, the teardown patches source files automatically
+10. **Rich descriptions** - Write detailed `description` fields in ElementDefinitions for better AI healing

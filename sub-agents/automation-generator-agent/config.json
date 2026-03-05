@@ -1,8 +1,8 @@
 {
   "agent": {
     "name": "Automation Generator Agent",
-    "version": "2.0.0",
-    "description": "Generates Playwright test automation with AI-powered self-healing from manual test cases",
+    "version": "3.0.0",
+    "description": "Generates Playwright test automation with AI-powered self-healing from manual test cases, matching the OrangeHRM reference project structure",
     "type": "sub-agent"
   },
   "pipeline": {
@@ -27,14 +27,16 @@
     "output": {
       "directory": "playwright-projects/{AppName}",
       "structure": {
-        "pages": "Page Object Model classes",
+        "pages": "Page Object Model classes with ElementDefinition fields",
+        "pages/components": "Reusable UI components (e.g., SidebarNav)",
         "tests": "Test specification files",
         "data": "JSON test data files",
-        "utils": "Self-healing utilities",
-        "config": "Configuration files"
+        "utils": "Self-healing utilities (copied verbatim)",
+        "config": "Global setup/teardown (copied verbatim)"
       }
     },
-    "upstream": "testcase-generator-agent"
+    "upstream": "testcase-generator-agent",
+    "reference_project": "playwright-projects/OrangeHRM"
   },
   "capabilities": {
     "test_case_parsing": true,
@@ -42,7 +44,8 @@
     "test_data_generation": true,
     "test_spec_generation": true,
     "self_healing_integration": true,
-    "framework_setup": true
+    "framework_setup": true,
+    "auto_patching": true
   },
   "workflow": {
     "phases": [
@@ -66,101 +69,62 @@
       },
       {
         "id": 4,
-        "name": "Generate Page Objects",
-        "description": "Create TypeScript Page Object classes",
+        "name": "Copy Framework Files",
+        "description": "Copy utils/, config/, BasePage.ts verbatim",
         "requires_user_input": false
       },
       {
         "id": 5,
-        "name": "Generate Test Data",
-        "description": "Create JSON test data files",
+        "name": "Generate Page Objects",
+        "description": "Create TypeScript Page Object classes with ElementDefinition fields",
         "requires_user_input": false
       },
       {
         "id": 6,
-        "name": "Generate Test Specs",
-        "description": "Create Playwright test specifications",
+        "name": "Generate Test Data",
+        "description": "Create JSON test data files from CSV",
         "requires_user_input": false
       },
       {
         "id": 7,
-        "name": "Generate Framework Files",
-        "description": "Create config, utilities, and documentation",
+        "name": "Generate Test Specs",
+        "description": "Create Playwright test specifications with login in beforeEach",
+        "requires_user_input": false
+      },
+      {
+        "id": 8,
+        "name": "Generate Config & Docs",
+        "description": "Create playwright.config.ts, package.json, .env.example, README.md",
         "requires_user_input": false
       }
     ]
   },
   "parsing": {
     "module_mapping": {
-      "TC_AUTH_": {
-        "module": "Authentication",
-        "page": "LoginPage",
-        "file_prefix": "auth"
-      },
-      "TC_REG_": {
-        "module": "Registration",
-        "page": "RegistrationPage",
-        "file_prefix": "registration"
-      },
-      "TC_DASH_": {
-        "module": "Dashboard",
-        "page": "DashboardPage",
-        "file_prefix": "dashboard"
-      },
-      "TC_FORM_": {
-        "module": "Forms",
-        "page": "FormPage",
-        "file_prefix": "form"
-      },
-      "TC_LIST_": {
-        "module": "Lists",
-        "page": "ListPage",
-        "file_prefix": "list"
-      },
-      "TC_CRUD_": {
-        "module": "CRUD",
-        "page": "CrudPage",
-        "file_prefix": "crud"
-      },
-      "TC_CART_": {
-        "module": "Cart",
-        "page": "CartPage",
-        "file_prefix": "cart"
-      },
-      "TC_CHKOUT_": {
-        "module": "Checkout",
-        "page": "CheckoutPage",
-        "file_prefix": "checkout"
-      },
-      "TC_SEARCH_": {
-        "module": "Search",
-        "page": "SearchPage",
-        "file_prefix": "search"
-      },
-      "TC_PROF_": {
-        "module": "Profile",
-        "page": "ProfilePage",
-        "file_prefix": "profile"
-      },
-      "TC_SEC_": {
-        "module": "Security",
-        "page": null,
-        "file_prefix": "security"
-      },
-      "E2E_": {
-        "module": "EndToEnd",
-        "page": null,
-        "file_prefix": "e2e"
-      }
+      "TC_AUTH_": { "module": "Authentication", "page": "LoginPage", "file_prefix": "auth" },
+      "TC_REG_": { "module": "Registration", "page": "RegistrationPage", "file_prefix": "registration" },
+      "TC_DASH_": { "module": "Dashboard", "page": "DashboardPage", "file_prefix": "dashboard" },
+      "TC_FORM_": { "module": "Forms", "page": "FormPage", "file_prefix": "form" },
+      "TC_LIST_": { "module": "Lists", "page": "ListPage", "file_prefix": "list" },
+      "TC_CRUD_": { "module": "CRUD", "page": "CrudPage", "file_prefix": "crud" },
+      "TC_CART_": { "module": "Cart", "page": "CartPage", "file_prefix": "cart" },
+      "TC_CHKOUT_": { "module": "Checkout", "page": "CheckoutPage", "file_prefix": "checkout" },
+      "TC_SEARCH_": { "module": "Search", "page": "SearchPage", "file_prefix": "search" },
+      "TC_PROF_": { "module": "Profile", "page": "ProfilePage", "file_prefix": "profile" },
+      "TC_CONFIG_": { "module": "Configuration", "page": "ConfigPage", "file_prefix": "config" },
+      "TC_RPT_": { "module": "Reports", "page": "ReportsPage", "file_prefix": "reports" },
+      "TC_ENT_": { "module": "Entitlements", "page": "EntitlementsPage", "file_prefix": "entitlements" },
+      "TC_ASSIGN_": { "module": "Assignment", "page": "AssignPage", "file_prefix": "assign" },
+      "TC_APPLY_": { "module": "Application", "page": "ApplyPage", "file_prefix": "apply" },
+      "TC_SEC_": { "module": "Security", "page": null, "file_prefix": "security" },
+      "E2E_": { "module": "EndToEnd", "page": null, "file_prefix": "e2e" }
     },
     "type_mapping": {
       "001-099": "validScenarios",
       "100-199": "invalidScenarios",
       "200-299": "emptyFieldTests",
       "300-399": "boundaryTests",
-      "400-499": "securityTests",
-      "500-599": "caseSensitivityTests",
-      "600-699": "specialInputTests"
+      "400-499": "securityTests"
     }
   },
   "code_generation": {
@@ -169,87 +133,91 @@
       "no_any": true,
       "async_await": true
     },
-    "locator_strategy": {
-      "priority": [
-        "data-testid",
-        "data-test",
-        "id",
-        "name",
-        "aria-label",
-        "placeholder",
-        "role",
-        "text",
-        "class"
-      ],
-      "fallback_count": 5
+    "element_definition_pattern": {
+      "field_naming": "private readonly {descriptiveName}Def: ElementDefinition",
+      "name_field": "matches field name without Def suffix",
+      "description_field": "rich, contextual for AI healing",
+      "primary_field": "most specific CSS selector",
+      "fallbacks_field": "1-5 alternative selectors",
+      "type_field": "input | button | link | text | container | dropdown | checkbox | radio | textarea"
+    },
+    "page_object_pattern": {
+      "extends": "BasePage",
+      "imports": ["Page from @playwright/test", "BasePage from ./BasePage", "ElementDefinition from ../utils/SelfHealingLocator"],
+      "healer_usage": "this.healer.fill/click/getText/isVisible/locate/selectOption",
+      "constructor": "constructor(page: Page) { super(page); }"
+    },
+    "test_spec_pattern": {
+      "login_in_beforeEach": true,
+      "users_from_json": "import users from '../data/users.json'",
+      "section_separators": "// ============================================================================",
+      "tags_on_describe": "@smoke @regression @security @boundary @negative @e2e",
+      "test_naming": "TC_XXX_NNN: Description"
     },
     "self_healing": {
       "enabled": true,
-      "framework": "AI Observer",
+      "framework": "AI Observer v2.0",
+      "dual_mode": {
+        "standard": "StandardLocator (primary only, via AI_HEALING_ENABLED=false)",
+        "ai_healing": "SelfHealingLocator (4-tier with parallel race, via AI_HEALING_ENABLED=true)"
+      },
       "tiers": [
-        {
-          "tier": 1,
-          "name": "cache",
-          "description": "Check previously healed selectors from cache"
-        },
-        {
-          "tier": 2,
-          "name": "fallbacks",
-          "description": "Try predefined fallback selectors"
-        },
-        {
-          "tier": 3,
-          "name": "ai_visual",
-          "description": "AI-powered visual element detection using Claude Vision"
-        },
-        {
-          "tier": 4,
-          "name": "ai_dom",
-          "description": "AI-powered DOM analysis for element identification"
-        }
+        { "tier": 1, "name": "parallel_race", "description": "Race primary + cache + fallbacks in parallel" },
+        { "tier": 2, "name": "ai_visual", "description": "Screenshot + Claude Vision API analysis" },
+        { "tier": 3, "name": "ai_dom", "description": "Full DOM HTML analysis with AI" }
       ],
-      "healing_report": {
+      "auto_patching": {
         "enabled": true,
-        "format": "json",
-        "location": "reports/healing/"
+        "via": "config/global-teardown.ts",
+        "patches_primary": true,
+        "removes_broken_fallbacks": true,
+        "adds_working_fallbacks": true
       },
       "ai_observer": {
         "provider": "anthropic",
+        "sdk_version": "^0.78.0",
         "model": "claude-sonnet-4-20250514",
-        "capabilities": ["screenshot_analysis", "dom_parsing", "selector_generation"],
-        "fallback_without_api": true
+        "capabilities": ["screenshot_analysis", "dom_parsing", "selector_generation", "selector_validation"]
       }
     }
   },
-  "output_files": {
-    "pages": {
-      "BasePage.ts": "Base class with common methods",
-      "{PageName}Page.ts": "Page-specific classes"
-    },
-    "tests": {
-      "{module}.spec.ts": "Module test specifications",
-      "e2e/{flow}.e2e.spec.ts": "End-to-end tests"
-    },
-    "data": {
-      "{module}Data.json": "Module test data",
-      "users.json": "Test user credentials",
-      "securityPayloads.json": "Security test payloads"
-    },
-    "utils": {
-      "SelfHealingLocator.ts": "Core self-healing engine with 4-tier healing",
-      "AIObserver.ts": "AI-powered element detection using Claude Vision API",
-      "HealingReporter.ts": "Healing statistics and report generation",
-      "ElementRegistry.ts": "Centralized element definitions with fallbacks",
-      "TestHelpers.ts": "Common test utilities and data generators",
-      "RetryHandler.ts": "Smart retry logic with exponential backoff"
-    },
-    "config": {
-      "playwright.config.ts": "Playwright configuration",
-      "tsconfig.json": "TypeScript configuration",
-      "package.json": "Dependencies",
-      ".env.example": "Environment template",
-      ".gitignore": "Git ignore rules",
-      "README.md": "Project documentation"
+  "copy_verbatim_files": [
+    "config/global-setup.ts",
+    "config/global-teardown.ts",
+    "utils/SelfHealingLocator.ts",
+    "utils/AIObserver.ts",
+    "utils/HealingReporter.ts",
+    "utils/HealingPatcher.ts",
+    "utils/LocatorStrategy.ts",
+    "utils/StandardLocator.ts",
+    "pages/BasePage.ts"
+  ],
+  "generate_from_template_files": [
+    "playwright.config.ts",
+    "package.json",
+    "tsconfig.json",
+    ".env.example",
+    ".gitignore",
+    "README.md",
+    "utils/TestHelpers.ts"
+  ],
+  "generate_per_project_files": {
+    "pages": "{ModuleName}Page.ts for each identified module",
+    "pages/components": "Reusable components like SidebarNav.ts",
+    "tests": "{module}.spec.ts for each module",
+    "data": "{module}Data.json for each module, users.json, e2eData.json"
+  },
+  "dependencies": {
+    "devDependencies": {
+      "@anthropic-ai/sdk": "^0.78.0",
+      "@playwright/test": "^1.40.0",
+      "@types/node": "^20.10.0",
+      "allure-commandline": "^2.36.0",
+      "allure-playwright": "^3.4.4",
+      "cross-env": "^7.0.3",
+      "dotenv": "^16.3.1",
+      "rimraf": "^5.0.5",
+      "typescript": "^5.3.0"
     }
   },
   "guardrail_reference": {
