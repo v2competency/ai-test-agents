@@ -12,8 +12,8 @@
       "description": "Apply leave with valid data",
       "priority": "High",
       "leaveType": "Sick Leave",
-      "fromDate": "2025-04-01",
-      "toDate": "2025-04-02",
+      "fromDate": "2026-04-01",
+      "toDate": "2026-04-02",
       "comments": "Family event",
       "expectedResult": "success"
     },

@@ -22,6 +22,7 @@
     "test:dashboard": "npx playwright test tests/dashboard.spec.ts",
     "test:leave": "npx playwright test tests/apply-leave.spec.ts tests/leave-list.spec.ts tests/assign-leave.spec.ts",
     "test:leave-apply": "npx playwright test tests/apply-leave.spec.ts",
+    "test:leave-apply:headed": "npx playwright test tests/apply-leave.spec.ts --headed",
     "test:config": "npx playwright test tests/leave-config.spec.ts",
     "test:report": "npx playwright test tests/reports.spec.ts",
     "test:entitlements": "npx playwright test tests/entitlements.spec.ts",
