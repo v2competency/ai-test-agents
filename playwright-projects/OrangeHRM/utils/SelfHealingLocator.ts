@@ -110,6 +110,15 @@ export class SelfHealingLocator implements ILocatorStrategy {
             method: 'ai_visual',
             timestamp: new Date().toISOString()
           });
+          // Update broken fallbacks record with the working selector
+          if (element.fallbacks.length > 0) {
+            saveBrokenFallbacks({
+              elementName: element.name,
+              brokenFallbacks: element.fallbacks,
+              workingSelector: aiSelector,
+              timestamp: new Date().toISOString()
+            });
+          }
           return locator.first();
         } else {
           console.log(`[SelfHealing] AI Vision returned no selector for "${element.name}"`);
@@ -138,6 +147,15 @@ export class SelfHealingLocator implements ILocatorStrategy {
             method: 'ai_dom',
             timestamp: new Date().toISOString()
           });
+          // Update broken fallbacks record with the working selector
+          if (element.fallbacks.length > 0) {
+            saveBrokenFallbacks({
+              elementName: element.name,
+              brokenFallbacks: element.fallbacks,
+              workingSelector: aiSelector,
+              timestamp: new Date().toISOString()
+            });
+          }
           return locator.first();
         } else {
           console.log(`[SelfHealing] AI DOM returned no selector for "${element.name}"`);
@@ -149,7 +167,16 @@ export class SelfHealingLocator implements ILocatorStrategy {
       console.log(`[SelfHealing] AI Observer is disabled. Skipping AI healing.`);
     }
 
-    // All healing strategies failed
+    // All healing strategies failed — record all fallbacks as broken
+    if (element.fallbacks.length > 0) {
+      saveBrokenFallbacks({
+        elementName: element.name,
+        brokenFallbacks: element.fallbacks,
+        workingSelector: '',
+        timestamp: new Date().toISOString()
+      });
+    }
+
     const elapsed = Date.now() - start;
     console.log(`[SelfHealing] ALL strategies failed for "${element.name}" after ${elapsed}ms`);
     this.reporter.record(element.name, element.primary, null, 'failed', elapsed);

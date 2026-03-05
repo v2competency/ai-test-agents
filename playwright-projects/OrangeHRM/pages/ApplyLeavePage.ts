@@ -57,9 +57,8 @@ export class ApplyLeavePage extends BasePage {
     primary: 'textarea',
     fallbacks: [
       '.oxd-textarea',
-      '[class*="textarea"]',
-      'textarea[placeholder]'
-    ],
+      '[class*="textarea"]'
+],
     type: 'textarea'
   };
 

@@ -116,7 +116,6 @@ export class DashboardPage extends BasePage {
     description: 'Apply Leave quick launch button in Quick Launch widget',
     primary: '.orangehrm-quick-launch-card:has-text("Apply Leave")',
     fallbacks: [
-      'button:has-text("Apply Leave")',
       'button[title="Apply Leave"]'
     ],
     type: 'button'
