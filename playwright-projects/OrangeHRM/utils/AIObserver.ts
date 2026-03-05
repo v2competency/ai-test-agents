@@ -7,9 +7,15 @@ export class AIObserver {
   private model: string;
 
   constructor() {
-    if (process.env.ANTHROPIC_API_KEY && process.env.AI_HEALING_ENABLED !== 'false') {
+    const hasKey = !!process.env.ANTHROPIC_API_KEY;
+    const aiEnabled = process.env.AI_HEALING_ENABLED === 'true';
+
+    if (hasKey && aiEnabled) {
       this.client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
       this.enabled = true;
+      console.log(`[AIObserver] Initialized with model: ${process.env.AI_MODEL || 'claude-sonnet-4-20250514'}`);
+    } else {
+      console.log(`[AIObserver] Disabled (API key: ${hasKey}, AI_HEALING_ENABLED: ${process.env.AI_HEALING_ENABLED})`);
     }
     this.model = process.env.AI_MODEL || 'claude-sonnet-4-20250514';
   }
@@ -30,7 +36,7 @@ export class AIObserver {
     try {
       const response = await this.client.messages.create({
         model: this.model,
-        max_tokens: 200,
+        max_tokens: 300,
         messages: [{
           role: 'user',
           content: [
@@ -44,34 +50,26 @@ export class AIObserver {
             },
             {
               type: 'text',
-              text: `You are a test automation expert. Analyze this screenshot and find the CSS selector for a ${type} element that matches this description: "${description}".
+              text: `You are a Playwright test automation expert. Look at this screenshot and identify the ${type} element matching: "${description}".
 
-Requirements:
-- Return ONLY the CSS selector, nothing else
-- Prefer data-testid, id, or unique class selectors
-- Make the selector as specific and reliable as possible
-- If you cannot find it, return "NOT_FOUND"
+Based on what you see, suggest a CSS selector that would work in Playwright's page.locator(). Consider:
+- Text content visible on the element (use :has-text() or text= selectors)
+- Position relative to labels (use :has() combinators)
+- Common UI framework patterns (e.g., .oxd-select-wrapper for OrangeHRM dropdowns)
 
-CSS Selector:`
+Return ONLY the CSS selector on a single line, nothing else.
+If you truly cannot identify the element, return exactly: NOT_FOUND`
             }
           ]
         }]
       });
 
-      const selector = (response.content[0] as { type: string; text: string }).text?.trim();
+      const rawResponse = (response.content[0] as { type: string; text: string }).text?.trim();
+      console.log(`[AIObserver] Vision raw response: "${rawResponse}"`);
 
-      // Validate the selector
-      if (selector &&
-          selector !== 'NOT_FOUND' &&
-          selector.length < 150 &&
-          !selector.includes('\n') &&
-          !selector.toLowerCase().includes('sorry') &&
-          !selector.toLowerCase().includes('cannot')) {
-        return selector;
-      }
-      return null;
+      return this.validateSelector(rawResponse);
     } catch (error) {
-      console.error('[AIObserver] Vision analysis failed:', error);
+      console.error('[AIObserver] Vision analysis failed:', (error as Error).message);
       return null;
     }
   }
@@ -83,45 +81,66 @@ CSS Selector:`
     if (!this.client) return null;
 
     try {
-      // Truncate HTML to avoid token limits
-      const truncatedHtml = html.substring(0, 15000);
+      // Truncate HTML smartly - keep more content to find the element
+      const truncatedHtml = html.substring(0, 30000);
 
       const response = await this.client.messages.create({
         model: this.model,
-        max_tokens: 200,
+        max_tokens: 300,
         messages: [{
           role: 'user',
-          content: `You are a test automation expert. Analyze this HTML and find the CSS selector for a ${type} element that matches this description: "${description}".
+          content: `You are a Playwright test automation expert. Analyze this HTML and find a CSS selector for a ${type} element matching: "${description}".
 
 HTML:
 ${truncatedHtml}
 
-Requirements:
-- Return ONLY the CSS selector, nothing else
-- Prefer data-testid, id, or unique class selectors
-- Make the selector as specific and reliable as possible
-- If you cannot find it, return "NOT_FOUND"
-
-CSS Selector:`
+Rules:
+- Return ONLY a single CSS selector on one line that works with Playwright's page.locator()
+- Prefer: data-testid, id, role attributes, or unique class combinations
+- You can use Playwright-specific pseudo-selectors like :has-text(), :has(), :nth-of-type()
+- For OrangeHRM apps, common patterns: .oxd-select-wrapper, .oxd-input, .oxd-button
+- If you truly cannot find it, return exactly: NOT_FOUND`
         }]
       });
 
-      const selector = (response.content[0] as { type: string; text: string }).text?.trim();
+      const rawResponse = (response.content[0] as { type: string; text: string }).text?.trim();
+      console.log(`[AIObserver] DOM raw response: "${rawResponse}"`);
 
-      // Validate the selector
-      if (selector &&
-          selector !== 'NOT_FOUND' &&
-          selector.length < 150 &&
-          !selector.includes('\n') &&
-          !selector.toLowerCase().includes('sorry') &&
-          !selector.toLowerCase().includes('cannot')) {
-        return selector;
-      }
-      return null;
+      return this.validateSelector(rawResponse);
     } catch (error) {
-      console.error('[AIObserver] DOM analysis failed:', error);
+      console.error('[AIObserver] DOM analysis failed:', (error as Error).message);
       return null;
     }
+  }
+
+  /**
+   * Validate and clean a selector returned by AI
+   */
+  private validateSelector(raw: string | undefined): string | null {
+    if (!raw) return null;
+
+    // Clean up: remove backticks, quotes, markdown formatting
+    let selector = raw
+      .replace(/^```[a-z]*\n?/g, '')
+      .replace(/\n?```$/g, '')
+      .replace(/^["'`]+|["'`]+$/g, '')
+      .trim();
+
+    // Take only the first line if multiple lines
+    if (selector.includes('\n')) {
+      selector = selector.split('\n')[0].trim();
+    }
+
+    if (!selector ||
+        selector === 'NOT_FOUND' ||
+        selector.length > 200 ||
+        selector.toLowerCase().includes('sorry') ||
+        selector.toLowerCase().includes('cannot') ||
+        selector.toLowerCase().includes('i ')) {
+      return null;
+    }
+
+    return selector;
   }
 
   /**

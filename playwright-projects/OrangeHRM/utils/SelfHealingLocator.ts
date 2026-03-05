@@ -35,16 +35,19 @@ export class SelfHealingLocator implements ILocatorStrategy {
    */
   async locate(element: ElementDefinition, timeout = 15000): Promise<Locator> {
     const start = Date.now();
-    const healingTimeout = 5000; // shorter timeout for fallback/AI tiers
+    // Short timeout for primary — if element exists with correct selector, it appears fast
+    // This avoids wasting time when the selector is genuinely broken
+    const primaryTimeout = Math.min(timeout, 5000);
+    const healingTimeout = 3000;
 
-    // Try primary selector first (gets the full timeout, same as StandardLocator)
+    // Try primary selector first
     try {
       const locator = this.page.locator(element.primary);
-      await locator.waitFor({ state: 'visible', timeout });
+      await locator.waitFor({ state: 'visible', timeout: primaryTimeout });
       this.reporter.record(element.name, element.primary, element.primary, 'primary', Date.now() - start);
       return locator;
     } catch {
-      // Primary failed, continue to healing strategies
+      console.log(`[SelfHealing] Primary selector failed for "${element.name}": ${element.primary}`);
     }
 
     // TIER 1: Check cache for previously healed selector
@@ -53,10 +56,11 @@ export class SelfHealingLocator implements ILocatorStrategy {
       try {
         const locator = this.page.locator(cached);
         await locator.waitFor({ state: 'visible', timeout: healingTimeout });
+        console.log(`[SelfHealing] Cache hit for "${element.name}": ${cached}`);
         this.reporter.record(element.name, element.primary, cached, 'cache', Date.now() - start);
         return locator;
       } catch {
-        // Cache miss, remove stale entry
+        console.log(`[SelfHealing] Cached selector stale for "${element.name}": ${cached}`);
         this.cache.delete(element.name);
       }
     }
@@ -66,6 +70,7 @@ export class SelfHealingLocator implements ILocatorStrategy {
       try {
         const locator = this.page.locator(fallback);
         await locator.waitFor({ state: 'visible', timeout: healingTimeout / element.fallbacks.length });
+        console.log(`[SelfHealing] Fallback worked for "${element.name}": ${fallback}`);
         this.cache.set(element.name, fallback);
         this.reporter.record(element.name, element.primary, fallback, 'fallback', Date.now() - start);
         return locator;
@@ -74,43 +79,59 @@ export class SelfHealingLocator implements ILocatorStrategy {
       }
     }
 
+    console.log(`[SelfHealing] All static selectors failed for "${element.name}". Attempting AI healing...`);
+
     // TIER 3 & 4: AI-powered healing (only reached if primary + fallbacks all failed)
     if (this.aiObserver.isEnabled()) {
       // Tier 3: Visual analysis using screenshot
-      const screenshot = await this.page.screenshot({ type: 'png' });
-      let aiSelector = await this.aiObserver.findByVision(screenshot, element.description, element.type);
+      try {
+        console.log(`[SelfHealing] Tier 3: AI Visual analysis for "${element.name}"...`);
+        const screenshot = await this.page.screenshot({ type: 'png' });
+        const aiSelector = await this.aiObserver.findByVision(screenshot, element.description, element.type);
 
-      if (aiSelector) {
-        try {
+        if (aiSelector) {
+          console.log(`[SelfHealing] AI Vision suggested selector: ${aiSelector}`);
           const locator = this.page.locator(aiSelector);
           await locator.waitFor({ state: 'visible', timeout: healingTimeout });
+          console.log(`[SelfHealing] AI Vision healed "${element.name}" with: ${aiSelector}`);
           this.cache.set(element.name, aiSelector);
           this.reporter.record(element.name, element.primary, aiSelector, 'ai_visual', Date.now() - start);
           return locator;
-        } catch {
-          // AI visual failed, try DOM analysis
+        } else {
+          console.log(`[SelfHealing] AI Vision returned no selector for "${element.name}"`);
         }
+      } catch (error) {
+        console.log(`[SelfHealing] AI Vision failed for "${element.name}":`, (error as Error).message);
       }
 
       // Tier 4: DOM analysis
-      const html = await this.page.content();
-      aiSelector = await this.aiObserver.findByDOM(html, element.description, element.type);
+      try {
+        console.log(`[SelfHealing] Tier 4: AI DOM analysis for "${element.name}"...`);
+        const html = await this.page.content();
+        const aiSelector = await this.aiObserver.findByDOM(html, element.description, element.type);
 
-      if (aiSelector) {
-        try {
+        if (aiSelector) {
+          console.log(`[SelfHealing] AI DOM suggested selector: ${aiSelector}`);
           const locator = this.page.locator(aiSelector);
           await locator.waitFor({ state: 'visible', timeout: healingTimeout });
+          console.log(`[SelfHealing] AI DOM healed "${element.name}" with: ${aiSelector}`);
           this.cache.set(element.name, aiSelector);
           this.reporter.record(element.name, element.primary, aiSelector, 'ai_dom', Date.now() - start);
           return locator;
-        } catch {
-          // AI DOM failed
+        } else {
+          console.log(`[SelfHealing] AI DOM returned no selector for "${element.name}"`);
         }
+      } catch (error) {
+        console.log(`[SelfHealing] AI DOM failed for "${element.name}":`, (error as Error).message);
       }
+    } else {
+      console.log(`[SelfHealing] AI Observer is disabled. Skipping AI healing.`);
     }
 
     // All healing strategies failed
-    this.reporter.record(element.name, element.primary, null, 'failed', Date.now() - start);
+    const elapsed = Date.now() - start;
+    console.log(`[SelfHealing] ALL strategies failed for "${element.name}" after ${elapsed}ms`);
+    this.reporter.record(element.name, element.primary, null, 'failed', elapsed);
     throw new Error(`[Self-Healing Failed] Could not locate element: ${element.name} - ${element.description}`);
   }
 
