@@ -1,0 +1,81 @@
+{
+  "_metadata": {
+    "module": "Assign Core Orientations",
+    "source": "IMDEX_HubIQ_Manual_Test_Cases.csv",
+    "generatedDate": "2026-03-10",
+    "testCaseCount": 12
+  },
+  "validScenarios": [
+    {
+      "id": "TC_CORE_001",
+      "title": "Assign core orientation to drillhole",
+      "project": "DemoProj_Nagen",
+      "drillhole": "DemoDL_Nagen"
+    },
+    {
+      "id": "TC_CORE_002",
+      "title": "Add multiple core orientation assignments",
+      "project": "DemoProj_Nagen",
+      "drillholes": ["DemoDL_Nagen", "TestDrillhole"]
+    },
+    {
+      "id": "TC_CORE_003",
+      "title": "Delete core orientation assignment",
+      "action": "delete"
+    },
+    {
+      "id": "TC_CORE_004",
+      "title": "Export core orientation data",
+      "action": "export"
+    },
+    {
+      "id": "TC_CORE_005",
+      "title": "Cancel assign modal",
+      "action": "cancel"
+    }
+  ],
+  "negativeScenarios": [
+    {
+      "id": "TC_CORE_100",
+      "title": "Assign without selecting drillhole",
+      "project": "DemoProj_Nagen",
+      "drillhole": "",
+      "expectedError": "Drillhole is required"
+    },
+    {
+      "id": "TC_CORE_101",
+      "title": "Assign without selecting project",
+      "project": "",
+      "drillhole": ""
+    },
+    {
+      "id": "TC_CORE_102",
+      "title": "Delete without selecting any row",
+      "action": "delete_no_selection"
+    },
+    {
+      "id": "TC_CORE_103",
+      "title": "Duplicate assignment to same drillhole",
+      "project": "DemoProj_Nagen",
+      "drillhole": "DemoDL_Nagen"
+    },
+    {
+      "id": "TC_CORE_104",
+      "title": "Assign to drillhole from different project",
+      "action": "cross_project_assign"
+    }
+  ],
+  "securityTests": [
+    {
+      "id": "TC_CORE_400",
+      "title": "Authorization check - assign without permission",
+      "category": "authorization"
+    },
+    {
+      "id": "TC_CORE_401",
+      "title": "SQL injection in drillhole search",
+      "drillholeSearch": "' OR 1=1 --",
+      "category": "injection"
+    }
+  ]
+}

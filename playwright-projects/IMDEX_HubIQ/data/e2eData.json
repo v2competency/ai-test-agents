@@ -1,0 +1,38 @@
+{
+  "_metadata": {
+    "module": "E2E Flows",
+    "source": "IMDEX_HubIQ_Manual_Test_Cases.csv",
+    "generatedDate": "2026-03-10",
+    "testCaseCount": 4
+  },
+  "flows": [
+    {
+      "id": "E2E_001",
+      "title": "Complete View Data flow - Login to Logout",
+      "user": "N.Rao",
+      "project": "DemoProj_Nagen",
+      "tool": "EZ-GYRO",
+      "drillhole": "DemoDL_Nagen"
+    },
+    {
+      "id": "E2E_002",
+      "title": "Complete Add Project and Add Drillhole flow",
+      "project": "E2E_TestProject",
+      "drillhole": "E2E_TestDH001",
+      "dip": -45,
+      "azimuth": 180,
+      "depth": 1000
+    },
+    {
+      "id": "E2E_003",
+      "title": "Assign Core Orientation and Approve Survey flow",
+      "project": "DemoProj_Nagen",
+      "drillhole": "DemoDL_Nagen"
+    },
+    {
+      "id": "E2E_004",
+      "title": "Dashboard navigation to all major modules",
+      "user": "N.Rao"
+    }
+  ]
+}

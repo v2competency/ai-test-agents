@@ -1,0 +1,77 @@
+{
+  "_metadata": {
+    "module": "Dashboard",
+    "source": "IMDEX_HubIQ_Manual_Test_Cases.csv",
+    "generatedDate": "2026-03-10",
+    "testCaseCount": 11
+  },
+  "validScenarios": [
+    {
+      "id": "TC_DASH_001",
+      "title": "Dashboard loads with pending data cards",
+      "user": "N.Rao",
+      "company": "TESTKP_COMPANY01",
+      "expectedTools": ["BLAST TRAC-IQ", "DeviGyro", "EZ-GYRO", "EZ-TRAC", "LOGRx", "NOVAxG"]
+    },
+    {
+      "id": "TC_DASH_002",
+      "title": "Dashboard displays unassigned data section",
+      "expectedUnassignedTools": ["ACTx", "EZ-GYRO", "EZ-TRAC", "LOGRx", "NOVAxG", "OMNIx3B", "Rig Alignments", "SPRINT-IQ", "XRF"]
+    },
+    {
+      "id": "TC_DASH_003",
+      "title": "Dashboard displays submitted data chart"
+    },
+    {
+      "id": "TC_DASH_004",
+      "title": "Navigate from pending data card via View link",
+      "tool": "EZ-GYRO",
+      "count": 88
+    },
+    {
+      "id": "TC_DASH_005",
+      "title": "Navigate from unassigned data card via View link",
+      "tool": "LOGRx",
+      "count": 103
+    },
+    {
+      "id": "TC_DASH_006",
+      "title": "Verify sidebar navigation menu items",
+      "expectedMenuItems": ["Dashboard", "Plan", "Assign", "Approve", "View", "IMSIGHTs", "Reports", "Manage", "Mobile Forms", "Help"]
+    },
+    {
+      "id": "TC_DASH_007",
+      "title": "Expand sidebar sub-menus",
+      "menus": ["Plan", "Assign", "Approve", "View"],
+      "expectedSubMenus": {
+        "Assign": ["Assays", "Gammas", "Surveys", "Structural Readings", "Core Orientations", "Reassign"],
+        "Approve": ["Assays", "Gammas", "Surveys", "Structural Readings", "Mobile Forms"],
+        "View": ["Data", "Core Orientation", "Mud Activities"]
+      }
+    }
+  ],
+  "negativeScenarios": [
+    {
+      "id": "TC_DASH_100",
+      "title": "Dashboard with no data access",
+      "user": "new_user"
+    },
+    {
+      "id": "TC_DASH_101",
+      "title": "Access Dashboard without authentication",
+      "url": "/Home/Dashboard"
+    }
+  ],
+  "securityTests": [
+    {
+      "id": "TC_DASH_400",
+      "title": "XSS via company name display",
+      "category": "xss"
+    },
+    {
+      "id": "TC_DASH_401",
+      "title": "Authorization - cross-company data isolation",
+      "category": "authorization"
+    }
+  ]
+}

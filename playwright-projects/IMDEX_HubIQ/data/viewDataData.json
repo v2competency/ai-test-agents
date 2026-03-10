@@ -1,0 +1,128 @@
+{
+  "_metadata": {
+    "module": "View Data",
+    "source": "IMDEX_HubIQ_Manual_Test_Cases.csv",
+    "generatedDate": "2026-03-10",
+    "testCaseCount": 21
+  },
+  "validScenarios": [
+    {
+      "id": "TC_VIEW_001",
+      "title": "Select project and view data",
+      "project": "DemoProj_Nagen",
+      "tool": "EZ-GYRO"
+    },
+    {
+      "id": "TC_VIEW_002",
+      "title": "Use date range filter",
+      "project": "DemoProj_Nagen",
+      "dateFrom": "2022-01-01",
+      "dateTo": "2022-12-31"
+    },
+    {
+      "id": "TC_VIEW_003",
+      "title": "Use saved search functionality",
+      "savedSearch": "existing_search"
+    },
+    {
+      "id": "TC_VIEW_004",
+      "title": "Save a new search",
+      "project": "DemoProj_Nagen",
+      "tool": "EZ-GYRO",
+      "searchName": "MySearch1"
+    },
+    {
+      "id": "TC_VIEW_005",
+      "title": "Select multiple tools",
+      "project": "DemoProj_Nagen",
+      "tools": ["EZ-GYRO", "ACTx"]
+    },
+    {
+      "id": "TC_VIEW_006",
+      "title": "Select All tools"
+    },
+    {
+      "id": "TC_VIEW_007",
+      "title": "Deselect All tools"
+    },
+    {
+      "id": "TC_VIEW_008",
+      "title": "Export All data from results"
+    },
+    {
+      "id": "TC_VIEW_009",
+      "title": "Export per-tool results",
+      "tool": "EZ-GYRO"
+    },
+    {
+      "id": "TC_VIEW_010",
+      "title": "Refresh Data button"
+    },
+    {
+      "id": "TC_VIEW_011",
+      "title": "Navigate drillholes table pagination"
+    },
+    {
+      "id": "TC_VIEW_012",
+      "title": "Change items per page",
+      "itemsPerPage": 25
+    }
+  ],
+  "negativeScenarios": [
+    {
+      "id": "TC_VIEW_100",
+      "title": "View Data without selecting project",
+      "project": "",
+      "tool": "EZ-GYRO"
+    },
+    {
+      "id": "TC_VIEW_101",
+      "title": "View Data without selecting tools",
+      "project": "DemoProj_Nagen",
+      "tool": ""
+    },
+    {
+      "id": "TC_VIEW_102",
+      "title": "Invalid date range - From after To",
+      "dateFrom": "2023-12-31",
+      "dateTo": "2023-01-01"
+    },
+    {
+      "id": "TC_VIEW_103",
+      "title": "Invalid date format",
+      "dateFrom": "13-2023-01"
+    },
+    {
+      "id": "TC_VIEW_104",
+      "title": "View Data with no matching results",
+      "project": "DemoProj_Nagen",
+      "tool": "BALCATTA"
+    }
+  ],
+  "boundaryTests": [
+    {
+      "id": "TC_VIEW_300",
+      "title": "Date From at minimum valid date",
+      "dateFrom": "2000-01-01"
+    },
+    {
+      "id": "TC_VIEW_301",
+      "title": "Date To at current date",
+      "dateTo": "2026-03-05"
+    }
+  ],
+  "securityTests": [
+    {
+      "id": "TC_VIEW_400",
+      "title": "SQL injection in Saved Search",
+      "savedSearch": "'; DROP TABLE surveys; --",
+      "category": "injection"
+    },
+    {
+      "id": "TC_VIEW_401",
+      "title": "URL parameter tampering for unauthorized project access",
+      "url": "/View/Data?project=unauthorized_project",
+      "category": "authorization"
+    }
+  ]
+}

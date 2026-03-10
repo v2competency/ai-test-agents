@@ -1,0 +1,30 @@
+{
+  "admin": {
+    "username": "N.Rao",
+    "password": "ValidPass123!",
+    "role": "admin",
+    "fullName": "N. Rao",
+    "company": "TESTKP_COMPANY01"
+  },
+  "employee": {
+    "username": "employee_user",
+    "password": "EmployeePass123!",
+    "role": "employee",
+    "fullName": "Employee User",
+    "company": "TESTKP_COMPANY01"
+  },
+  "testAccounts": {
+    "validAdmin": {
+      "username": "N.Rao",
+      "password": "ValidPass123!"
+    },
+    "invalidUser": {
+      "username": "nonexistent_user",
+      "password": "anypassword"
+    },
+    "readOnlyUser": {
+      "username": "readonly_user",
+      "password": "ReadOnly123!"
+    }
+  }
+}

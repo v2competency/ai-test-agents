@@ -1,0 +1,191 @@
+{
+  "_metadata": {
+    "module": "Add Drillhole",
+    "source": "IMDEX_HubIQ_Manual_Test_Cases.csv",
+    "generatedDate": "2026-03-10",
+    "testCaseCount": 28
+  },
+  "validScenarios": [
+    {
+      "id": "TC_DRILL_001",
+      "title": "Add drillhole with all required fields",
+      "project": "DemoProj_Nagen",
+      "drillhole": "TestDH001",
+      "holeType": "Diamond",
+      "dip": -45,
+      "trueNorthAzimuth": 180,
+      "plannedDepth": 500
+    },
+    {
+      "id": "TC_DRILL_002",
+      "title": "Add drillhole with location details",
+      "project": "DemoProj_Nagen",
+      "drillhole": "TestDH002",
+      "preCollarDepth": 10,
+      "collarElevation": 500,
+      "latitude": -31.5,
+      "longitude": 115.8
+    },
+    {
+      "id": "TC_DRILL_003",
+      "title": "Add drillhole with target coordinates",
+      "project": "DemoProj_Nagen",
+      "drillhole": "TestDH003",
+      "targetX": 100.5,
+      "targetY": 200.3,
+      "targetZ": 50.0
+    },
+    {
+      "id": "TC_DRILL_004",
+      "title": "Add drillhole with Program Group and Tenement",
+      "project": "DemoProj_Nagen",
+      "drillhole": "TestDH004",
+      "program": "ProgramA",
+      "group": "GroupA",
+      "tenement": "TenementA"
+    },
+    {
+      "id": "TC_DRILL_005",
+      "title": "Add another drillhole using Add another button",
+      "drillhole1": "TestDH005A",
+      "drillhole2": "TestDH005B"
+    },
+    {
+      "id": "TC_DRILL_006",
+      "title": "Cancel Add Drillhole form",
+      "action": "cancel"
+    }
+  ],
+  "negativeScenarios": [
+    {
+      "id": "TC_DRILL_100",
+      "title": "Add drillhole without selecting project",
+      "project": "",
+      "drillhole": "TestDH",
+      "expectedError": "Project is required"
+    },
+    {
+      "id": "TC_DRILL_101",
+      "title": "Add drillhole with empty name",
+      "project": "DemoProj_Nagen",
+      "drillhole": "",
+      "expectedError": "Drillhole Name is required"
+    },
+    {
+      "id": "TC_DRILL_102",
+      "title": "Add drillhole with duplicate name in same project",
+      "project": "DemoProj_Nagen",
+      "drillhole": "DemoDL_Nagen",
+      "expectedError": "Drillhole name already exists"
+    },
+    {
+      "id": "TC_DRILL_103",
+      "title": "Add drillhole with Dip outside range",
+      "dip": 95,
+      "expectedError": "Dip must be between -90° and 90°"
+    },
+    {
+      "id": "TC_DRILL_104",
+      "title": "Add drillhole with True North Azimuth outside range",
+      "trueNorthAzimuth": 370,
+      "expectedError": "True North Azimuth must be between 0° and 360°"
+    },
+    {
+      "id": "TC_DRILL_105",
+      "title": "Add drillhole with Planned Depth exceeding maximum",
+      "plannedDepth": 30000,
+      "expectedError": "Planned Depth maximum is 25000"
+    },
+    {
+      "id": "TC_DRILL_106",
+      "title": "Add drillhole with Collar Elevation exceeding maximum",
+      "collarElevation": 150000,
+      "expectedError": "Collar Elevation maximum is 100000"
+    },
+    {
+      "id": "TC_DRILL_107",
+      "title": "Add drillhole with Latitude outside range",
+      "latitude": 95,
+      "expectedError": "Latitude must be between -90° and 90°"
+    },
+    {
+      "id": "TC_DRILL_200",
+      "title": "Add drillhole with whitespace-only name",
+      "drillhole": "   ",
+      "expectedError": "Drillhole Name cannot be whitespace only"
+    }
+  ],
+  "boundaryTests": [
+    {
+      "id": "TC_DRILL_300",
+      "title": "Drillhole Name at exactly 50 characters",
+      "drillhole": "12345678901234567890123456789012345678901234567890"
+    },
+    {
+      "id": "TC_DRILL_301",
+      "title": "Dip at boundary -90",
+      "dip": -90
+    },
+    {
+      "id": "TC_DRILL_302",
+      "title": "Dip at boundary 90",
+      "dip": 90
+    },
+    {
+      "id": "TC_DRILL_303",
+      "title": "True North Azimuth at boundary 0",
+      "trueNorthAzimuth": 0
+    },
+    {
+      "id": "TC_DRILL_304",
+      "title": "True North Azimuth at boundary 360",
+      "trueNorthAzimuth": 360
+    },
+    {
+      "id": "TC_DRILL_305",
+      "title": "Planned Depth at boundary 0 and 25000",
+      "plannedDepth_min": 0,
+      "plannedDepth_max": 25000
+    },
+    {
+      "id": "TC_DRILL_306",
+      "title": "Latitude at boundary -90 and 90",
+      "latitude_min": -90,
+      "latitude_max": 90
+    },
+    {
+      "id": "TC_DRILL_307",
+      "title": "Longitude at boundary -180 and 180",
+      "longitude_min": -180,
+      "longitude_max": 180
+    },
+    {
+      "id": "TC_DRILL_308",
+      "title": "Decimal precision - 3 decimal places for Dip",
+      "dip": -45.12345,
+      "expectedPrecision": 3,
+      "expectedValue": -45.123
+    },
+    {
+      "id": "TC_DRILL_309",
+      "title": "Decimal precision - 5 decimal places for Latitude",
+      "latitude": -31.1234567,
+      "expectedPrecision": 5,
+      "expectedValue": -31.12346
+    }
+  ],
+  "securityTests": [
+    {
+      "id": "TC_DRILL_400",
+      "title": "SQL injection in Drillhole Name",
+      "drillhole": "'; DROP TABLE drillholes; --",
+      "category": "injection"
+    },
+    {
+      "id": "TC_DRILL_401",
+      "title": "XSS in Drillhole Name",
+      "drillhole": "<script>alert('xss')</script>",
+      "category": "xss"
+    }
+  ]
+}

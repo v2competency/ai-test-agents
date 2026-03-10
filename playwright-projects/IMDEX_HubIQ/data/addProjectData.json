@@ -1,0 +1,185 @@
+{
+  "_metadata": {
+    "module": "Add Project",
+    "source": "IMDEX_HubIQ_Manual_Test_Cases.csv",
+    "generatedDate": "2026-03-10",
+    "testCaseCount": 27
+  },
+  "validScenarios": [
+    {
+      "id": "TC_PROJ_001",
+      "title": "Add project with all required fields",
+      "project": "TestProject001",
+      "country": "Australia",
+      "currency": "AUD",
+      "unit": "Metres",
+      "description": "Test project description"
+    },
+    {
+      "id": "TC_PROJ_002",
+      "title": "Add project with Feet unit",
+      "project": "TestProjectFeet",
+      "unit": "Feet"
+    },
+    {
+      "id": "TC_PROJ_003",
+      "title": "Add project with QA settings configured",
+      "project": "TestProjectQA",
+      "dipTolerance": 0.5,
+      "azimuthTolerance": 0.5,
+      "targetTolerance": 5,
+      "magneticDip": 45,
+      "magneticField": 50000,
+      "magneticDipTolerance": 0.5
+    },
+    {
+      "id": "TC_PROJ_004",
+      "title": "Add project with Project Group and Region",
+      "project": "TestProjectGrouped",
+      "projectGroup": "GroupA",
+      "projectRegion": "RegionX"
+    },
+    {
+      "id": "TC_PROJ_005",
+      "title": "Add project with offsets",
+      "project": "TestProjectOffsets",
+      "mineGridOffset": 15.5,
+      "declinationOffset": -10.2
+    },
+    {
+      "id": "TC_PROJ_006",
+      "title": "Add project with Approve Surveys and Azimuth Mode",
+      "project": "TestProjectApprove",
+      "approveSurveys": "Auto",
+      "azimuthMode": "True North",
+      "fieldAppAzimuthMode": "Grid North"
+    },
+    {
+      "id": "TC_PROJ_007",
+      "title": "Add project with Apply Field App Azimuth Mode checkbox",
+      "project": "TestProjectAzCheck",
+      "fieldAppAzimuthMode": "Grid North",
+      "applyToMagneticTool": true,
+      "declinationOffset": 5.0
+    },
+    {
+      "id": "TC_PROJ_008",
+      "title": "Cancel Add Project form",
+      "action": "cancel"
+    }
+  ],
+  "negativeScenarios": [
+    {
+      "id": "TC_PROJ_100",
+      "title": "Add project with empty Project Name",
+      "project": "",
+      "country": "Australia",
+      "expectedError": "Project Name is required"
+    },
+    {
+      "id": "TC_PROJ_101",
+      "title": "Add project with duplicate name",
+      "project": "DemoProj_Nagen",
+      "expectedError": "Project name already exists"
+    },
+    {
+      "id": "TC_PROJ_102",
+      "title": "Add project with Mine Grid Offset outside range",
+      "mineGridOffset": 200,
+      "expectedError": "Mine Grid Offset must be between -180° and 180°"
+    },
+    {
+      "id": "TC_PROJ_103",
+      "title": "Add project with Declination Offset outside range",
+      "declinationOffset": -200,
+      "expectedError": "Declination Offset must be between -180° and 180°"
+    },
+    {
+      "id": "TC_PROJ_104",
+      "title": "Add project with QA Dip Tolerance outside range",
+      "dipTolerance": 15,
+      "expectedError": "Dip Tolerance must be between 0 and 10°"
+    },
+    {
+      "id": "TC_PROJ_200",
+      "title": "Add project with only spaces in Project Name",
+      "project": "   ",
+      "expectedError": "Project Name is required"
+    }
+  ],
+  "boundaryTests": [
+    {
+      "id": "TC_PROJ_300",
+      "title": "Project Name at exactly 50 characters",
+      "project": "12345678901234567890123456789012345678901234567890"
+    },
+    {
+      "id": "TC_PROJ_301",
+      "title": "Project Name exceeding 50 characters",
+      "project": "123456789012345678901234567890123456789012345678901"
+    },
+    {
+      "id": "TC_PROJ_302",
+      "title": "Description at exactly 250 characters",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in"
+    },
+    {
+      "id": "TC_PROJ_303",
+      "title": "Mine Grid Offset at boundary -180",
+      "mineGridOffset": -180
+    },
+    {
+      "id": "TC_PROJ_304",
+      "title": "Mine Grid Offset at boundary 180",
+      "mineGridOffset": 180
+    },
+    {
+      "id": "TC_PROJ_305",
+      "title": "Dip Tolerance at boundary 0",
+      "dipTolerance": 0
+    },
+    {
+      "id": "TC_PROJ_306",
+      "title": "Dip Tolerance at boundary 10",
+      "dipTolerance": 10
+    },
+    {
+      "id": "TC_PROJ_307",
+      "title": "Target Tolerance at boundary 0 and 50",
+      "targetTolerance_min": 0,
+      "targetTolerance_max": 50
+    },
+    {
+      "id": "TC_PROJ_308",
+      "title": "Magnetic Dip at boundary -90 and 90",
+      "magneticDip_min": -90,
+      "magneticDip_max": 90
+    },
+    {
+      "id": "TC_PROJ_309",
+      "title": "Magnetic Field at boundary 0 and 90000",
+      "magneticField_min": 0,
+      "magneticField_max": 90000
+    },
+    {
+      "id": "TC_PROJ_310",
+      "title": "Magnetic Dip Tolerance at boundary 0 and 2",
+      "magneticDipTolerance_min": 0,
+      "magneticDipTolerance_max": 2
+    }
+  ],
+  "securityTests": [
+    {
+      "id": "TC_PROJ_400",
+      "title": "SQL injection in Project Name",
+      "project": "'; DROP TABLE projects; --",
+      "category": "injection"
+    },
+    {
+      "id": "TC_PROJ_401",
+      "title": "XSS in Project Description",
+      "description": "<script>alert('xss')</script>",
+      "category": "xss"
+    }
+  ]
+}

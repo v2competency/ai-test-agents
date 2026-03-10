@@ -1,0 +1,109 @@
+{
+  "_metadata": {
+    "module": "Authentication",
+    "source": "IMDEX_HubIQ_Manual_Test_Cases.csv",
+    "generatedDate": "2026-03-10",
+    "testCaseCount": 16
+  },
+  "validScenarios": [
+    {
+      "id": "TC_AUTH_001",
+      "title": "Login with valid credentials",
+      "username": "N.Rao",
+      "password": "ValidPass123!",
+      "expectedCompany": "TESTKP_COMPANY01",
+      "expectedUser": "N. Rao"
+    }
+  ],
+  "ssoScenario": {
+    "id": "TC_AUTH_002",
+    "title": "Login with SSO",
+    "sso": true
+  },
+  "rememberMeScenario": {
+    "id": "TC_AUTH_003",
+    "title": "Login with Remember Me",
+    "username": "N.Rao",
+    "password": "ValidPass123!",
+    "rememberMe": true
+  },
+  "invalidScenarios": [
+    {
+      "id": "TC_AUTH_100",
+      "title": "Login with invalid password",
+      "username": "N.Rao",
+      "password": "wrongpassword",
+      "expectedError": "Invalid credentials"
+    },
+    {
+      "id": "TC_AUTH_101",
+      "title": "Login with non-existent username",
+      "username": "nonexistent_user",
+      "password": "anypassword",
+      "expectedError": "Invalid credentials"
+    }
+  ],
+  "emptyFieldTests": [
+    {
+      "id": "TC_AUTH_200",
+      "title": "Login with empty username",
+      "username": "",
+      "password": "ValidPass123!",
+      "expectedError": "Username is required"
+    },
+    {
+      "id": "TC_AUTH_201",
+      "title": "Login with empty password",
+      "username": "N.Rao",
+      "password": "",
+      "expectedError": "Password is required"
+    },
+    {
+      "id": "TC_AUTH_202",
+      "title": "Login with both fields empty",
+      "username": "",
+      "password": "",
+      "expectedError": "required"
+    }
+  ],
+  "boundaryTests": [
+    {
+      "id": "TC_AUTH_300",
+      "title": "Login with minimum length password",
+      "username": "N.Rao",
+      "password": "12345678",
+      "expectedBehavior": "System accepts minimum length password if valid"
+    },
+    {
+      "id": "TC_AUTH_301",
+      "title": "Login with maximum length username",
+      "username": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "password": "any",
+      "expectedBehavior": "Input is truncated or rejected"
+    }
+  ],
+  "securityTests": [
+    {
+      "id": "TC_AUTH_400",
+      "title": "SQL injection in username",
+      "username": "' OR '1'='1' --",
+      "password": "any",
+      "category": "injection",
+      "expectedBehavior": "Input rejected or sanitized"
+    },
+    {
+      "id": "TC_AUTH_401",
+      "title": "XSS in username",
+      "username": "<script>alert('xss')</script>",
+      "password": "any",
+      "category": "xss",
+      "expectedBehavior": "Script not executed"
+    },
+    {
+      "id": "TC_AUTH_402",
+      "title": "Session management after logout",
+      "category": "session",
+      "expectedBehavior": "Session invalidated after logout"
+    }
+  ]
+}

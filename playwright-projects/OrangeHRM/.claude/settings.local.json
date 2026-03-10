@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npx playwright test --grep \"TC_APPLY_003\" --reporter=list)"
+      "Bash(npx playwright test --grep \"TC_APPLY_003\" --reporter=list)",
+      "Bash(\"/c/Users/mehul.kagathara/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0/LocalCache/local-packages/Python312/Scripts/python.exe\" --version)",
+      "Read(//c/Program Files/WindowsApps/**)",
+      "Bash(pip show python-docx)"
     ]
   }
 }

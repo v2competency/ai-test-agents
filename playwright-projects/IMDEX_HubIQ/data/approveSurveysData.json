@@ -1,0 +1,138 @@
+{
+  "_metadata": {
+    "module": "Approve Surveys",
+    "source": "IMDEX_HubIQ_Manual_Test_Cases.csv",
+    "generatedDate": "2026-03-10",
+    "testCaseCount": 24
+  },
+  "validScenarios": [
+    {
+      "id": "TC_APPR_001",
+      "title": "View approve surveys list with search",
+      "search": "DemoProj"
+    },
+    {
+      "id": "TC_APPR_002",
+      "title": "Navigate to survey detail from list",
+      "drillhole": "DemoDL_Nagen",
+      "tool": "EZ-GYRO"
+    },
+    {
+      "id": "TC_APPR_003",
+      "title": "Accept QA Results",
+      "action": "accept_qa"
+    },
+    {
+      "id": "TC_APPR_004",
+      "title": "Approve survey",
+      "action": "approve"
+    },
+    {
+      "id": "TC_APPR_005",
+      "title": "Reject survey",
+      "action": "reject"
+    },
+    {
+      "id": "TC_APPR_006",
+      "title": "Change Start of hole reference",
+      "startOfHoleRef": "Planned - Dip: 45.00 Azimuth: 45.00"
+    },
+    {
+      "id": "TC_APPR_007",
+      "title": "Change Azimuth Mode",
+      "azimuthMode": "True North"
+    },
+    {
+      "id": "TC_APPR_008",
+      "title": "Export All from survey detail",
+      "action": "export_all"
+    },
+    {
+      "id": "TC_APPR_009",
+      "title": "Generate Report from survey detail",
+      "action": "generate_report"
+    },
+    {
+      "id": "TC_APPR_010",
+      "title": "Toggle Show Charts",
+      "action": "show_charts"
+    },
+    {
+      "id": "TC_APPR_011",
+      "title": "Toggle Columns visibility",
+      "action": "toggle_columns"
+    },
+    {
+      "id": "TC_APPR_012",
+      "title": "Use filter chips - Clear all",
+      "action": "clear_all_filters"
+    },
+    {
+      "id": "TC_APPR_013",
+      "title": "Use filter chips - Remove individual filter",
+      "removeFilter": "Project Name"
+    },
+    {
+      "id": "TC_APPR_014",
+      "title": "Undo pending changes",
+      "action": "undo"
+    },
+    {
+      "id": "TC_APPR_015",
+      "title": "Save changes on survey detail",
+      "action": "save"
+    }
+  ],
+  "negativeScenarios": [
+    {
+      "id": "TC_APPR_100",
+      "title": "Search with no matching results",
+      "search": "NonExistentProject999"
+    },
+    {
+      "id": "TC_APPR_101",
+      "title": "Approve without accepting QA first",
+      "action": "approve_without_qa"
+    },
+    {
+      "id": "TC_APPR_102",
+      "title": "Reject with no surveys selected",
+      "action": "reject_no_selection"
+    },
+    {
+      "id": "TC_APPR_103",
+      "title": "Save with no pending changes",
+      "action": "save_no_changes"
+    },
+    {
+      "id": "TC_APPR_104",
+      "title": "Navigate back without saving pending changes",
+      "action": "navigate_away"
+    }
+  ],
+  "boundaryTests": [
+    {
+      "id": "TC_APPR_300",
+      "title": "Survey with boundary depth value",
+      "depth": 0
+    },
+    {
+      "id": "TC_APPR_301",
+      "title": "Survey with boundary dip value",
+      "dip": -0.38
+    }
+  ],
+  "securityTests": [
+    {
+      "id": "TC_APPR_400",
+      "title": "XSS in search field",
+      "search": "<script>alert('xss')</script>",
+      "category": "xss"
+    },
+    {
+      "id": "TC_APPR_401",
+      "title": "Authorization - approve without permission",
+      "category": "authorization"
+    }
+  ]
+}
