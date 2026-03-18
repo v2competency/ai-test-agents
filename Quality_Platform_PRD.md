@@ -182,6 +182,68 @@ The context layer is the platform's competitive moat. The richer the context pro
 | API Specs (OpenAPI/Swagger) | Endpoints, payloads, expected responses | Phase 3 |
 | Existing Test Artifacts | Legacy tests to migrate, coverage gaps | Phase 3 |
 
+#### Context Confidence Scoring
+
+The platform computes a **Context Confidence Score (CCS)** per page/feature based on which context sources are connected and their quality. This score directly predicts the quality and reliability of AI-generated tests.
+
+##### Per-Source Confidence Contribution
+
+| Context Source | Weight | Confidence Contribution | What It Unlocks |
+|---------------|--------|------------------------|-----------------|
+| Screenshots only | 15% | Low -- visual layout understanding, no interactive knowledge | Basic positive path tests, UI element identification |
+| Application URL (live crawl) | 25% | Medium -- real DOM, interactive elements, current state | Form validation tests, navigation flows, dynamic content tests |
+| Frontend Source Code | 35% | High -- exact selectors, component props, data-testid, event handlers | Precise locators, boundary tests from prop types, edge case tests from conditional logic |
+| Figma Designs (Phase 2) | 10% | Supplementary -- intended design, component naming | Design-vs-reality comparison, visual regression baseline |
+| Requirements / User Stories (Phase 2) | 10% | Supplementary -- business rules, acceptance criteria | Business logic tests, requirement traceability |
+| API Specs (Phase 3) | 5% | Supplementary -- backend contract | API contract tests, data validation tests |
+
+##### Confidence Level Tiers
+
+| CCS Range | Level | Badge | Expected Test Quality |
+|-----------|-------|-------|-----------------------|
+| 0-25% | **Minimal** | 🔴 Red | Basic smoke tests only; high likelihood of wrong selectors; ~30% automation pass rate |
+| 26-50% | **Partial** | 🟡 Yellow | Positive path tests are reliable; negative/boundary tests may be generic; ~55% automation pass rate |
+| 51-75% | **Good** | 🟢 Green | Solid coverage across categories; most selectors correct; ~75% automation pass rate |
+| 76-100% | **Excellent** | 🔵 Blue | Comprehensive coverage; precise selectors with fallback chains; ~90%+ automation pass rate |
+
+##### Confidence Calculation Rules
+
+- **Combination bonuses:** Screenshots + Source Code together = +10% bonus (visual context validates selector extraction)
+- **URL + Source Code** = +8% bonus (live state confirms component behavior)
+- **All three MVP1 sources** = +15% bonus (full triangulation)
+- **Freshness penalty:** Stale data (>30 days since last sync/capture) reduces contribution by 25%
+- **Completeness factor:** If only 3 of 10 pages have screenshots, screenshot contribution is scaled to 30%
+
+##### Example Scenarios
+
+```
+Scenario A: Screenshots only (3 pages out of 8)
+  Screenshots:  15% × (3/8 pages) = 5.6%
+  CCS = 5.6%  → Minimal (🔴)
+  → "Add application URL or connect source code to significantly improve test quality"
+
+Scenario B: Screenshots (all pages) + Live URL
+  Screenshots:  15%
+  URL:          25%
+  CCS = 40%  → Partial (🟡)
+  → "Connect your source code repository to unlock precise selectors and boundary tests"
+
+Scenario C: Screenshots + URL + Source Code (all pages)
+  Screenshots:  15%
+  URL:          25%
+  Source Code:  35%
+  Combo bonus:  15% (all three)
+  CCS = 90%  → Excellent (🔵)
+  → "Maximum context provided — expect high-quality test generation"
+```
+
+##### UI Indicators
+
+- **Project Dashboard:** Overall CCS badge with breakdown per source
+- **Per-Page CCS:** Each page/feature shows its own confidence based on available context
+- **Generation prompt:** Before generating tests, show CCS and recommend actions to improve it
+- **Context gap alerts:** "Login page has source code but no screenshot — add a screenshot to improve visual test coverage"
+
 #### Data Model
 
 ```
@@ -378,6 +440,93 @@ Timeout:         [ 30s per test ]
 | **Flakiness Root Cause** | Explains why a test is flaky | "Timing-dependent -- suggesting explicit wait for API response" |
 | **Test Health Score** | Per-module confidence rating | Score based on coverage + pass rate + freshness |
 | **Requirement Traceability** | Links tests to requirements | "JIRA-1234 has 4 linked tests: 3 passing, 1 failing" |
+
+#### Coverage Prediction & Quality Metrics
+
+The platform provides data-driven indicators that show how much testing coverage the current test suite provides and what can be expected if the user proceeds with the current context and approved tests.
+
+##### Coverage Dimensions
+
+| Dimension | What It Measures | How It's Calculated | Display |
+|-----------|-----------------|--------------------:|---------|
+| **Page Coverage** | % of known pages/routes with at least 1 test | Pages with tests ÷ Total detected pages | Progress bar per page |
+| **Feature Coverage** | % of interactive elements (forms, buttons, links) covered by tests | Elements tested ÷ Total interactive elements detected | Heatmap overlay on screenshots |
+| **Category Coverage** | Distribution of tests across categories per page | Count of positive/negative/boundary/security/accessibility tests | Radar chart per page |
+| **Selector Confidence** | Reliability of locators used in automation | Weighted average of selector grades (A+ to D) | Letter grade per page object |
+| **Execution Coverage** | % of approved tests that have been executed at least once | Executed tests ÷ Approved tests | Percentage with trend |
+| **Pass-Through Rate** | % of tests that pass on first run without modification | First-run passes ÷ Total first runs | Percentage (target: >85%) |
+
+##### Coverage Score Formula
+
+The platform computes an overall **Test Coverage Score (TCS)** per project:
+
+```
+TCS = (
+    Page Coverage        × 0.30
+  + Feature Coverage     × 0.25
+  + Category Coverage    × 0.20
+  + Selector Confidence  × 0.15
+  + Pass-Through Rate    × 0.10
+) × 100
+
+Rating:
+  90-100%  →  Comprehensive  (ready for production gate)
+  70-89%   →  Strong         (most risk areas covered)
+  50-69%   →  Moderate       (significant gaps remain)
+  25-49%   →  Basic          (smoke-level coverage only)
+  0-24%    →  Minimal        (critical gaps -- action required)
+```
+
+##### Predictive Coverage Indicators
+
+Before the user generates or runs tests, show what they can expect:
+
+| Indicator | Description | Example |
+|-----------|-------------|---------|
+| **Estimated Coverage Uplift** | Predicted TCS increase if pending draft tests are approved | "Approving 12 draft tests will increase coverage from 45% → 68%" |
+| **Context-to-Coverage Projection** | Expected coverage based on current CCS | "With your current context (CCS: 72%), expect ~65-75% feature coverage" |
+| **Gap-to-Test Mapping** | Specific untested areas with estimated test count to close gap | "Password reset: 0 tests. Generating ~8 tests would add 5% to TCS" |
+| **Risk-Weighted Coverage** | Coverage weighted by page criticality (user-defined) | "Critical flows: 82% covered. Low-priority pages: 34% covered" |
+| **Category Balance Score** | How evenly tests are spread across categories | "Heavy on positive (78%), weak on security (5%) and boundary (8%)" |
+
+##### Key Data Points on Dashboard
+
+| Data Point | Where Shown | Update Frequency |
+|------------|-------------|-----------------|
+| Overall TCS (with trend arrow) | Project dashboard header | After every run |
+| CCS per page with recommendation | Context management page | Real-time |
+| Pages with zero tests (sorted by traffic/criticality) | Coverage gaps widget | After generation |
+| Category distribution pie chart | Dashboard sidebar | After generation |
+| Selector health summary (% A/B/C/D grade) | Automation overview | After code generation |
+| First-run pass rate trend (last 10 generations) | Insights tab | After every run |
+| Estimated vs actual coverage comparison | Insights tab | Weekly |
+| "What-if" simulator: projected TCS if user adds context X | Context upload page | Real-time |
+
+##### Coverage Improvement Recommendations
+
+The platform actively suggests next actions ranked by coverage impact:
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  📊 Coverage: 52% (Moderate)                            │
+│                                                          │
+│  Top actions to improve coverage:                        │
+│                                                          │
+│  1. Generate tests for "Checkout" page     → +12% TCS   │
+│     (0 tests, high-traffic critical page)                │
+│                                                          │
+│  2. Add security tests for "Login" page    → +4% TCS    │
+│     (12 positive tests, 0 security tests)                │
+│                                                          │
+│  3. Connect source code repository         → +8% CCS    │
+│     (improves selector accuracy for all future tests)    │
+│                                                          │
+│  4. Approve 7 pending draft tests          → +5% TCS    │
+│     (reviewed but not yet approved)                      │
+│                                                          │
+│  Projected TCS after all actions: ~81% (Strong)          │
+└─────────────────────────────────────────────────────────┘
+```
 
 ---
 
@@ -619,6 +768,19 @@ The system tracks accuracy and learns from misses:
   - [ ] Re-sync button to pull latest changes
   - [ ] Disconnect repository option
 
+**E2-US4: View Context Confidence Score**
+- As a user, I want to see how confident the platform is in generating quality tests based on the context I've provided, so I know if I should add more context before generating.
+- Acceptance Criteria:
+  - [ ] Display overall Context Confidence Score (CCS) on project dashboard as badge (Minimal/Partial/Good/Excellent)
+  - [ ] Per-page CCS breakdown showing which sources are connected
+  - [ ] Visual indicator showing contribution of each source (screenshots, URL, source code)
+  - [ ] Combination bonuses reflected (e.g., all three sources = +15%)
+  - [ ] Freshness penalty shown for stale context (>30 days)
+  - [ ] Completeness factor: partial page coverage reduces score proportionally
+  - [ ] Actionable recommendations to improve CCS (e.g., "Connect source code to increase from 40% to 75%")
+  - [ ] CCS shown on generation prompt screen before user triggers test generation
+  - [ ] Context gap alerts per page (e.g., "Login page has source code but no screenshot")
+
 ---
 
 #### EPIC 3: AI Test Case Generation
@@ -785,7 +947,25 @@ The system tracks accuracy and learns from misses:
   - [ ] Recent activity feed (generations, reviews, runs)
   - [ ] Quick action buttons: Generate Tests, Run Suite, Review Queue
 
-**E7-US2: Test Results Report**
+**E7-US2: Test Coverage Score & Predictions**
+- As a user, I want to see a comprehensive coverage score with predictions so I can make informed decisions about where to invest testing effort.
+- Acceptance Criteria:
+  - [ ] Overall Test Coverage Score (TCS) displayed on project dashboard header with trend arrow
+  - [ ] TCS breakdown by dimension: page coverage, feature coverage, category coverage, selector confidence, pass-through rate
+  - [ ] Coverage rating badge: Comprehensive / Strong / Moderate / Basic / Minimal
+  - [ ] Pages with zero tests listed and sorted by criticality
+  - [ ] Category distribution chart (positive/negative/boundary/security/accessibility)
+  - [ ] Estimated Coverage Uplift: show projected TCS if pending draft tests are approved
+  - [ ] Context-to-Coverage Projection: expected coverage based on current CCS
+  - [ ] Gap-to-Test Mapping: specific untested areas with estimated test count needed
+  - [ ] Risk-Weighted Coverage: coverage weighted by user-defined page criticality
+  - [ ] Category Balance Score: indicator of how evenly tests are spread across categories
+  - [ ] Coverage improvement recommendations ranked by TCS impact
+  - [ ] "What-if" simulator: projected TCS when user adds a specific context source
+  - [ ] Selector health summary (% of A/B/C/D grade locators)
+  - [ ] First-run pass rate trend (last 10 generations)
+
+**E7-US3: Test Results Report**
 - As a user, I want to generate a shareable test report so I can communicate quality status to stakeholders.
 - Acceptance Criteria:
   - [ ] Generate report for any completed run
@@ -872,6 +1052,31 @@ test_results
 
 shared_reports
   id, run_id, share_token, expires_at, created_at
+
+-- Coverage & Confidence Scoring
+
+context_confidence_scores
+  id, project_id, page_name,
+  screenshots_contribution (decimal), url_contribution (decimal),
+  source_code_contribution (decimal), combo_bonus (decimal),
+  freshness_penalty (decimal), completeness_factor (decimal),
+  total_ccs (decimal), ccs_level (minimal/partial/good/excellent),
+  calculated_at
+
+coverage_scores
+  id, project_id, run_id,
+  page_coverage (decimal), feature_coverage (decimal),
+  category_coverage (decimal), selector_confidence (decimal),
+  pass_through_rate (decimal), total_tcs (decimal),
+  tcs_rating (comprehensive/strong/moderate/basic/minimal),
+  category_distribution (jsonb),   -- {positive: 45, negative: 12, boundary: 8, security: 3, accessibility: 2}
+  uncovered_pages (text[]),
+  recommendations (jsonb),         -- [{action, impact_estimate, priority}]
+  calculated_at
+
+page_criticality
+  id, project_id, page_name, criticality (critical/high/medium/low),
+  set_by, updated_at
 ```
 
 ### 9.4 Non-Functional Requirements (MVP1)
@@ -960,6 +1165,15 @@ Environments
 Reports
   POST   /api/projects/:id/runs/:rid/share
   GET    /api/shared-reports/:token             (public)
+
+Confidence & Coverage Scoring
+  GET    /api/projects/:id/confidence            (overall CCS with per-page breakdown)
+  GET    /api/projects/:id/confidence/:page       (per-page CCS detail)
+  GET    /api/projects/:id/coverage-score         (overall TCS with dimension breakdown)
+  GET    /api/projects/:id/coverage-score/gaps    (uncovered pages/features with recommendations)
+  POST   /api/projects/:id/coverage-score/simulate (what-if: projected TCS given hypothetical actions)
+  GET    /api/projects/:id/page-criticality       (page criticality settings)
+  PUT    /api/projects/:id/page-criticality/:page (set page criticality)
 ```
 
 ---
@@ -973,12 +1187,12 @@ Reports
 | Epic | Features |
 |------|----------|
 | Auth & Projects | Registration, login, project CRUD, team invitations |
-| Context Ingestion | Screenshots, URLs, source code repo connection |
+| Context Ingestion | Screenshots, URLs, source code repo connection, Context Confidence Scoring (CCS) |
 | Test Generation | AI generation across 5 categories, confidence scoring |
 | Human Review | Approve/reject/edit workflow, bulk actions, suites |
 | Automation | POM code generation, self-healing, view/edit/export |
 | Execution | Cloud runners, multi-browser, on-demand |
-| Dashboard | Pass/fail trends, coverage overview, results detail |
+| Dashboard | Pass/fail trends, coverage overview, results detail, Test Coverage Score (TCS), coverage predictions & recommendations |
 
 ### Phase 2: Source Integration & Intelligence
 
