@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUALINT — Accessibility Report &middot; CCM Mortgage</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .wcag-score-card {
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-xl);
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2xl);
+      margin-bottom: var(--sp-2xl);
+    }
+
+    .wcag-ring {
+      width: 130px; height: 130px; position: relative; flex-shrink: 0;
+    }
+
+    .wcag-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .wcag-ring .ring-bg { fill: none; stroke: var(--border-light); stroke-width: 8; }
+    .wcag-ring .ring-fill { fill: none; stroke-width: 8; stroke-linecap: round; stroke-dasharray: 339.292; }
+
+    .wcag-ring .ring-center {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;
+    }
+
+    .wcag-ring .ring-center .score { font-size: 32px; font-weight: 700; line-height: 1; }
+    .wcag-ring .ring-center .label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-secondary); }
+
+    .wcag-summary-stats { display: flex; gap: var(--sp-3xl); }
+    .wcag-stat .ws-value { font-size: 28px; font-weight: 700; font-family: var(--font-mono); line-height: 1; }
+    .wcag-stat .ws-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-tertiary); margin-top: 2px; }
+
+    .wcag-level-bar { flex: 1; display: flex; flex-direction: column; gap: var(--sp-md); }
+    .wcag-level-row { display: flex; align-items: center; gap: var(--sp-md); }
+    .wcag-level-row .wl-badge { width: 40px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-xs); font-size: 10px; font-weight: 700; flex-shrink: 0; }
+    .wl-badge.level-a { background: var(--success-green-light); color: var(--success-green); }
+    .wl-badge.level-aa { background: var(--warm-amber-light); color: var(--warm-amber); }
+    .wl-badge.level-aaa { background: #EBF5FF; color: #1D4ED8; }
+    .wcag-level-row .wl-label { width: 100px; font-size: 11px; color: var(--ink-secondary); }
+    .wcag-level-row .wl-bar { flex: 1; height: 6px; background: var(--border-light); border-radius: var(--radius-pill); overflow: hidden; }
+    .wcag-level-row .wl-bar-fill { height: 100%; border-radius: var(--radius-pill); }
+    .wcag-level-row .wl-value { width: 70px; text-align: right; font-family: var(--font-mono); font-size: 11px; font-weight: 600; }
+
+    .principles-overview { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--card-gap); margin-bottom: var(--sp-2xl); }
+
+    .principle-overview-card {
+      background: var(--card-surface); border: 1px solid var(--border-color);
+      border-radius: var(--radius-md); padding: var(--sp-lg); box-shadow: var(--shadow-card);
+    }
+
+    .principle-overview-card .po-header { display: flex; align-items: center; gap: var(--sp-sm); margin-bottom: var(--sp-md); }
+    .principle-overview-card .po-icon { width: 32px; height: 32px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .principle-overview-card .po-name { font-size: 13px; font-weight: 700; }
+    .principle-overview-card .po-full { font-size: 10px; color: var(--ink-tertiary); }
+    .principle-overview-card .po-score { font-size: 28px; font-weight: 700; font-family: var(--font-mono); margin-bottom: var(--sp-sm); }
+    .principle-overview-card .po-bar { height: 6px; background: var(--border-light); border-radius: var(--radius-pill); overflow: hidden; margin-bottom: var(--sp-sm); }
+    .principle-overview-card .po-bar-fill { height: 100%; border-radius: var(--radius-pill); }
+    .principle-overview-card .po-criteria { font-size: 10px; color: var(--ink-tertiary); }
+
+    .guideline-row { display: flex; align-items: center; padding: 4px 0; gap: var(--sp-sm); font-size: 11px; }
+    .guideline-row .gl-status { width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; flex-shrink: 0; }
+    .gl-status.pass { background: var(--success-green-light); color: var(--success-green); }
+    .gl-status.fail { background: var(--critical-red-light); color: var(--critical-red); }
+    .gl-status.partial { background: var(--warm-amber-light); color: var(--warm-amber); }
+    .gl-status.na { background: var(--border-light); color: var(--ink-tertiary); }
+    .guideline-row .gl-code { font-family: var(--font-mono); font-size: 10px; width: 50px; flex-shrink: 0; color: var(--ink-secondary); }
+    .guideline-row .gl-name { flex: 1; }
+    .guideline-row .gl-level { width: 24px; text-align: center; font-size: 9px; font-weight: 700; color: var(--ink-tertiary); }
+
+    /* Per-page cards */
+    .a11y-page-card {
+      background: var(--card-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); margin-bottom: var(--sp-md); overflow: hidden;
+    }
+    .a11y-page-card.expanded { border-color: var(--brand-orange); }
+
+    .a11y-page-header {
+      display: flex; align-items: center; padding: var(--sp-md) var(--sp-lg); gap: var(--sp-lg); cursor: pointer; transition: background 0.1s;
+    }
+    .a11y-page-header:hover { background: var(--hover-bg); }
+
+    .a11y-page-header .page-name { font-size: 13px; font-weight: 700; width: 160px; flex-shrink: 0; }
+
+    .a11y-grade { width: 36px; height: 28px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+    .a11y-grade.grade-a { background: var(--success-green-light); color: var(--success-green); }
+    .a11y-grade.grade-b { background: var(--success-green-light); color: var(--success-green); }
+    .a11y-grade.grade-c { background: var(--warm-amber-light); color: var(--warm-amber); }
+    .a11y-grade.grade-d { background: var(--critical-red-light); color: var(--critical-red); }
+    .a11y-grade.grade-f { background: var(--critical-red); color: white; }
+    .a11y-grade.grade-na { background: var(--border-light); color: var(--ink-tertiary); }
+
+    .mini-bars { display: flex; gap: var(--sp-xs); flex: 1; }
+    .mini-bar-group { display: flex; flex-direction: column; align-items: center; gap: 2px; flex: 1; }
+    .mini-bar-group .mb-bar { width: 100%; height: 4px; background: var(--border-light); border-radius: 2px; overflow: hidden; }
+    .mini-bar-group .mb-fill { height: 100%; border-radius: 2px; }
+    .mini-bar-group .mb-label { font-size: 8px; color: var(--ink-tertiary); text-transform: uppercase; letter-spacing: 0.04em; }
+
+    .issue-counts { display: flex; gap: var(--sp-sm); width: 220px; flex-shrink: 0; }
+    .issue-chip { display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px; border-radius: var(--radius-pill); font-size: 10px; font-weight: 600; }
+    .issue-chip.critical { background: var(--critical-red-light); color: var(--critical-red); }
+    .issue-chip.major { background: var(--warm-amber-light); color: var(--warm-amber); }
+    .issue-chip.minor { background: #F1F0EB; color: var(--ink-secondary); }
+    .issue-chip.pass { background: var(--success-green-light); color: var(--success-green); }
+
+    .a11y-page-detail { border-top: 1px solid var(--border-light); padding: var(--sp-lg); display: none; }
+    .a11y-page-card.expanded .a11y-page-detail { display: block; }
+
+    .principle-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-md); margin-bottom: var(--sp-lg); }
+    .principle-card { border-radius: var(--radius-sm); padding: var(--sp-md); text-align: center; }
+    .principle-card .pc-name { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: var(--sp-xs); }
+    .principle-card .pc-score { font-size: 20px; font-weight: 700; font-family: var(--font-mono); }
+    .principle-card .pc-issues { font-size: 10px; margin-top: 2px; }
+
+    .issue-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .issue-table th { text-align: left; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-secondary); padding: var(--sp-sm) var(--sp-md); border-bottom: 1px solid var(--border-color); }
+    .issue-table td { padding: var(--sp-sm) var(--sp-md); border-bottom: 1px solid var(--border-light); vertical-align: top; }
+    .issue-table tr:hover td { background: var(--hover-bg); }
+    .issue-table .criterion-code { font-family: var(--font-mono); font-size: 10px; font-weight: 600; white-space: nowrap; }
+    .severity-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .severity-dot.critical { background: var(--critical-red); }
+    .severity-dot.major { background: var(--warm-amber); }
+    .severity-dot.minor { background: var(--ink-tertiary); }
+
+    /* Compliance cross-ref callout */
+    .compliance-callout {
+      background: var(--critical-red-light);
+      border: 1px solid var(--critical-red);
+      border-left: 4px solid var(--critical-red);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      padding: var(--sp-lg);
+      margin-bottom: var(--sp-2xl);
+    }
+    .compliance-callout .cc-title { font-size: 14px; font-weight: 700; color: var(--critical-red); margin-bottom: var(--sp-sm); }
+    .compliance-callout .cc-item { display: flex; gap: var(--sp-md); font-size: 12px; padding: 4px 0; }
+    .compliance-callout .cc-reg { font-weight: 700; width: 80px; flex-shrink: 0; }
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo-mark"></div>
+      <div class="brand-text">QUALINT<small>Quality Intelligence Platform</small></div>
+    </div>
+    <div class="sidebar-nav">
+      <a href="02-projects.html"><span class="nav-icon">&#9634;</span><span class="nav-label">All Projects</span></a>
+      <div class="sidebar-section-label">CCM Mortgage</div>
+      <a href="09-ccm-dashboard.html"><span class="nav-icon">&#9632;</span><span class="nav-label">Dashboard</span></a>
+      <a href="10-ccm-context.html"><span class="nav-icon">&#128206;</span><span class="nav-label">Context</span></a>
+      <a href="11-ccm-tests.html"><span class="nav-icon">&#9745;</span><span class="nav-label">Test Cases</span><span class="badge">14</span></a>
+      <a href="#"><span class="nav-icon">&#60;/&#62;</span><span class="nav-label">Automation</span></a>
+      <a href="12-ccm-execution.html"><span class="nav-icon">&#9654;</span><span class="nav-label">Execution</span></a>
+      <a href="#"><span class="nav-icon">&#9776;</span><span class="nav-label">Results</span></a>
+      <a href="14-accessibility-ccm.html" class="active"><span class="nav-icon">&#9855;</span><span class="nav-label">Accessibility</span></a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">AK</div>
+        <div class="user-info"><div class="name">Alex Kim</div><div class="role">Acme Startup</div></div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="breadcrumb">
+      <a href="02-projects.html">Projects</a><span class="sep">/</span>
+      <a href="09-ccm-dashboard.html">CCM Mortgage</a><span class="sep">/</span>
+      <span>Accessibility Report</span>
+    </div>
+
+    <div class="page-header">
+      <div>
+        <div class="eyebrow">WCAG 2.0 Compliance Report</div>
+        <h1>Accessibility Report</h1>
+        <p class="subtitle">CCM Mortgage &middot; Last audited: Mar 18, 2026 &middot; 8 of 12 pages scanned</p>
+      </div>
+      <div class="flex gap-sm">
+        <button class="btn btn-secondary">Export PDF</button>
+        <button class="btn btn-secondary">Re-Scan All Pages</button>
+        <button class="btn btn-primary">Generate A11y Tests</button>
+      </div>
+    </div>
+
+    <!-- Regulatory compliance callout -->
+    <div class="compliance-callout">
+      <div class="cc-title">Regulatory Accessibility Requirements</div>
+      <div class="cc-item">
+        <span class="cc-reg" style="color:var(--critical-red)">ECOA</span>
+        <span>Equal Credit Opportunity Act requires accessible loan application forms for borrowers with disabilities. <strong>Loan Application page has 8 critical issues.</strong></span>
+      </div>
+      <div class="cc-item">
+        <span class="cc-reg" style="color:var(--critical-red)">ADA</span>
+        <span>Financial services websites must meet WCAG 2.0 Level AA. Current overall compliance: <strong>41%</strong> at Level AA.</span>
+      </div>
+      <div class="cc-item">
+        <span class="cc-reg" style="color:var(--warm-amber)">Section 508</span>
+        <span>If CCM serves any government-backed loans (FHA/VA), Section 508 compliance is mandatory. 4 pages have not been scanned.</span>
+      </div>
+    </div>
+
+    <!-- Overall Score -->
+    <div class="wcag-score-card">
+      <div class="wcag-ring">
+        <svg viewBox="0 0 120 120">
+          <circle class="ring-bg" cx="60" cy="60" r="54"/>
+          <circle class="ring-fill" cx="60" cy="60" r="54" stroke="var(--critical-red)" stroke-dashoffset="190" stroke-dasharray="339.292"/>
+        </svg>
+        <div class="ring-center">
+          <div class="score text-red">44%</div>
+          <div class="label">WCAG Score</div>
+        </div>
+      </div>
+
+      <div class="wcag-summary-stats">
+        <div class="wcag-stat">
+          <div class="ws-value text-red">28</div>
+          <div class="ws-label">Critical Issues</div>
+        </div>
+        <div class="wcag-stat">
+          <div class="ws-value text-amber">41</div>
+          <div class="ws-label">Major Issues</div>
+        </div>
+        <div class="wcag-stat">
+          <div class="ws-value">22</div>
+          <div class="ws-label">Minor Issues</div>
+        </div>
+        <div class="wcag-stat">
+          <div class="ws-value text-green">54</div>
+          <div class="ws-label">Checks Passed</div>
+        </div>
+      </div>
+
+      <div class="wcag-level-bar">
+        <div class="eyebrow">Conformance Levels</div>
+        <div class="wcag-level-row">
+          <span class="wl-badge level-a">A</span>
+          <span class="wl-label">Level A</span>
+          <div class="wl-bar"><div class="wl-bar-fill" style="width:58%;background:var(--warm-amber)"></div></div>
+          <span class="wl-value text-amber">58% (24/41)</span>
+        </div>
+        <div class="wcag-level-row">
+          <span class="wl-badge level-aa">AA</span>
+          <span class="wl-label">Level AA</span>
+          <div class="wl-bar"><div class="wl-bar-fill" style="width:41%;background:var(--critical-red)"></div></div>
+          <span class="wl-value text-red">41% (12/29)</span>
+        </div>
+        <div class="wcag-level-row">
+          <span class="wl-badge level-aaa">AAA</span>
+          <span class="wl-label">Level AAA</span>
+          <div class="wl-bar"><div class="wl-bar-fill" style="width:11%;background:var(--critical-red)"></div></div>
+          <span class="wl-value text-red">11% (2/18)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Principles -->
+    <div class="principles-overview">
+      <div class="principle-overview-card" style="border-top:3px solid var(--warm-amber)">
+        <div class="po-header">
+          <div class="po-icon" style="background:var(--warm-amber-light);color:var(--warm-amber)">&#128065;</div>
+          <div><div class="po-name">Perceivable</div><div class="po-full">Can users perceive content?</div></div>
+        </div>
+        <div class="po-score text-amber">52%</div>
+        <div class="po-bar"><div class="po-bar-fill" style="width:52%;background:var(--warm-amber)"></div></div>
+        <div class="po-criteria">13/25 criteria passed</div>
+        <div class="mt-md">
+          <div class="guideline-row"><span class="gl-status fail">&#10007;</span><span class="gl-code">1.1.1</span><span class="gl-name">Non-text Content</span><span class="gl-level">A</span></div>
+          <div class="guideline-row"><span class="gl-status fail">&#10007;</span><span class="gl-code">1.3.1</span><span class="gl-name">Info and Relationships</span><span class="gl-level">A</span></div>
+          <div class="guideline-row"><span class="gl-status pass">&#10003;</span><span class="gl-code">1.3.2</span><span class="gl-name">Meaningful Sequence</span><span class="gl-level">A</span></div>
+          <div class="guideline-row"><span class="gl-status fail">&#10007;</span><span class="gl-code">1.4.1</span><span class="gl-name">Use of Color</span><span class="gl-level">A</span></div>
+          <div class="guideline-row"><span class="gl-status fail">&#10007;</span><span class="gl-code">1.4.3</span><span class="gl-name">Contrast (Minimum)</span><span class="gl-level">AA</span></div>
+        </div>
+      </div>
+
+      <div class="principle-overview-card" style="border-top:3px solid var(--critical-red)">
+        <div class="po-header">
+          <div class="po-icon" style="background:var(--critical-red-light);color:var(--critical-red)">&#9995;</div>
+          <div><div class="po-name">Operable</div><div class="po-full">Can users operate the UI?</div></div>
+        </div>
+        <div class="po-score text-red">35%</div>
+        <div class="po-bar"><div class="po-bar-fill" style="width:35%;background:var(--critical-red)"></div></div>
+        <div class="po-criteria">8/24 criteria passed</div>
+        <div class="mt-md">
+          <div class="guideline-row"><span class="gl-status fail">&#10007;</span><span class="gl-code">2.1.1</span><span class="gl-name">Keyboard</span><span class="gl-level">A</span></div>
+          <div class="guideline-row"><span class="gl-status fail">&#10007;</span><span class="gl-code">2.1.2</span><span class="gl-name">No Keyboard Trap</span><span class="gl-level">A</span></div>
+          <div class="guideline-row"><span class="gl-status fail">&#10007;</span><span class="gl-code">2.4.3</span><span class="gl-name">Focus Order</span><span class="gl-level">A</span></div>
+          <div class="guideline-row"><span class="gl-status fail">&#10007;</span><span class="gl-code">2.4.7</span><span class="gl-name">Focus Visible</span><span class="gl-level">AA</span></div>
+          <div class="guideline-row"><span class="gl-status pass">&#10003;</span><span class="gl-code">2.4.4</span><span class="gl-name">Link Purpose</span><span class="gl-level">A</span></div>
+        </div>
+      </div>
+
+      <div class="principle-overview-card" style="border-top:3px solid var(--warm-amber)">
+        <div class="po-header">
+          <div class="po-icon" style="background:var(--warm-amber-light);color:var(--warm-amber)">&#128172;</div>
+          <div><div class="po-name">Understandable</div><div class="po-full">Can users understand content?</div></div>
+        </div>
+        <div class="po-score text-amber">50%</div>
+        <div class="po-bar"><div class="po-bar-fill" style="width:50%;background:var(--warm-amber)"></div></div>
+        <div class="po-criteria">8/16 criteria passed</div>
+        <div class="mt-md">
+          <div class="guideline-row"><span class="gl-status pass">&#10003;</span><span class="gl-code">3.1.1</span><span class="gl-name">Language of Page</span><span class="gl-level">A</span></div>
+          <div class="guideline-row"><span class="gl-status fail">&#10007;</span><span class="gl-code">3.3.1</span><span class="gl-name">Error Identification</span><span class="gl-level">A</span></div>
+          <div class="guideline-row"><span class="gl-status fail">&#10007;</span><span class="gl-code">3.3.2</span><span class="gl-name">Labels or Instructions</span><span class="gl-level">A</span></div>
+          <div class="guideline-row"><span class="gl-status fail">&#10007;</span><span class="gl-code">3.3.3</span><span class="gl-name">Error Suggestion</span><span class="gl-level">AA</span></div>
+          <div class="guideline-row"><span class="gl-status fail">&#10007;</span><span class="gl-code">3.3.4</span><span class="gl-name">Error Prevention</span><span class="gl-level">AA</span></div>
+        </div>
+      </div>
+
+      <div class="principle-overview-card" style="border-top:3px solid var(--critical-red)">
+        <div class="po-header">
+          <div class="po-icon" style="background:var(--critical-red-light);color:var(--critical-red)">&#128736;</div>
+          <div><div class="po-name">Robust</div><div class="po-full">Compatible with assistive tech?</div></div>
+        </div>
+        <div class="po-score text-red">38%</div>
+        <div class="po-bar"><div class="po-bar-fill" style="width:38%;background:var(--critical-red)"></div></div>
+        <div class="po-criteria">6/17 criteria passed</div>
+        <div class="mt-md">
+          <div class="guideline-row"><span class="gl-status fail">&#10007;</span><span class="gl-code">4.1.1</span><span class="gl-name">Parsing</span><span class="gl-level">A</span></div>
+          <div class="guideline-row"><span class="gl-status fail">&#10007;</span><span class="gl-code">4.1.2</span><span class="gl-name">Name, Role, Value</span><span class="gl-level">A</span></div>
+          <div class="guideline-row"><span class="gl-status pass">&#10003;</span><span class="gl-code">4.1.3</span><span class="gl-name">Status Messages</span><span class="gl-level">AA</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Per-Page Reports -->
+    <div class="eyebrow mb-md">Per-Page Accessibility Report &mdash; 12 Mortgage Pages</div>
+
+    <!-- Loan Application - Expanded (worst offender) -->
+    <div class="a11y-page-card expanded">
+      <div class="a11y-page-header">
+        <span class="a11y-grade grade-f">F</span>
+        <span class="page-name">Loan Application</span>
+        <div class="mini-bars">
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:35%;background:var(--critical-red)"></div></div><span class="mb-label">Perceive</span></div>
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:20%;background:var(--critical-red)"></div></div><span class="mb-label">Operate</span></div>
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:30%;background:var(--critical-red)"></div></div><span class="mb-label">Understand</span></div>
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:25%;background:var(--critical-red)"></div></div><span class="mb-label">Robust</span></div>
+        </div>
+        <div class="issue-counts">
+          <span class="issue-chip critical">8 critical</span>
+          <span class="issue-chip major">6 major</span>
+          <span class="issue-chip minor">4 minor</span>
+        </div>
+      </div>
+
+      <div class="a11y-page-detail">
+        <div class="principle-grid">
+          <div class="principle-card" style="background:var(--critical-red-light)">
+            <div class="pc-name" style="color:var(--critical-red)">Perceivable</div>
+            <div class="pc-score text-red">35%</div>
+            <div class="pc-issues text-red">3 critical issues</div>
+          </div>
+          <div class="principle-card" style="background:var(--critical-red-light)">
+            <div class="pc-name" style="color:var(--critical-red)">Operable</div>
+            <div class="pc-score text-red">20%</div>
+            <div class="pc-issues text-red">3 critical issues</div>
+          </div>
+          <div class="principle-card" style="background:var(--critical-red-light)">
+            <div class="pc-name" style="color:var(--critical-red)">Understandable</div>
+            <div class="pc-score text-red">30%</div>
+            <div class="pc-issues text-red">1 critical, 3 major</div>
+          </div>
+          <div class="principle-card" style="background:var(--critical-red-light)">
+            <div class="pc-name" style="color:var(--critical-red)">Robust</div>
+            <div class="pc-score text-red">25%</div>
+            <div class="pc-issues text-red">1 critical, 2 major</div>
+          </div>
+        </div>
+
+        <table class="issue-table">
+          <thead>
+            <tr><th style="width:30px">Sev</th><th style="width:70px">Criterion</th><th style="width:60px">Level</th><th>Issue</th><th>Element</th><th style="width:80px">Regulation</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="severity-dot critical"></span></td>
+              <td><span class="criterion-code">2.1.1</span></td>
+              <td><span class="wl-badge level-a" style="width:auto;height:auto;padding:1px 6px;font-size:9px">A</span></td>
+              <td>Multi-step loan form cannot be navigated with keyboard only. Tab key skips form steps 3-5.</td>
+              <td class="font-mono text-xs text-tertiary">.loan-wizard</td>
+              <td><span class="pill pill-fail" style="font-size:8px">ECOA</span></td>
+            </tr>
+            <tr>
+              <td><span class="severity-dot critical"></span></td>
+              <td><span class="criterion-code">1.3.1</span></td>
+              <td><span class="wl-badge level-a" style="width:auto;height:auto;padding:1px 6px;font-size:9px">A</span></td>
+              <td>Income, Loan Amount, and Property Value fields lack <code>&lt;label&gt;</code> elements. Screen readers cannot identify fields.</td>
+              <td class="font-mono text-xs text-tertiary">input.currency-field</td>
+              <td><span class="pill pill-fail" style="font-size:8px">ECOA</span></td>
+            </tr>
+            <tr>
+              <td><span class="severity-dot critical"></span></td>
+              <td><span class="criterion-code">3.3.1</span></td>
+              <td><span class="wl-badge level-a" style="width:auto;height:auto;padding:1px 6px;font-size:9px">A</span></td>
+              <td>Validation errors not announced to screen readers. Errors only shown visually in red text.</td>
+              <td class="font-mono text-xs text-tertiary">.error-msg</td>
+              <td><span class="pill pill-fail" style="font-size:8px">ECOA</span></td>
+            </tr>
+            <tr>
+              <td><span class="severity-dot critical"></span></td>
+              <td><span class="criterion-code">4.1.2</span></td>
+              <td><span class="wl-badge level-a" style="width:auto;height:auto;padding:1px 6px;font-size:9px">A</span></td>
+              <td>Custom dropdown for "Loan Type" (Conventional/FHA/VA) lacks ARIA roles. Not operable with assistive tech.</td>
+              <td class="font-mono text-xs text-tertiary">.custom-select</td>
+              <td><span class="pill pill-fail" style="font-size:8px">ADA</span></td>
+            </tr>
+            <tr>
+              <td><span class="severity-dot critical"></span></td>
+              <td><span class="criterion-code">2.4.3</span></td>
+              <td><span class="wl-badge level-a" style="width:auto;height:auto;padding:1px 6px;font-size:9px">A</span></td>
+              <td>Focus order jumps from Step 1 header to Step 3 content, skipping Step 2 entirely.</td>
+              <td class="font-mono text-xs text-tertiary">.wizard-step</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><span class="severity-dot major"></span></td>
+              <td><span class="criterion-code">1.4.3</span></td>
+              <td><span class="wl-badge level-aa" style="width:auto;height:auto;padding:1px 6px;font-size:9px">AA</span></td>
+              <td>Helper text below SSN field has 2.4:1 contrast ratio (needs 4.5:1 minimum).</td>
+              <td class="font-mono text-xs text-tertiary">.help-text</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><span class="severity-dot major"></span></td>
+              <td><span class="criterion-code">2.4.7</span></td>
+              <td><span class="wl-badge level-aa" style="width:auto;height:auto;padding:1px 6px;font-size:9px">AA</span></td>
+              <td>No visible focus indicator on "Continue" and "Previous" navigation buttons.</td>
+              <td class="font-mono text-xs text-tertiary">.wizard-nav button</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><span class="severity-dot major"></span></td>
+              <td><span class="criterion-code">1.4.1</span></td>
+              <td><span class="wl-badge level-a" style="width:auto;height:auto;padding:1px 6px;font-size:9px">A</span></td>
+              <td>Required fields indicated only by red asterisk color. No text or icon alternative.</td>
+              <td class="font-mono text-xs text-tertiary">.required-marker</td>
+              <td><span class="pill pill-fail" style="font-size:8px">ECOA</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="flex justify-between items-center mt-lg">
+          <span class="text-xs text-red font-bold">18 issues found &mdash; 5 linked to ECOA/ADA compliance</span>
+          <button class="btn btn-primary btn-sm">Generate A11y Tests for Loan Application</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Other pages collapsed -->
+    <div class="a11y-page-card">
+      <div class="a11y-page-header">
+        <span class="a11y-grade grade-b">B</span>
+        <span class="page-name">Login / Auth</span>
+        <div class="mini-bars">
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:85%;background:var(--success-green)"></div></div><span class="mb-label">Perceive</span></div>
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:72%;background:var(--success-green)"></div></div><span class="mb-label">Operate</span></div>
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:78%;background:var(--success-green)"></div></div><span class="mb-label">Understand</span></div>
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:68%;background:var(--warm-amber)"></div></div><span class="mb-label">Robust</span></div>
+        </div>
+        <div class="issue-counts">
+          <span class="issue-chip critical">1 critical</span>
+          <span class="issue-chip major">2 major</span>
+          <span class="issue-chip minor">2 minor</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="a11y-page-card">
+      <div class="a11y-page-header">
+        <span class="a11y-grade grade-c">C</span>
+        <span class="page-name">Borrower Dashboard</span>
+        <div class="mini-bars">
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:65%;background:var(--warm-amber)"></div></div><span class="mb-label">Perceive</span></div>
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:50%;background:var(--warm-amber)"></div></div><span class="mb-label">Operate</span></div>
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:60%;background:var(--warm-amber)"></div></div><span class="mb-label">Understand</span></div>
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:55%;background:var(--warm-amber)"></div></div><span class="mb-label">Robust</span></div>
+        </div>
+        <div class="issue-counts">
+          <span class="issue-chip critical">2 critical</span>
+          <span class="issue-chip major">5 major</span>
+          <span class="issue-chip minor">3 minor</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="a11y-page-card">
+      <div class="a11y-page-header">
+        <span class="a11y-grade grade-c">C-</span>
+        <span class="page-name">Document Upload</span>
+        <div class="mini-bars">
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:55%;background:var(--warm-amber)"></div></div><span class="mb-label">Perceive</span></div>
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:40%;background:var(--critical-red)"></div></div><span class="mb-label">Operate</span></div>
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:50%;background:var(--warm-amber)"></div></div><span class="mb-label">Understand</span></div>
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:45%;background:var(--critical-red)"></div></div><span class="mb-label">Robust</span></div>
+        </div>
+        <div class="issue-counts">
+          <span class="issue-chip critical">3 critical</span>
+          <span class="issue-chip major">4 major</span>
+          <span class="issue-chip minor">2 minor</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="a11y-page-card">
+      <div class="a11y-page-header">
+        <span class="a11y-grade grade-d">D</span>
+        <span class="page-name">Credit Check</span>
+        <div class="mini-bars">
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:45%;background:var(--critical-red)"></div></div><span class="mb-label">Perceive</span></div>
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:30%;background:var(--critical-red)"></div></div><span class="mb-label">Operate</span></div>
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:40%;background:var(--critical-red)"></div></div><span class="mb-label">Understand</span></div>
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:35%;background:var(--critical-red)"></div></div><span class="mb-label">Robust</span></div>
+        </div>
+        <div class="issue-counts">
+          <span class="issue-chip critical">4 critical</span>
+          <span class="issue-chip major">5 major</span>
+          <span class="issue-chip minor">2 minor</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="a11y-page-card">
+      <div class="a11y-page-header">
+        <span class="a11y-grade grade-d">D</span>
+        <span class="page-name">Rate Calculator</span>
+        <div class="mini-bars">
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:40%;background:var(--critical-red)"></div></div><span class="mb-label">Perceive</span></div>
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:35%;background:var(--critical-red)"></div></div><span class="mb-label">Operate</span></div>
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:45%;background:var(--critical-red)"></div></div><span class="mb-label">Understand</span></div>
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:30%;background:var(--critical-red)"></div></div><span class="mb-label">Robust</span></div>
+        </div>
+        <div class="issue-counts">
+          <span class="issue-chip critical">3 critical</span>
+          <span class="issue-chip major">4 major</span>
+          <span class="issue-chip minor">3 minor</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="a11y-page-card">
+      <div class="a11y-page-header">
+        <span class="a11y-grade grade-d">D-</span>
+        <span class="page-name">Underwriting</span>
+        <div class="mini-bars">
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:30%;background:var(--critical-red)"></div></div><span class="mb-label">Perceive</span></div>
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:22%;background:var(--critical-red)"></div></div><span class="mb-label">Operate</span></div>
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:28%;background:var(--critical-red)"></div></div><span class="mb-label">Understand</span></div>
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:20%;background:var(--critical-red)"></div></div><span class="mb-label">Robust</span></div>
+        </div>
+        <div class="issue-counts">
+          <span class="issue-chip critical">4 critical</span>
+          <span class="issue-chip major">6 major</span>
+          <span class="issue-chip minor">2 minor</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="a11y-page-card">
+      <div class="a11y-page-header">
+        <span class="a11y-grade grade-c">C</span>
+        <span class="page-name">Loan Estimates</span>
+        <div class="mini-bars">
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:58%;background:var(--warm-amber)"></div></div><span class="mb-label">Perceive</span></div>
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:48%;background:var(--warm-amber)"></div></div><span class="mb-label">Operate</span></div>
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:52%;background:var(--warm-amber)"></div></div><span class="mb-label">Understand</span></div>
+          <div class="mini-bar-group"><div class="mb-bar"><div class="mb-fill" style="width:42%;background:var(--critical-red)"></div></div><span class="mb-label">Robust</span></div>
+        </div>
+        <div class="issue-counts">
+          <span class="issue-chip critical">2 critical</span>
+          <span class="issue-chip major">4 major</span>
+          <span class="issue-chip minor">3 minor</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Not scanned pages -->
+    <div class="eyebrow mb-md mt-xl" style="color:var(--critical-red)">Not Yet Scanned (4 pages)</div>
+
+    <div class="a11y-page-card">
+      <div class="a11y-page-header">
+        <span class="a11y-grade grade-na">N/A</span>
+        <span class="page-name">Closing / Settlement</span>
+        <div class="mini-bars"><div style="flex:1;font-size:11px;color:var(--ink-tertiary)">Page not scanned &mdash; add URL context first</div></div>
+        <div class="issue-counts"><span class="issue-chip" style="background:var(--border-light);color:var(--ink-tertiary)">Pending</span></div>
+        <button class="btn btn-primary btn-sm">Scan</button>
+      </div>
+    </div>
+
+    <div class="a11y-page-card">
+      <div class="a11y-page-header">
+        <span class="a11y-grade grade-na">N/A</span>
+        <span class="page-name">E-Sign Portal</span>
+        <div class="mini-bars"><div style="flex:1;font-size:11px;color:var(--ink-tertiary)">Page not scanned &mdash; add URL context first</div></div>
+        <div class="issue-counts"><span class="issue-chip" style="background:var(--border-light);color:var(--ink-tertiary)">Pending</span></div>
+        <button class="btn btn-primary btn-sm">Scan</button>
+      </div>
+    </div>
+
+    <div class="a11y-page-card">
+      <div class="a11y-page-header">
+        <span class="a11y-grade grade-na">N/A</span>
+        <span class="page-name">Servicing Portal</span>
+        <div class="mini-bars"><div style="flex:1;font-size:11px;color:var(--ink-tertiary)">No context available for this page</div></div>
+        <div class="issue-counts"><span class="issue-chip" style="background:var(--border-light);color:var(--ink-tertiary)">No context</span></div>
+        <button class="btn btn-secondary btn-sm">Add URL</button>
+      </div>
+    </div>
+
+    <div class="a11y-page-card">
+      <div class="a11y-page-header">
+        <span class="a11y-grade grade-na">N/A</span>
+        <span class="page-name">Payment Processing</span>
+        <div class="mini-bars"><div style="flex:1;font-size:11px;color:var(--ink-tertiary)">No context available for this page</div></div>
+        <div class="issue-counts"><span class="issue-chip" style="background:var(--border-light);color:var(--ink-tertiary)">No context</span></div>
+        <button class="btn btn-secondary btn-sm">Add URL</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>

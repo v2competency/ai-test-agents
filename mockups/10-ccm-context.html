@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUALINT — CCM Mortgage Context</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .context-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: var(--sp-2xl);
+    }
+
+    .ccs-summary {
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: var(--sp-xl);
+      text-align: center;
+      margin-bottom: var(--sp-lg);
+    }
+
+    .ccs-summary .ccs-large {
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .ccs-summary .ccs-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-secondary);
+      margin-top: var(--sp-xs);
+    }
+
+    .ccs-breakdown {
+      margin-top: var(--sp-lg);
+      text-align: left;
+      font-size: 11px;
+    }
+
+    .ccs-breakdown .breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 3px 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .source-card {
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: var(--sp-lg);
+      margin-bottom: var(--sp-md);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .source-card:hover { border-color: var(--brand-orange); }
+    .source-card.active { border-color: var(--brand-orange); box-shadow: 0 0 0 3px rgba(233,92,8,0.1); }
+
+    .source-card .source-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--sp-sm);
+    }
+
+    .source-card .source-name { font-size: 13px; font-weight: 700; }
+
+    .source-card .source-contribution {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+      margin-top: var(--sp-sm);
+    }
+
+    .source-card .contrib-bar {
+      flex: 1;
+      height: 4px;
+      background: var(--border-light);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+    }
+
+    .source-card .contrib-fill {
+      height: 100%;
+      border-radius: var(--radius-pill);
+    }
+
+    .source-card .contrib-value {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      width: 30px;
+      text-align: right;
+    }
+
+    .ccs-boost-callout {
+      background: var(--brand-orange-light);
+      border: 1px solid var(--brand-orange);
+      border-radius: var(--radius-md);
+      padding: var(--sp-lg);
+      margin-top: var(--sp-lg);
+    }
+
+    .ccs-boost-callout .boost-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--brand-orange);
+      margin-bottom: var(--sp-sm);
+    }
+
+    .ccs-boost-callout .boost-item {
+      font-size: 11px;
+      padding: 3px 0;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .screenshot-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--sp-md);
+    }
+
+    .screenshot-card {
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .screenshot-card .screenshot-preview {
+      height: 100px;
+      background: var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .screenshot-card .screenshot-preview .page-mock {
+      width: 80%;
+      height: 80%;
+      background: white;
+      border-radius: var(--radius-xs);
+      border: 1px solid var(--border-color);
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .page-mock .mock-bar { height: 3px; border-radius: 2px; background: var(--border-color); }
+    .page-mock .mock-block { flex: 1; border-radius: 2px; background: var(--border-light); }
+
+    .screenshot-card .screenshot-info {
+      padding: var(--sp-sm) var(--sp-md);
+    }
+
+    .screenshot-card .screenshot-info .name { font-size: 11px; font-weight: 600; }
+    .screenshot-card .screenshot-info .meta { font-size: 9px; color: var(--ink-tertiary); font-family: var(--font-mono); }
+
+    .not-connected-card {
+      border: 2px dashed var(--critical-red);
+      background: var(--critical-red-light);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-xl);
+      text-align: center;
+    }
+
+    .not-connected-card .nc-icon {
+      font-size: 36px;
+      color: var(--critical-red);
+      margin-bottom: var(--sp-md);
+    }
+
+    .not-connected-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--critical-red);
+      margin-bottom: var(--sp-xs);
+    }
+
+    .not-connected-card p {
+      font-size: 12px;
+      color: var(--ink-secondary);
+      margin-bottom: var(--sp-lg);
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .whatif-simulator {
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-xl);
+    }
+
+    .whatif-row {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-lg);
+      padding: var(--sp-md) 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .whatif-row .wif-action {
+      flex: 1;
+      font-size: 12px;
+    }
+
+    .whatif-row .wif-current, .whatif-row .wif-projected {
+      width: 70px;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .whatif-row .wif-arrow {
+      color: var(--ink-tertiary);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo-mark"></div>
+      <div class="brand-text">QUALINT<small>Quality Intelligence Platform</small></div>
+    </div>
+    <div class="sidebar-nav">
+      <a href="02-projects.html"><span class="nav-icon">&#9634;</span><span class="nav-label">All Projects</span></a>
+      <div class="sidebar-section-label">CCM Mortgage</div>
+      <a href="09-ccm-dashboard.html"><span class="nav-icon">&#9632;</span><span class="nav-label">Dashboard</span></a>
+      <a href="10-ccm-context.html" class="active"><span class="nav-icon">&#128206;</span><span class="nav-label">Context</span></a>
+      <a href="11-ccm-tests.html"><span class="nav-icon">&#9745;</span><span class="nav-label">Test Cases</span><span class="badge">14</span></a>
+      <a href="#"><span class="nav-icon">&#60;/&#62;</span><span class="nav-label">Automation</span></a>
+      <a href="12-ccm-execution.html"><span class="nav-icon">&#9654;</span><span class="nav-label">Execution</span></a>
+      <a href="#"><span class="nav-icon">&#9776;</span><span class="nav-label">Results</span></a>
+      <a href="14-accessibility-ccm.html"><span class="nav-icon">&#9855;</span><span class="nav-label">Accessibility</span></a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">AK</div>
+        <div class="user-info"><div class="name">Alex Kim</div><div class="role">Acme Startup</div></div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="breadcrumb">
+      <a href="02-projects.html">Projects</a><span class="sep">/</span>
+      <a href="09-ccm-dashboard.html">CCM Mortgage</a><span class="sep">/</span>
+      <span>Context</span>
+    </div>
+
+    <div class="page-header">
+      <div>
+        <h1>Context Management</h1>
+        <p class="subtitle">Provide rich context about CCM Mortgage portal for better AI-generated tests</p>
+      </div>
+      <button class="btn btn-primary" onclick="window.location.href='11-ccm-tests.html'">Generate Tests from Context</button>
+    </div>
+
+    <div class="context-grid">
+      <!-- Left: CCS -->
+      <div>
+        <div class="ccs-summary">
+          <div class="eyebrow">Context Confidence Score</div>
+          <div class="ccs-large text-amber">48%</div>
+          <div class="ccs-label">Partial</div>
+          <div class="ccs-badge partial mt-md" style="margin:8px auto 0">
+            <span class="ccs-dot"></span> Tests may have generic selectors
+          </div>
+
+          <div class="ccs-breakdown">
+            <div class="eyebrow mt-lg">Score Breakdown</div>
+            <div class="breakdown-row">
+              <span>Screenshots</span>
+              <span class="font-mono font-bold">10%</span>
+            </div>
+            <div class="breakdown-row">
+              <span class="text-tertiary" style="font-size:10px">&nbsp;&nbsp;(8/12 pages have screenshots)</span>
+              <span></span>
+            </div>
+            <div class="breakdown-row">
+              <span>Application URLs</span>
+              <span class="font-mono font-bold">22%</span>
+            </div>
+            <div class="breakdown-row">
+              <span class="text-tertiary" style="font-size:10px">&nbsp;&nbsp;(10/12 pages configured)</span>
+              <span></span>
+            </div>
+            <div class="breakdown-row">
+              <span style="color:var(--critical-red)">Source Code</span>
+              <span class="font-mono font-bold text-red">0%</span>
+            </div>
+            <div class="breakdown-row">
+              <span>Combo Bonus</span>
+              <span class="font-mono font-bold">+8%</span>
+            </div>
+            <div class="breakdown-row">
+              <span>Freshness Penalty</span>
+              <span class="font-mono font-bold text-red">-2%</span>
+            </div>
+            <div class="breakdown-row" style="border:none;padding-top:6px">
+              <span><strong>Total CCS</strong></span>
+              <span class="font-mono font-bold text-amber">48%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="eyebrow">Context Sources</div>
+
+        <div class="source-card active">
+          <div class="source-header">
+            <span class="source-name">Screenshots</span>
+            <span class="pill pill-pass" style="font-size:9px">Connected</span>
+          </div>
+          <div class="text-xs text-tertiary">8 screenshots &middot; 8/12 pages</div>
+          <div class="source-contribution">
+            <div class="contrib-bar"><div class="contrib-fill" style="width:67%;background:var(--warm-amber)"></div></div>
+            <span class="contrib-value text-amber">10%</span>
+          </div>
+        </div>
+
+        <div class="source-card">
+          <div class="source-header">
+            <span class="source-name">Application URLs</span>
+            <span class="pill pill-pass" style="font-size:9px">Connected</span>
+          </div>
+          <div class="text-xs text-tertiary">10 URLs configured</div>
+          <div class="source-contribution">
+            <div class="contrib-bar"><div class="contrib-fill" style="width:88%;background:var(--success-green)"></div></div>
+            <span class="contrib-value text-green">22%</span>
+          </div>
+        </div>
+
+        <div class="source-card" style="border-color:var(--critical-red); background:var(--critical-red-light)">
+          <div class="source-header">
+            <span class="source-name" style="color:var(--critical-red)">Source Code</span>
+            <span class="pill pill-fail" style="font-size:9px">Not Connected</span>
+          </div>
+          <div class="text-xs" style="color:var(--critical-red)">Missing! Connect repo for +35% CCS</div>
+          <div class="source-contribution">
+            <div class="contrib-bar"><div class="contrib-fill" style="width:0%"></div></div>
+            <span class="contrib-value text-red">0%</span>
+          </div>
+          <button class="btn btn-primary btn-sm mt-sm w-full">Connect Repository</button>
+        </div>
+
+        <!-- What-If Simulator -->
+        <div class="ccs-boost-callout">
+          <div class="boost-title">What-If Simulator</div>
+          <div class="boost-item">
+            <span>Current CCS</span>
+            <span class="font-mono font-bold text-amber">48%</span>
+          </div>
+          <div class="boost-item">
+            <span>+ Connect source code</span>
+            <span class="font-mono font-bold text-green">+35%</span>
+          </div>
+          <div class="boost-item">
+            <span>+ Add 4 missing screenshots</span>
+            <span class="font-mono font-bold text-green">+5%</span>
+          </div>
+          <div class="boost-item" style="border-top:1px solid var(--brand-orange);padding-top:6px;margin-top:4px">
+            <span><strong>Projected CCS</strong></span>
+            <span class="font-mono font-bold" style="color:#1D4ED8">88%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Content -->
+      <div>
+        <div class="tabs">
+          <span class="tab active">Screenshots</span>
+          <span class="tab">Application URLs</span>
+          <span class="tab">Source Code</span>
+        </div>
+
+        <div class="flex justify-between items-center mb-lg">
+          <span class="text-sm text-secondary">8 screenshots uploaded &middot; 4 pages missing screenshots</span>
+          <button class="btn btn-secondary btn-sm">Upload Screenshots</button>
+        </div>
+
+        <div class="screenshot-grid mb-xl">
+          <div class="screenshot-card">
+            <div class="screenshot-preview">
+              <div class="page-mock"><div class="mock-bar" style="width:60%"></div><div class="mock-block"></div></div>
+            </div>
+            <div class="screenshot-info">
+              <div class="name">Login Page</div>
+              <div class="meta">login.png</div>
+            </div>
+          </div>
+          <div class="screenshot-card">
+            <div class="screenshot-preview">
+              <div class="page-mock"><div class="mock-bar" style="width:100%"></div><div style="display:grid;grid-template-columns:1fr 2fr;gap:3px;flex:1"><div class="mock-block"></div><div class="mock-block"></div></div></div>
+            </div>
+            <div class="screenshot-info">
+              <div class="name">Borrower Dashboard</div>
+              <div class="meta">dashboard.png</div>
+            </div>
+          </div>
+          <div class="screenshot-card">
+            <div class="screenshot-preview">
+              <div class="page-mock"><div class="mock-bar" style="width:80%"></div><div class="mock-block"></div><div class="mock-bar" style="width:40%"></div><div class="mock-block" style="flex:0.5"></div></div>
+            </div>
+            <div class="screenshot-info">
+              <div class="name">Loan Application</div>
+              <div class="meta">loan-app.png</div>
+            </div>
+          </div>
+          <div class="screenshot-card">
+            <div class="screenshot-preview">
+              <div class="page-mock"><div class="mock-bar" style="width:50%"></div><div class="mock-block"></div></div>
+            </div>
+            <div class="screenshot-info">
+              <div class="name">Document Upload</div>
+              <div class="meta">doc-upload.png</div>
+            </div>
+          </div>
+          <div class="screenshot-card">
+            <div class="screenshot-preview">
+              <div class="page-mock"><div class="mock-bar" style="width:70%"></div><div class="mock-block"></div><div class="mock-bar" style="width:90%"></div></div>
+            </div>
+            <div class="screenshot-info">
+              <div class="name">Credit Check</div>
+              <div class="meta">credit.png</div>
+            </div>
+          </div>
+          <div class="screenshot-card">
+            <div class="screenshot-preview">
+              <div class="page-mock"><div class="mock-bar" style="width:45%"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;flex:1"><div class="mock-block"></div><div class="mock-block"></div></div></div>
+            </div>
+            <div class="screenshot-info">
+              <div class="name">Rate Calculator</div>
+              <div class="meta">rate-calc.png</div>
+            </div>
+          </div>
+          <div class="screenshot-card">
+            <div class="screenshot-preview">
+              <div class="page-mock"><div class="mock-bar" style="width:55%"></div><div class="mock-block"></div><div class="mock-block" style="flex:0.3"></div></div>
+            </div>
+            <div class="screenshot-info">
+              <div class="name">Underwriting</div>
+              <div class="meta">underwriting.png</div>
+            </div>
+          </div>
+          <div class="screenshot-card">
+            <div class="screenshot-preview">
+              <div class="page-mock"><div class="mock-bar" style="width:65%"></div><div class="mock-block"></div></div>
+            </div>
+            <div class="screenshot-info">
+              <div class="name">Loan Estimates</div>
+              <div class="meta">estimates.png</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Missing Screenshots Alert -->
+        <div style="background:var(--warm-amber-light);border:1px solid var(--warm-amber);border-radius:var(--radius-md);padding:var(--sp-lg);margin-bottom:var(--sp-xl)">
+          <div style="font-size:12px;font-weight:700;color:var(--warm-amber);margin-bottom:var(--sp-sm)">Missing Screenshots (4 pages)</div>
+          <div class="flex gap-lg" style="font-size:12px">
+            <span>Closing / Settlement</span>
+            <span>E-Sign Portal</span>
+            <span>Servicing Portal</span>
+            <span>Payment Processing</span>
+          </div>
+          <div class="text-xs text-tertiary mt-sm">Adding these screenshots will increase CCS by ~5% and enable test generation for these critical pages.</div>
+        </div>
+
+        <!-- Per-Page CCS Table -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Per-Page Context Confidence</div>
+          </div>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Page</th>
+                <th>Screenshot</th>
+                <th>URL</th>
+                <th>Source Code</th>
+                <th>CCS</th>
+                <th>Level</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Login / Auth</strong></td>
+                <td><span class="pill pill-active-pass">Yes</span></td>
+                <td><span class="pill pill-active-pass">Yes</span></td>
+                <td><span class="pill pill-fail">No</span></td>
+                <td class="mono font-bold text-amber">48%</td>
+                <td><span class="ccs-badge partial" style="font-size:9px"><span class="ccs-dot"></span>Partial</span></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><strong>Loan Application</strong></td>
+                <td><span class="pill pill-active-pass">Yes</span></td>
+                <td><span class="pill pill-active-pass">Yes</span></td>
+                <td><span class="pill pill-fail">No</span></td>
+                <td class="mono font-bold text-amber">48%</td>
+                <td><span class="ccs-badge partial" style="font-size:9px"><span class="ccs-dot"></span>Partial</span></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><strong>Rate Calculator</strong></td>
+                <td><span class="pill pill-active-pass">Yes</span></td>
+                <td><span class="pill pill-active-pass">Yes</span></td>
+                <td><span class="pill pill-fail">No</span></td>
+                <td class="mono font-bold text-amber">48%</td>
+                <td><span class="ccs-badge partial" style="font-size:9px"><span class="ccs-dot"></span>Partial</span></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><strong>Closing / Settlement</strong></td>
+                <td><span class="pill pill-fail">No</span></td>
+                <td><span class="pill pill-active-pass">Yes</span></td>
+                <td><span class="pill pill-fail">No</span></td>
+                <td class="mono font-bold text-red">25%</td>
+                <td><span class="ccs-badge minimal" style="font-size:9px"><span class="ccs-dot"></span>Minimal</span></td>
+                <td><button class="btn btn-ghost btn-sm text-orange">Add screenshot</button></td>
+              </tr>
+              <tr>
+                <td><strong>E-Sign Portal</strong></td>
+                <td><span class="pill pill-fail">No</span></td>
+                <td><span class="pill pill-active-pass">Yes</span></td>
+                <td><span class="pill pill-fail">No</span></td>
+                <td class="mono font-bold text-red">25%</td>
+                <td><span class="ccs-badge minimal" style="font-size:9px"><span class="ccs-dot"></span>Minimal</span></td>
+                <td><button class="btn btn-ghost btn-sm text-orange">Add screenshot</button></td>
+              </tr>
+              <tr>
+                <td><strong>Servicing Portal</strong></td>
+                <td><span class="pill pill-fail">No</span></td>
+                <td><span class="pill pill-fail">No</span></td>
+                <td><span class="pill pill-fail">No</span></td>
+                <td class="mono font-bold text-red">0%</td>
+                <td><span class="ccs-badge minimal" style="font-size:9px"><span class="ccs-dot"></span>None</span></td>
+                <td><button class="btn btn-ghost btn-sm text-orange">Add all</button></td>
+              </tr>
+              <tr>
+                <td><strong>Payment Processing</strong></td>
+                <td><span class="pill pill-fail">No</span></td>
+                <td><span class="pill pill-fail">No</span></td>
+                <td><span class="pill pill-fail">No</span></td>
+                <td class="mono font-bold text-red">0%</td>
+                <td><span class="ccs-badge minimal" style="font-size:9px"><span class="ccs-dot"></span>None</span></td>
+                <td><button class="btn btn-ghost btn-sm text-orange">Add all</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Source Code Not Connected -->
+        <div class="not-connected-card mt-xl">
+          <div class="nc-icon">&#128279;</div>
+          <h3>Source Code Not Connected</h3>
+          <p>Connecting your frontend repository will increase CCS from 48% to ~83%. The platform will extract precise selectors, component trees, and data-testid attributes for reliable test automation.</p>
+          <button class="btn btn-primary btn-lg">Connect GitHub Repository</button>
+          <div class="text-xs text-tertiary mt-md">Read-only access &middot; SOC 2 compliant &middot; Disconnect anytime</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

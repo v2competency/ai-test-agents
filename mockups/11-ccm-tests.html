@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUALINT — CCM Mortgage Test Cases</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-md);
+      padding: var(--sp-md) var(--sp-lg);
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--sp-lg);
+      flex-wrap: wrap;
+    }
+
+    .filter-bar .filter-group { display: flex; align-items: center; gap: var(--sp-xs); }
+
+    .filter-bar .filter-label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-tertiary);
+    }
+
+    .filter-bar .filter-chip {
+      padding: 4px 10px; border-radius: var(--radius-pill); font-size: 11px; font-weight: 500;
+      border: 1px solid var(--border-color); background: white; cursor: pointer; transition: all 0.15s;
+    }
+
+    .filter-bar .filter-chip:hover { border-color: var(--brand-orange); }
+    .filter-bar .filter-chip.active { background: var(--brand-orange); color: white; border-color: var(--brand-orange); }
+
+    .test-card {
+      background: var(--card-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md);
+      margin-bottom: var(--sp-md); overflow: hidden; transition: all 0.15s;
+    }
+
+    .test-card:hover { box-shadow: var(--shadow-panel); }
+    .test-card.expanded { border-color: var(--brand-orange); }
+
+    .test-card-header {
+      display: flex; align-items: center; padding: var(--sp-md) var(--sp-lg); gap: var(--sp-md); cursor: pointer;
+    }
+
+    .tc-checkbox { width: 16px; height: 16px; accent-color: var(--brand-orange); }
+
+    .tc-priority { width: 4px; height: 28px; border-radius: 2px; flex-shrink: 0; }
+    .tc-priority.critical { background: var(--critical-red); }
+    .tc-priority.high { background: var(--brand-orange); }
+    .tc-priority.medium { background: var(--warm-amber); }
+    .tc-priority.low { background: var(--ink-tertiary); }
+
+    .tc-title { flex: 1; font-size: 13px; font-weight: 600; }
+    .tc-meta { display: flex; align-items: center; gap: var(--sp-sm); }
+
+    .tc-confidence {
+      font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+      padding: 2px 8px; border-radius: var(--radius-xs); background: var(--border-light);
+    }
+
+    .test-card-body { padding: 0 var(--sp-lg) var(--sp-lg) 52px; display: none; }
+    .test-card.expanded .test-card-body { display: block; }
+
+    .tc-section { margin-bottom: var(--sp-md); }
+    .tc-section-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-secondary); margin-bottom: var(--sp-xs); }
+
+    .tc-steps { list-style: none; counter-reset: step; }
+    .tc-steps li {
+      counter-increment: step; padding: var(--sp-xs) 0; font-size: 12px;
+      display: flex; align-items: flex-start; gap: var(--sp-sm);
+    }
+    .tc-steps li::before {
+      content: counter(step); width: 20px; height: 20px; border-radius: 50%; background: var(--border-light);
+      display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700;
+      color: var(--ink-secondary); flex-shrink: 0;
+    }
+
+    .tc-expected {
+      padding: var(--sp-sm) var(--sp-md); background: var(--success-green-light);
+      border-left: 3px solid var(--success-green); border-radius: 0 var(--radius-xs) var(--radius-xs) 0; font-size: 12px;
+    }
+
+    .tc-actions {
+      display: flex; gap: var(--sp-sm); margin-top: var(--sp-lg);
+      padding-top: var(--sp-md); border-top: 1px solid var(--border-light);
+    }
+
+    .suite-sidebar {
+      background: var(--card-surface); border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg); padding: var(--sp-lg);
+    }
+
+    .suite-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: var(--sp-sm) var(--sp-md); border-radius: var(--radius-sm);
+      cursor: pointer; font-size: 12px; transition: all 0.15s;
+    }
+    .suite-item:hover { background: var(--hover-bg); }
+    .suite-item.active { background: var(--brand-orange-light); color: var(--brand-orange); font-weight: 600; }
+    .suite-item .suite-count { font-family: var(--font-mono); font-size: 10px; color: var(--ink-tertiary); }
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo-mark"></div>
+      <div class="brand-text">QUALINT<small>Quality Intelligence Platform</small></div>
+    </div>
+    <div class="sidebar-nav">
+      <a href="02-projects.html"><span class="nav-icon">&#9634;</span><span class="nav-label">All Projects</span></a>
+      <div class="sidebar-section-label">CCM Mortgage</div>
+      <a href="09-ccm-dashboard.html"><span class="nav-icon">&#9632;</span><span class="nav-label">Dashboard</span></a>
+      <a href="10-ccm-context.html"><span class="nav-icon">&#128206;</span><span class="nav-label">Context</span></a>
+      <a href="11-ccm-tests.html" class="active"><span class="nav-icon">&#9745;</span><span class="nav-label">Test Cases</span><span class="badge">14</span></a>
+      <a href="#"><span class="nav-icon">&#60;/&#62;</span><span class="nav-label">Automation</span></a>
+      <a href="12-ccm-execution.html"><span class="nav-icon">&#9654;</span><span class="nav-label">Execution</span></a>
+      <a href="#"><span class="nav-icon">&#9776;</span><span class="nav-label">Results</span></a>
+      <a href="14-accessibility-ccm.html"><span class="nav-icon">&#9855;</span><span class="nav-label">Accessibility</span></a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">AK</div>
+        <div class="user-info"><div class="name">Alex Kim</div><div class="role">Acme Startup</div></div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="breadcrumb">
+      <a href="02-projects.html">Projects</a><span class="sep">/</span>
+      <a href="09-ccm-dashboard.html">CCM Mortgage</a><span class="sep">/</span>
+      <span>Test Cases</span>
+    </div>
+
+    <div class="page-header">
+      <div>
+        <h1>Test Cases</h1>
+        <p class="subtitle">96 test cases &middot; <span class="text-orange font-bold">14 pending review</span></p>
+      </div>
+      <div class="flex gap-sm">
+        <button class="btn btn-secondary">Organize Suites</button>
+        <button class="btn btn-primary">+ Generate Tests</button>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:200px 1fr; gap:var(--sp-xl)">
+      <!-- Suites -->
+      <div class="suite-sidebar">
+        <div class="eyebrow mb-md">Test Suites</div>
+        <div class="suite-item"><span>All Tests</span><span class="suite-count">96</span></div>
+        <div class="suite-item active"><span>Review Queue</span><span class="suite-count" style="color:var(--brand-orange)">14</span></div>
+        <div class="suite-item"><span>Smoke</span><span class="suite-count">18</span></div>
+        <div class="suite-item"><span>Regression</span><span class="suite-count">89</span></div>
+        <div class="suite-item"><span>Compliance</span><span class="suite-count">16</span></div>
+
+        <div class="eyebrow mb-md mt-lg">By Page</div>
+        <div class="suite-item"><span>Login / Auth</span><span class="suite-count">14</span></div>
+        <div class="suite-item"><span>Loan Application</span><span class="suite-count">18</span></div>
+        <div class="suite-item"><span>Borrower Dashboard</span><span class="suite-count">12</span></div>
+        <div class="suite-item"><span>Document Upload</span><span class="suite-count">10</span></div>
+        <div class="suite-item"><span>Credit Check</span><span class="suite-count">8</span></div>
+        <div class="suite-item"><span>Rate Calculator</span><span class="suite-count">6</span></div>
+        <div class="suite-item"><span>Loan Estimates</span><span class="suite-count">8</span></div>
+        <div class="suite-item"><span>Underwriting</span><span class="suite-count">4</span></div>
+      </div>
+
+      <!-- Test List -->
+      <div>
+        <div class="filter-bar">
+          <div class="filter-group">
+            <span class="filter-label">Status:</span>
+            <span class="filter-chip">All</span>
+            <span class="filter-chip active">Draft (14)</span>
+            <span class="filter-chip">Approved</span>
+            <span class="filter-chip">Rejected</span>
+          </div>
+          <div style="margin-left:auto">
+            <input class="form-input" placeholder="Search test cases..." style="width:200px;padding:5px 10px;font-size:11px">
+          </div>
+        </div>
+
+        <div class="eyebrow mb-md" style="color:var(--brand-orange)">Pending Review &mdash; 14 drafts</div>
+
+        <!-- TC 1: Expanded -->
+        <div class="test-card expanded">
+          <div class="test-card-header">
+            <input type="checkbox" class="tc-checkbox">
+            <div class="tc-priority critical"></div>
+            <div class="tc-title">Verify loan application rejects negative income values</div>
+            <div class="tc-meta">
+              <span class="pill pill-review">Draft</span>
+              <span class="pill pill-draft">Boundary</span>
+              <span class="tag">loan-app</span>
+              <span class="tag">compliance</span>
+              <span class="tc-confidence text-amber">76%</span>
+            </div>
+          </div>
+          <div class="test-card-body">
+            <div class="tc-section">
+              <div class="tc-section-label">Preconditions</div>
+              <p class="text-sm">Borrower is logged in and on Step 2 (Financial Information) of the loan application.</p>
+            </div>
+            <div class="tc-section">
+              <div class="tc-section-label">Steps</div>
+              <ol class="tc-steps">
+                <li>Navigate to the Loan Application page</li>
+                <li>Proceed to Step 2: Financial Information</li>
+                <li>Enter "-50000" in the Annual Income field</li>
+                <li>Enter "250000" in the Loan Amount field</li>
+                <li>Click "Continue to Next Step"</li>
+              </ol>
+            </div>
+            <div class="tc-section">
+              <div class="tc-section-label">Expected Result</div>
+              <div class="tc-expected">
+                Form displays validation error: "Annual income must be a positive number." The user cannot proceed to Step 3. The negative value is not submitted to the backend.
+              </div>
+            </div>
+            <div class="tc-section">
+              <div class="tc-section-label">AI Generation Info</div>
+              <div class="flex gap-lg text-xs text-tertiary">
+                <span>Generated from: <strong>Loan App screenshot + URL</strong></span>
+                <span>Page CCS: <strong class="text-amber">48%</strong></span>
+                <span>Confidence: <strong class="text-amber">76%</strong> (no source code)</span>
+              </div>
+            </div>
+            <div class="tc-actions">
+              <button class="btn btn-success btn-sm">Approve</button>
+              <button class="btn btn-danger btn-sm">Reject</button>
+              <button class="btn btn-secondary btn-sm">Edit</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TC 2 -->
+        <div class="test-card">
+          <div class="test-card-header">
+            <input type="checkbox" class="tc-checkbox">
+            <div class="tc-priority critical"></div>
+            <div class="tc-title">Verify rate calculator handles 0% APR edge case correctly</div>
+            <div class="tc-meta">
+              <span class="pill pill-review">Draft</span>
+              <span class="pill pill-draft">Boundary</span>
+              <span class="tag">rate-calc</span>
+              <span class="tc-confidence text-amber">71%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TC 3 -->
+        <div class="test-card">
+          <div class="test-card-header">
+            <input type="checkbox" class="tc-checkbox">
+            <div class="tc-priority critical"></div>
+            <div class="tc-title">Verify rate calculator computes monthly payment for 30yr fixed correctly</div>
+            <div class="tc-meta">
+              <span class="pill pill-review">Draft</span>
+              <span class="pill pill-draft">Positive</span>
+              <span class="tag">rate-calc</span>
+              <span class="tc-confidence text-amber">78%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TC 4 -->
+        <div class="test-card">
+          <div class="test-card-header">
+            <input type="checkbox" class="tc-checkbox">
+            <div class="tc-priority critical"></div>
+            <div class="tc-title">Verify XSS prevention in borrower name and address fields</div>
+            <div class="tc-meta">
+              <span class="pill pill-review">Draft</span>
+              <span class="pill pill-draft">Security</span>
+              <span class="tag">loan-app</span>
+              <span class="tc-confidence text-amber">68%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TC 5 -->
+        <div class="test-card">
+          <div class="test-card-header">
+            <input type="checkbox" class="tc-checkbox">
+            <div class="tc-priority high"></div>
+            <div class="tc-title">Verify credit pull consent modal appears before initiating credit check</div>
+            <div class="tc-meta">
+              <span class="pill pill-review">Draft</span>
+              <span class="pill pill-draft">Positive</span>
+              <span class="tag">credit-check</span>
+              <span class="tag">compliance</span>
+              <span class="tc-confidence text-green">82%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TC 6 -->
+        <div class="test-card">
+          <div class="test-card-header">
+            <input type="checkbox" class="tc-checkbox">
+            <div class="tc-priority high"></div>
+            <div class="tc-title">Verify underwriting conditions list displays correctly for loan officer</div>
+            <div class="tc-meta">
+              <span class="pill pill-review">Draft</span>
+              <span class="pill pill-draft">Positive</span>
+              <span class="tag">underwriting</span>
+              <span class="tc-confidence text-amber">65%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TC 7 -->
+        <div class="test-card">
+          <div class="test-card-header">
+            <input type="checkbox" class="tc-checkbox">
+            <div class="tc-priority high"></div>
+            <div class="tc-title">Verify loan application validates SSN format (XXX-XX-XXXX)</div>
+            <div class="tc-meta">
+              <span class="pill pill-review">Draft</span>
+              <span class="pill pill-draft">Boundary</span>
+              <span class="tag">loan-app</span>
+              <span class="tc-confidence text-amber">74%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TC 8 -->
+        <div class="test-card">
+          <div class="test-card-header">
+            <input type="checkbox" class="tc-checkbox">
+            <div class="tc-priority high"></div>
+            <div class="tc-title">Verify document upload rejects files over 25MB with clear error</div>
+            <div class="tc-meta">
+              <span class="pill pill-review">Draft</span>
+              <span class="pill pill-draft">Negative</span>
+              <span class="tag">doc-upload</span>
+              <span class="tc-confidence text-green">83%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TC 9 -->
+        <div class="test-card">
+          <div class="test-card-header">
+            <input type="checkbox" class="tc-checkbox">
+            <div class="tc-priority high"></div>
+            <div class="tc-title">Verify Loan Estimate PDF displays correct APR and closing costs</div>
+            <div class="tc-meta">
+              <span class="pill pill-review">Draft</span>
+              <span class="pill pill-draft">Positive</span>
+              <span class="tag">loan-estimates</span>
+              <span class="tag">TILA</span>
+              <span class="tc-confidence text-amber">72%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TC 10 -->
+        <div class="test-card">
+          <div class="test-card-header">
+            <input type="checkbox" class="tc-checkbox">
+            <div class="tc-priority medium"></div>
+            <div class="tc-title">Verify rate lock expiration countdown displays correctly</div>
+            <div class="tc-meta">
+              <span class="pill pill-review">Draft</span>
+              <span class="pill pill-draft">Positive</span>
+              <span class="tag">rate-calc</span>
+              <span class="tc-confidence text-amber">69%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TC 11 -->
+        <div class="test-card">
+          <div class="test-card-header">
+            <input type="checkbox" class="tc-checkbox">
+            <div class="tc-priority medium"></div>
+            <div class="tc-title">Verify SQL injection prevention in property address search</div>
+            <div class="tc-meta">
+              <span class="pill pill-review">Draft</span>
+              <span class="pill pill-draft">Security</span>
+              <span class="tag">loan-app</span>
+              <span class="tc-confidence text-amber">66%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TC 12 -->
+        <div class="test-card">
+          <div class="test-card-header">
+            <input type="checkbox" class="tc-checkbox">
+            <div class="tc-priority medium"></div>
+            <div class="tc-title">Verify borrower dashboard shows loan status timeline correctly</div>
+            <div class="tc-meta">
+              <span class="pill pill-review">Draft</span>
+              <span class="pill pill-draft">Positive</span>
+              <span class="tag">dashboard</span>
+              <span class="tc-confidence text-green">80%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TC 13 -->
+        <div class="test-card">
+          <div class="test-card-header">
+            <input type="checkbox" class="tc-checkbox">
+            <div class="tc-priority medium"></div>
+            <div class="tc-title">Verify loan amount boundary: min $50,000 and max $2,000,000</div>
+            <div class="tc-meta">
+              <span class="pill pill-review">Draft</span>
+              <span class="pill pill-draft">Boundary</span>
+              <span class="tag">loan-app</span>
+              <span class="tc-confidence text-amber">75%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TC 14 -->
+        <div class="test-card">
+          <div class="test-card-header">
+            <input type="checkbox" class="tc-checkbox">
+            <div class="tc-priority low"></div>
+            <div class="tc-title">Verify keyboard navigation through loan application form steps</div>
+            <div class="tc-meta">
+              <span class="pill pill-review">Draft</span>
+              <span class="pill pill-draft">A11y</span>
+              <span class="tag">loan-app</span>
+              <span class="tag">ECOA</span>
+              <span class="tc-confidence text-amber">62%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-between items-center mt-lg">
+          <span class="text-xs text-tertiary">Showing 14 draft test cases</span>
+          <div class="flex gap-sm">
+            <button class="btn btn-success">Approve All 14</button>
+            <button class="btn btn-secondary">Select &amp; Approve</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

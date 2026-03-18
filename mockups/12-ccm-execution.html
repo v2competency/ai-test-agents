@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUALINT — CCM Mortgage Execution</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .run-config-panel {
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-xl);
+      margin-bottom: var(--sp-2xl);
+    }
+
+    .run-config-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-xl);
+    }
+
+    .config-field { display: flex; flex-direction: column; gap: var(--sp-xs); }
+
+    .config-field .config-label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-secondary);
+    }
+
+    .browser-options { display: flex; gap: var(--sp-sm); }
+
+    .browser-option {
+      display: flex; align-items: center; gap: var(--sp-xs); padding: 6px 12px;
+      border: 1px solid var(--border-color); border-radius: var(--radius-sm);
+      font-size: 12px; cursor: pointer; transition: all 0.15s;
+    }
+
+    .browser-option:hover { border-color: var(--brand-orange); }
+    .browser-option.selected { border-color: var(--brand-orange); background: var(--brand-orange-light); color: var(--brand-orange); font-weight: 600; }
+    .browser-option input { accent-color: var(--brand-orange); }
+
+    .history-row {
+      display: flex; align-items: center; padding: var(--sp-md) var(--sp-lg);
+      border-bottom: 1px solid var(--border-light); gap: var(--sp-lg); font-size: 12px;
+      cursor: pointer; transition: background 0.1s;
+    }
+    .history-row:hover { background: var(--hover-bg); }
+
+    .history-row .hr-id { font-family: var(--font-mono); font-size: 11px; color: var(--ink-secondary); width: 70px; }
+    .history-row .hr-suite { font-weight: 600; width: 140px; }
+    .history-row .hr-env { width: 80px; color: var(--ink-secondary); }
+
+    .history-row .hr-results { display: flex; gap: var(--sp-sm); width: 200px; }
+
+    .history-row .hr-bar {
+      flex: 1; height: 6px; border-radius: var(--radius-pill); display: flex; overflow: hidden;
+    }
+
+    .history-row .hr-duration { font-family: var(--font-mono); font-size: 10px; color: var(--ink-tertiary); width: 60px; text-align: right; }
+    .history-row .hr-time { font-family: var(--font-mono); font-size: 10px; color: var(--ink-tertiary); width: 100px; text-align: right; }
+
+    .failed-summary {
+      background: var(--critical-red-light);
+      border: 1px solid var(--critical-red);
+      border-radius: var(--radius-md);
+      padding: var(--sp-lg);
+      margin-bottom: var(--sp-2xl);
+    }
+
+    .failed-summary .fs-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--sp-md);
+    }
+
+    .failed-summary .fs-title { font-size: 14px; font-weight: 700; color: var(--critical-red); }
+
+    .failure-cluster {
+      background: white;
+      border-radius: var(--radius-sm);
+      padding: var(--sp-md);
+      margin-bottom: var(--sp-sm);
+    }
+
+    .failure-cluster .fc-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--sp-xs);
+    }
+
+    .failure-cluster .fc-title { font-size: 12px; font-weight: 700; }
+    .failure-cluster .fc-count { font-family: var(--font-mono); font-size: 11px; }
+
+    .failure-cluster .fc-tests {
+      font-size: 11px; color: var(--ink-secondary); line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo-mark"></div>
+      <div class="brand-text">QUALINT<small>Quality Intelligence Platform</small></div>
+    </div>
+    <div class="sidebar-nav">
+      <a href="02-projects.html"><span class="nav-icon">&#9634;</span><span class="nav-label">All Projects</span></a>
+      <div class="sidebar-section-label">CCM Mortgage</div>
+      <a href="09-ccm-dashboard.html"><span class="nav-icon">&#9632;</span><span class="nav-label">Dashboard</span></a>
+      <a href="10-ccm-context.html"><span class="nav-icon">&#128206;</span><span class="nav-label">Context</span></a>
+      <a href="11-ccm-tests.html"><span class="nav-icon">&#9745;</span><span class="nav-label">Test Cases</span><span class="badge">14</span></a>
+      <a href="#"><span class="nav-icon">&#60;/&#62;</span><span class="nav-label">Automation</span></a>
+      <a href="12-ccm-execution.html" class="active"><span class="nav-icon">&#9654;</span><span class="nav-label">Execution</span></a>
+      <a href="#"><span class="nav-icon">&#9776;</span><span class="nav-label">Results</span></a>
+      <a href="14-accessibility-ccm.html"><span class="nav-icon">&#9855;</span><span class="nav-label">Accessibility</span></a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">AK</div>
+        <div class="user-info"><div class="name">Alex Kim</div><div class="role">Acme Startup</div></div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="breadcrumb">
+      <a href="02-projects.html">Projects</a><span class="sep">/</span>
+      <a href="09-ccm-dashboard.html">CCM Mortgage</a><span class="sep">/</span>
+      <span>Execution</span>
+    </div>
+
+    <div class="page-header">
+      <div>
+        <h1>Test Execution</h1>
+        <p class="subtitle">CCM Mortgage portal &middot; portal.ccmmortgage.com</p>
+      </div>
+      <button class="btn btn-primary btn-lg">Run Tests</button>
+    </div>
+
+    <!-- Run Config -->
+    <div class="run-config-panel">
+      <div class="eyebrow mb-lg">Run Configuration</div>
+      <div class="run-config-grid">
+        <div class="config-field">
+          <span class="config-label">Test Suite</span>
+          <select class="form-select">
+            <option>Regression (89 tests)</option>
+            <option>Smoke Tests (18 tests)</option>
+            <option>Compliance (16 tests)</option>
+            <option>Loan Application (18 tests)</option>
+            <option>Rate Calculator (6 tests)</option>
+          </select>
+        </div>
+        <div class="config-field">
+          <span class="config-label">Environment</span>
+          <select class="form-select">
+            <option>Staging (staging.ccmmortgage.com)</option>
+            <option>UAT (uat.ccmmortgage.com)</option>
+            <option>Production (portal.ccmmortgage.com)</option>
+          </select>
+        </div>
+        <div class="config-field">
+          <span class="config-label">Workers</span>
+          <select class="form-select">
+            <option>4 parallel workers</option>
+            <option>2 parallel workers</option>
+            <option>1 worker (sequential)</option>
+          </select>
+        </div>
+        <div class="config-field">
+          <span class="config-label">Browsers</span>
+          <div class="browser-options">
+            <label class="browser-option selected"><input type="checkbox" checked> Chrome</label>
+            <label class="browser-option"><input type="checkbox"> Firefox</label>
+            <label class="browser-option"><input type="checkbox"> WebKit</label>
+          </div>
+        </div>
+        <div class="config-field">
+          <span class="config-label">Retries</span>
+          <select class="form-select"><option>1 retry on failure</option></select>
+        </div>
+        <div class="config-field">
+          <span class="config-label">Timeout</span>
+          <select class="form-select"><option>30 seconds per test</option></select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Last Run: Failed Summary -->
+    <div class="failed-summary">
+      <div class="fs-header">
+        <div class="fs-title">Last Run: 17 failures detected (Run #23, 4h ago)</div>
+        <div class="flex gap-sm">
+          <button class="btn btn-danger btn-sm">Re-run Failed (17)</button>
+          <button class="btn btn-secondary btn-sm">View Full Results</button>
+        </div>
+      </div>
+
+      <div class="failure-cluster">
+        <div class="fc-header">
+          <span class="fc-title" style="color:var(--critical-red)">Cluster: Underwriting Page &mdash; Selector Not Found</span>
+          <span class="fc-count text-red">8 failures</span>
+        </div>
+        <div class="fc-tests">
+          All 4 underwriting tests failed on both Chrome &amp; Firefox. Root cause: <code>[data-testid="condition-list"]</code> not found. Likely the underwriting page was redesigned. <strong>Connect source code</strong> to enable auto-healing.
+        </div>
+      </div>
+
+      <div class="failure-cluster">
+        <div class="fc-header">
+          <span class="fc-title" style="color:var(--critical-red)">Cluster: Rate Calculator &mdash; Assertion Mismatch</span>
+          <span class="fc-count text-red">4 failures</span>
+        </div>
+        <div class="fc-tests">
+          Rate calculation tests expect monthly payment of $1,264.14 for $250K/30yr/4.5%, but page shows $1,266.71. Possible: rate calculation formula updated or rounding changed.
+        </div>
+      </div>
+
+      <div class="failure-cluster">
+        <div class="fc-header">
+          <span class="fc-title" style="color:var(--warm-amber)">Cluster: Loan Estimates &mdash; Timeout</span>
+          <span class="fc-count text-amber">3 failures</span>
+        </div>
+        <div class="fc-tests">
+          PDF generation step times out after 30s. The Loan Estimate PDF endpoint may be slow on staging. Consider increasing timeout for this suite.
+        </div>
+      </div>
+
+      <div class="failure-cluster">
+        <div class="fc-header">
+          <span class="fc-title" style="color:var(--warm-amber)">Cluster: Credit Check &mdash; Flaky</span>
+          <span class="fc-count text-amber">2 failures</span>
+        </div>
+        <div class="fc-tests">
+          Credit check consent modal test failed 1 of 2 retries. Timing issue: modal takes variable time to appear after API call. Suggest: add explicit wait for consent modal.
+        </div>
+      </div>
+    </div>
+
+    <!-- Execution History -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">Execution History</div>
+        <div class="flex gap-sm">
+          <select class="form-select" style="width:auto;padding:4px 8px;font-size:11px">
+            <option>All suites</option>
+            <option>Smoke</option>
+            <option>Regression</option>
+            <option>Compliance</option>
+          </select>
+          <select class="form-select" style="width:auto;padding:4px 8px;font-size:11px">
+            <option>Last 7 days</option>
+            <option>Last 30 days</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="history-row" style="background:var(--critical-red-light)">
+        <span class="hr-id">#23</span>
+        <span class="hr-suite">Regression</span>
+        <span class="hr-env">Staging</span>
+        <div class="hr-results">
+          <span class="pill pill-active-pass" style="font-size:10px">72 pass</span>
+          <span class="pill pill-active-fail" style="font-size:10px">17 fail</span>
+        </div>
+        <div class="hr-bar">
+          <div style="width:81%;background:var(--success-green);height:6px;border-radius:3px 0 0 3px"></div>
+          <div style="width:19%;background:var(--critical-red);height:6px;border-radius:0 3px 3px 0"></div>
+        </div>
+        <span class="hr-duration">3m 28s</span>
+        <span class="hr-time">4h ago</span>
+      </div>
+
+      <div class="history-row">
+        <span class="hr-id">#22</span>
+        <span class="hr-suite">Smoke Tests</span>
+        <span class="hr-env">Staging</span>
+        <div class="hr-results">
+          <span class="pill pill-active-pass" style="font-size:10px">16 pass</span>
+          <span class="pill pill-active-fail" style="font-size:10px">2 fail</span>
+        </div>
+        <div class="hr-bar">
+          <div style="width:89%;background:var(--success-green);height:6px;border-radius:3px 0 0 3px"></div>
+          <div style="width:11%;background:var(--critical-red);height:6px;border-radius:0 3px 3px 0"></div>
+        </div>
+        <span class="hr-duration">52s</span>
+        <span class="hr-time">1d ago</span>
+      </div>
+
+      <div class="history-row">
+        <span class="hr-id">#21</span>
+        <span class="hr-suite">Compliance</span>
+        <span class="hr-env">Staging</span>
+        <div class="hr-results">
+          <span class="pill pill-active-pass" style="font-size:10px">14 pass</span>
+          <span class="pill pill-active-fail" style="font-size:10px">2 fail</span>
+        </div>
+        <div class="hr-bar">
+          <div style="width:88%;background:var(--success-green);height:6px;border-radius:3px 0 0 3px"></div>
+          <div style="width:12%;background:var(--critical-red);height:6px;border-radius:0 3px 3px 0"></div>
+        </div>
+        <span class="hr-duration">1m 05s</span>
+        <span class="hr-time">2d ago</span>
+      </div>
+
+      <div class="history-row">
+        <span class="hr-id">#20</span>
+        <span class="hr-suite">Regression</span>
+        <span class="hr-env">UAT</span>
+        <div class="hr-results">
+          <span class="pill pill-active-pass" style="font-size:10px">78 pass</span>
+          <span class="pill pill-active-fail" style="font-size:10px">11 fail</span>
+        </div>
+        <div class="hr-bar">
+          <div style="width:88%;background:var(--success-green);height:6px;border-radius:3px 0 0 3px"></div>
+          <div style="width:12%;background:var(--critical-red);height:6px;border-radius:0 3px 3px 0"></div>
+        </div>
+        <span class="hr-duration">3m 45s</span>
+        <span class="hr-time">3d ago</span>
+      </div>
+
+      <div class="history-row">
+        <span class="hr-id">#19</span>
+        <span class="hr-suite">Loan Application</span>
+        <span class="hr-env">Staging</span>
+        <div class="hr-results">
+          <span class="pill pill-active-pass" style="font-size:10px">16 pass</span>
+          <span class="pill pill-active-fail" style="font-size:10px">2 fail</span>
+        </div>
+        <div class="hr-bar">
+          <div style="width:89%;background:var(--success-green);height:6px;border-radius:3px 0 0 3px"></div>
+          <div style="width:11%;background:var(--critical-red);height:6px;border-radius:0 3px 3px 0"></div>
+        </div>
+        <span class="hr-duration">1m 12s</span>
+        <span class="hr-time">5d ago</span>
+      </div>
+
+      <div class="history-row" style="background:var(--success-green-light)">
+        <span class="hr-id">#18</span>
+        <span class="hr-suite">Login / Auth</span>
+        <span class="hr-env">Staging</span>
+        <div class="hr-results">
+          <span class="pill pill-active-pass" style="font-size:10px">14 pass</span>
+        </div>
+        <div class="hr-bar">
+          <div style="width:100%;background:var(--success-green);height:6px;border-radius:3px"></div>
+        </div>
+        <span class="hr-duration">38s</span>
+        <span class="hr-time">6d ago</span>
+      </div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>
