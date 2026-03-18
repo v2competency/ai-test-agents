@@ -376,7 +376,7 @@
       <div class="context-sidebar">
         <div class="ccs-summary">
           <div class="eyebrow">Context Confidence Score</div>
-          <div class="ccs-large" style="color:#1D4ED8">75%</div>
+          <div class="ccs-large" style="color:#1D4ED8">82%</div>
           <div class="ccs-label">Good</div>
           <div class="ccs-badge good mt-md" style="margin:8px auto 0">
             <span class="ccs-dot"></span> AI can generate reliable tests
@@ -386,23 +386,27 @@
             <div class="eyebrow mt-lg">Score Breakdown</div>
             <div class="breakdown-row">
               <span>Screenshots</span>
-              <span class="font-mono font-bold">15%</span>
+              <span class="font-mono font-bold">12%</span>
             </div>
             <div class="breakdown-row">
               <span>Application URLs</span>
-              <span class="font-mono font-bold">25%</span>
-            </div>
-            <div class="breakdown-row">
-              <span>Source Code</span>
               <span class="font-mono font-bold">20%</span>
             </div>
             <div class="breakdown-row">
-              <span>Combo Bonus (all 3)</span>
+              <span>Source Code</span>
+              <span class="font-mono font-bold">18%</span>
+            </div>
+            <div class="breakdown-row">
+              <span>Swagger / OpenAPI</span>
+              <span class="font-mono font-bold">17%</span>
+            </div>
+            <div class="breakdown-row">
+              <span>Combo Bonus (all 4)</span>
               <span class="font-mono font-bold text-green">+15%</span>
             </div>
             <div class="breakdown-row" style="border:none;padding-top:6px">
               <span><strong>Total CCS</strong></span>
-              <span class="font-mono font-bold" style="color:#1D4ED8">75%</span>
+              <span class="font-mono font-bold" style="color:#1D4ED8">82%</span>
             </div>
           </div>
         </div>
@@ -448,6 +452,18 @@
           </div>
         </div>
 
+        <div class="source-card">
+          <div class="source-header">
+            <span class="source-name">Swagger / OpenAPI</span>
+            <span class="pill pill-pass source-status">Connected</span>
+          </div>
+          <div class="text-xs text-tertiary">v2 &middot; 14 endpoints &middot; api.acmedash.com</div>
+          <div class="source-contribution">
+            <div class="contrib-bar"><div class="contrib-fill" style="width:85%;background:var(--success-green)"></div></div>
+            <span class="contrib-value text-green">17%</span>
+          </div>
+        </div>
+
         <div class="source-card" style="opacity:0.5; border-style:dashed">
           <div class="source-header">
             <span class="source-name">Figma Designs</span>
@@ -472,6 +488,7 @@
           <span class="tab active">Screenshots</span>
           <span class="tab">Application URLs</span>
           <span class="tab">Source Code</span>
+          <span class="tab">Swagger / OpenAPI</span>
         </div>
 
         <!-- Screenshots panel -->
@@ -577,6 +594,161 @@
           <div class="upload-icon">&#128247;</div>
           <h3>Drop screenshots here</h3>
           <p>PNG, JPG, or WEBP &middot; Max 200MB total &middot; Up to 50 images</p>
+        </div>
+
+        <!-- Swagger / OpenAPI Panel -->
+        <div class="panel mb-xl" style="border-left:3px solid #85E89D">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Swagger / OpenAPI Spec</div>
+              <div class="panel-subtitle">Auto-synced from api.acmedash.com/v2/openapi.json</div>
+            </div>
+            <div style="display:inline-flex;align-items:center;gap:var(--sp-xs);padding:3px 10px;border-radius:var(--radius-pill);font-size:10px;font-weight:700;background:#1B3A2A;color:#85E89D">
+              <span style="width:6px;height:6px;border-radius:50%;background:#85E89D"></span> Connected &middot; Last synced 1d ago
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-sm);margin-bottom:var(--sp-lg)">
+            <div style="background:var(--hover-bg);border-radius:var(--radius-sm);padding:var(--sp-md);text-align:center">
+              <div class="eyebrow">Endpoints</div>
+              <div style="font-size:22px;font-weight:700;color:var(--ink)">14</div>
+              <div style="font-size:9px;color:var(--ink-tertiary)">discovered</div>
+            </div>
+            <div style="background:var(--hover-bg);border-radius:var(--radius-sm);padding:var(--sp-md);text-align:center">
+              <div class="eyebrow">Schemas</div>
+              <div style="font-size:22px;font-weight:700;color:var(--ink)">8</div>
+              <div style="font-size:9px;color:var(--ink-tertiary)">models defined</div>
+            </div>
+            <div style="background:var(--hover-bg);border-radius:var(--radius-sm);padding:var(--sp-md);text-align:center">
+              <div class="eyebrow">Tested</div>
+              <div style="font-size:22px;font-weight:700;color:var(--success-green)">10</div>
+              <div style="font-size:9px;color:var(--ink-tertiary)">endpoints covered</div>
+            </div>
+            <div style="background:var(--hover-bg);border-radius:var(--radius-sm);padding:var(--sp-md);text-align:center">
+              <div class="eyebrow">API Tests</div>
+              <div style="font-size:22px;font-weight:700;color:#1D4ED8">22</div>
+              <div style="font-size:9px;color:var(--ink-tertiary)">auto-generated</div>
+            </div>
+          </div>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Endpoint</th>
+                <th>Description</th>
+                <th>Tests</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span style="font-family:var(--font-mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;color:white;background:#1D4ED8">POST</span></td>
+                <td class="mono">/auth/login</td>
+                <td>Authenticate user</td>
+                <td class="mono font-bold text-green">3</td>
+                <td><span class="pill pill-pass">Covered</span></td>
+              </tr>
+              <tr>
+                <td><span style="font-family:var(--font-mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;color:white;background:#1D4ED8">POST</span></td>
+                <td class="mono">/auth/refresh</td>
+                <td>Refresh JWT token</td>
+                <td class="mono font-bold text-green">2</td>
+                <td><span class="pill pill-pass">Covered</span></td>
+              </tr>
+              <tr>
+                <td><span style="font-family:var(--font-mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;color:white;background:#16A344">GET</span></td>
+                <td class="mono">/users/me</td>
+                <td>Get current user profile</td>
+                <td class="mono font-bold text-green">2</td>
+                <td><span class="pill pill-pass">Covered</span></td>
+              </tr>
+              <tr>
+                <td><span style="font-family:var(--font-mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;color:white;background:#CA8B04">PUT</span></td>
+                <td class="mono">/users/:id</td>
+                <td>Update user profile</td>
+                <td class="mono font-bold text-green">3</td>
+                <td><span class="pill pill-pass">Covered</span></td>
+              </tr>
+              <tr>
+                <td><span style="font-family:var(--font-mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;color:white;background:#16A344">GET</span></td>
+                <td class="mono">/billing/plans</td>
+                <td>List billing plans</td>
+                <td class="mono font-bold text-green">2</td>
+                <td><span class="pill pill-pass">Covered</span></td>
+              </tr>
+              <tr>
+                <td><span style="font-family:var(--font-mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;color:white;background:#1D4ED8">POST</span></td>
+                <td class="mono">/billing/subscribe</td>
+                <td>Create subscription</td>
+                <td class="mono font-bold text-green">3</td>
+                <td><span class="pill pill-pass">Covered</span></td>
+              </tr>
+              <tr>
+                <td><span style="font-family:var(--font-mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;color:white;background:#16A344">GET</span></td>
+                <td class="mono">/reports/list</td>
+                <td>List available reports</td>
+                <td class="mono font-bold text-green">2</td>
+                <td><span class="pill pill-pass">Covered</span></td>
+              </tr>
+              <tr>
+                <td><span style="font-family:var(--font-mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;color:white;background:#1D4ED8">POST</span></td>
+                <td class="mono">/reports/export</td>
+                <td>Export report as PDF/CSV</td>
+                <td class="mono font-bold text-green">3</td>
+                <td><span class="pill pill-pass">Covered</span></td>
+              </tr>
+              <tr>
+                <td><span style="font-family:var(--font-mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;color:white;background:#16A344">GET</span></td>
+                <td class="mono">/users/:id/teams</td>
+                <td>Get user teams</td>
+                <td class="mono font-bold text-green">2</td>
+                <td><span class="pill pill-pass">Covered</span></td>
+              </tr>
+              <tr>
+                <td><span style="font-family:var(--font-mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;color:white;background:#C62828">DEL</span></td>
+                <td class="mono">/users/:id</td>
+                <td>Delete user account</td>
+                <td class="mono font-bold text-amber">0</td>
+                <td><span class="pill pill-warn">Missing</span></td>
+              </tr>
+              <tr>
+                <td><span style="font-family:var(--font-mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;color:white;background:#16A344">GET</span></td>
+                <td class="mono">/billing/invoices</td>
+                <td>List past invoices</td>
+                <td class="mono font-bold text-amber">0</td>
+                <td><span class="pill pill-warn">Missing</span></td>
+              </tr>
+              <tr>
+                <td><span style="font-family:var(--font-mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;color:white;background:#16A344">GET</span></td>
+                <td class="mono">/integrations</td>
+                <td>List connected integrations</td>
+                <td class="mono font-bold text-red">0</td>
+                <td><span class="pill pill-fail">Untested</span></td>
+              </tr>
+              <tr>
+                <td><span style="font-family:var(--font-mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;color:white;background:#1D4ED8">POST</span></td>
+                <td class="mono">/integrations/:id/connect</td>
+                <td>Connect integration</td>
+                <td class="mono font-bold text-red">0</td>
+                <td><span class="pill pill-fail">Untested</span></td>
+              </tr>
+              <tr>
+                <td><span style="font-family:var(--font-mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;color:white;background:#1D4ED8">POST</span></td>
+                <td class="mono">/auth/logout</td>
+                <td>End session</td>
+                <td class="mono font-bold text-green">1</td>
+                <td><span class="pill pill-pass">Covered</span></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="mt-lg flex justify-between items-center">
+            <span class="text-xs text-tertiary">Spec Version: OpenAPI 3.0.1 &middot; Auto-synced every 24h</span>
+            <div class="flex gap-sm">
+              <button class="btn btn-secondary btn-sm">Re-sync Spec</button>
+              <button class="btn btn-primary btn-sm">Generate API Tests for Missing</button>
+            </div>
+          </div>
         </div>
 
         <!-- Per-Page CCS -->

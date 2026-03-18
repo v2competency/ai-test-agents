@@ -10,7 +10,8 @@
       "Bash(npm run allure:serve:*)",
       "Bash(npx playwright install:*)",
       "Bash(npx tsc:*)",
-      "Bash(npm ls:*)"
+      "Bash(npm ls:*)",
+      "Bash(ls d:/Work/ai-test-agents/mockups/*.html)"
     ]
   }
 }

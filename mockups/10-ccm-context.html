@@ -242,7 +242,7 @@
       <a href="09-ccm-dashboard.html"><span class="nav-icon">&#9632;</span><span class="nav-label">Dashboard</span></a>
       <a href="10-ccm-context.html" class="active"><span class="nav-icon">&#128206;</span><span class="nav-label">Context</span></a>
       <a href="11-ccm-tests.html"><span class="nav-icon">&#9745;</span><span class="nav-label">Test Cases</span><span class="badge">14</span></a>
-      <a href="#"><span class="nav-icon">&#60;/&#62;</span><span class="nav-label">Automation</span></a>
+      <a href="15-ccm-automation.html"><span class="nav-icon">&#60;/&#62;</span><span class="nav-label">Automation</span></a>
       <a href="12-ccm-execution.html"><span class="nav-icon">&#9654;</span><span class="nav-label">Execution</span></a>
       <a href="#"><span class="nav-icon">&#9776;</span><span class="nav-label">Results</span></a>
       <a href="14-accessibility-ccm.html"><span class="nav-icon">&#9855;</span><span class="nav-label">Accessibility</span></a>
@@ -275,7 +275,7 @@
       <div>
         <div class="ccs-summary">
           <div class="eyebrow">Context Confidence Score</div>
-          <div class="ccs-large text-amber">48%</div>
+          <div class="ccs-large text-amber">55%</div>
           <div class="ccs-label">Partial</div>
           <div class="ccs-badge partial mt-md" style="margin:8px auto 0">
             <span class="ccs-dot"></span> Tests may have generic selectors
@@ -304,8 +304,16 @@
               <span class="font-mono font-bold text-red">0%</span>
             </div>
             <div class="breakdown-row">
+              <span>Swagger / OpenAPI</span>
+              <span class="font-mono font-bold">15%</span>
+            </div>
+            <div class="breakdown-row">
+              <span class="text-tertiary" style="font-size:10px">&nbsp;&nbsp;(26 endpoints discovered)</span>
+              <span></span>
+            </div>
+            <div class="breakdown-row">
               <span>Combo Bonus</span>
-              <span class="font-mono font-bold">+8%</span>
+              <span class="font-mono font-bold">+10%</span>
             </div>
             <div class="breakdown-row">
               <span>Freshness Penalty</span>
@@ -313,7 +321,7 @@
             </div>
             <div class="breakdown-row" style="border:none;padding-top:6px">
               <span><strong>Total CCS</strong></span>
-              <span class="font-mono font-bold text-amber">48%</span>
+              <span class="font-mono font-bold text-amber">55%</span>
             </div>
           </div>
         </div>
@@ -344,6 +352,18 @@
           </div>
         </div>
 
+        <div class="source-card">
+          <div class="source-header">
+            <span class="source-name">Swagger / OpenAPI</span>
+            <span class="pill pill-pass" style="font-size:9px">Connected</span>
+          </div>
+          <div class="text-xs text-tertiary">v1 &middot; 26 endpoints &middot; api.ccmmortgage.com</div>
+          <div class="source-contribution">
+            <div class="contrib-bar"><div class="contrib-fill" style="width:75%;background:var(--success-green)"></div></div>
+            <span class="contrib-value text-green">15%</span>
+          </div>
+        </div>
+
         <div class="source-card" style="border-color:var(--critical-red); background:var(--critical-red-light)">
           <div class="source-header">
             <span class="source-name" style="color:var(--critical-red)">Source Code</span>
@@ -362,11 +382,15 @@
           <div class="boost-title">What-If Simulator</div>
           <div class="boost-item">
             <span>Current CCS</span>
-            <span class="font-mono font-bold text-amber">48%</span>
+            <span class="font-mono font-bold text-amber">55%</span>
+          </div>
+          <div class="boost-item" style="color:var(--ink-tertiary)">
+            <span>&#10003; Swagger / OpenAPI connected</span>
+            <span class="font-mono font-bold text-green">+15%</span>
           </div>
           <div class="boost-item">
             <span>+ Connect source code</span>
-            <span class="font-mono font-bold text-green">+35%</span>
+            <span class="font-mono font-bold text-green">+28%</span>
           </div>
           <div class="boost-item">
             <span>+ Add 4 missing screenshots</span>
@@ -374,7 +398,7 @@
           </div>
           <div class="boost-item" style="border-top:1px solid var(--brand-orange);padding-top:6px;margin-top:4px">
             <span><strong>Projected CCS</strong></span>
-            <span class="font-mono font-bold" style="color:#1D4ED8">88%</span>
+            <span class="font-mono font-bold" style="color:#1D4ED8">93%</span>
           </div>
         </div>
       </div>
@@ -385,6 +409,7 @@
           <span class="tab active">Screenshots</span>
           <span class="tab">Application URLs</span>
           <span class="tab">Source Code</span>
+          <span class="tab">Swagger / OpenAPI</span>
         </div>
 
         <div class="flex justify-between items-center mb-lg">
@@ -479,6 +504,134 @@
           <div class="text-xs text-tertiary mt-sm">Adding these screenshots will increase CCS by ~5% and enable test generation for these critical pages.</div>
         </div>
 
+        <!-- Swagger / OpenAPI Panel -->
+        <div class="panel mb-xl" style="border-left:3px solid #85E89D">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Swagger / OpenAPI Spec</div>
+              <div class="panel-subtitle">Auto-synced from api.ccmmortgage.com/v1/openapi.json</div>
+            </div>
+            <div style="display:inline-flex;align-items:center;gap:var(--sp-xs);padding:3px 10px;border-radius:var(--radius-pill);font-size:10px;font-weight:700;background:#1B3A2A;color:#85E89D">
+              <span style="width:6px;height:6px;border-radius:50%;background:#85E89D"></span> Connected &middot; Last synced 1d ago
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-sm);margin-bottom:var(--sp-lg)">
+            <div style="background:var(--hover-bg);border-radius:var(--radius-sm);padding:var(--sp-md);text-align:center">
+              <div class="eyebrow">Endpoints</div>
+              <div style="font-size:22px;font-weight:700;color:var(--ink)">26</div>
+              <div style="font-size:9px;color:var(--ink-tertiary)">discovered</div>
+            </div>
+            <div style="background:var(--hover-bg);border-radius:var(--radius-sm);padding:var(--sp-md);text-align:center">
+              <div class="eyebrow">Schemas</div>
+              <div style="font-size:22px;font-weight:700;color:var(--ink)">14</div>
+              <div style="font-size:9px;color:var(--ink-tertiary)">models defined</div>
+            </div>
+            <div style="background:var(--hover-bg);border-radius:var(--radius-sm);padding:var(--sp-md);text-align:center">
+              <div class="eyebrow">Tested</div>
+              <div style="font-size:22px;font-weight:700;color:var(--warm-amber)">11</div>
+              <div style="font-size:9px;color:var(--ink-tertiary)">endpoints covered</div>
+            </div>
+            <div style="background:var(--hover-bg);border-radius:var(--radius-sm);padding:var(--sp-md);text-align:center">
+              <div class="eyebrow">API Tests</div>
+              <div style="font-size:22px;font-weight:700;color:#1D4ED8">18</div>
+              <div style="font-size:9px;color:var(--ink-tertiary)">auto-generated</div>
+            </div>
+          </div>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Endpoint</th>
+                <th>Description</th>
+                <th>Tests</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span style="font-family:var(--font-mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;color:white;background:#1D4ED8">POST</span></td>
+                <td class="mono">/auth/login</td>
+                <td>Borrower authentication</td>
+                <td class="mono font-bold text-green">3</td>
+                <td><span class="pill pill-pass">Covered</span></td>
+              </tr>
+              <tr>
+                <td><span style="font-family:var(--font-mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;color:white;background:#1D4ED8">POST</span></td>
+                <td class="mono">/loans/apply</td>
+                <td>Submit loan application</td>
+                <td class="mono font-bold text-green">3</td>
+                <td><span class="pill pill-pass">Covered</span></td>
+              </tr>
+              <tr>
+                <td><span style="font-family:var(--font-mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;color:white;background:#16A344">GET</span></td>
+                <td class="mono">/loans/:id/status</td>
+                <td>Get loan application status</td>
+                <td class="mono font-bold text-green">2</td>
+                <td><span class="pill pill-pass">Covered</span></td>
+              </tr>
+              <tr>
+                <td><span style="font-family:var(--font-mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;color:white;background:#1D4ED8">POST</span></td>
+                <td class="mono">/credit/pull</td>
+                <td>Initiate credit check</td>
+                <td class="mono font-bold text-green">2</td>
+                <td><span class="pill pill-pass">Covered</span></td>
+              </tr>
+              <tr>
+                <td><span style="font-family:var(--font-mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;color:white;background:#1D4ED8">POST</span></td>
+                <td class="mono">/docs/upload</td>
+                <td>Upload borrower document</td>
+                <td class="mono font-bold text-green">2</td>
+                <td><span class="pill pill-pass">Covered</span></td>
+              </tr>
+              <tr>
+                <td><span style="font-family:var(--font-mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;color:white;background:#16A344">GET</span></td>
+                <td class="mono">/loans/:id/estimates</td>
+                <td>Get loan estimate PDF</td>
+                <td class="mono font-bold text-green">2</td>
+                <td><span class="pill pill-pass">Covered</span></td>
+              </tr>
+              <tr>
+                <td><span style="font-family:var(--font-mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;color:white;background:#16A344">GET</span></td>
+                <td class="mono">/rates/current</td>
+                <td>Get current mortgage rates</td>
+                <td class="mono font-bold text-red">0</td>
+                <td><span class="pill pill-fail">Untested</span></td>
+              </tr>
+              <tr>
+                <td><span style="font-family:var(--font-mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;color:white;background:#1D4ED8">POST</span></td>
+                <td class="mono">/rates/lock</td>
+                <td>Lock interest rate</td>
+                <td class="mono font-bold text-red">0</td>
+                <td><span class="pill pill-fail">Untested</span></td>
+              </tr>
+              <tr>
+                <td><span style="font-family:var(--font-mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;color:white;background:#1D4ED8">POST</span></td>
+                <td class="mono">/esign/initiate</td>
+                <td>Start e-signature flow</td>
+                <td class="mono font-bold text-red">0</td>
+                <td><span class="pill pill-fail">Untested</span></td>
+              </tr>
+              <tr>
+                <td><span style="font-family:var(--font-mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;color:white;background:#16A344">GET</span></td>
+                <td class="mono">/esign/:id/status</td>
+                <td>Check signature status</td>
+                <td class="mono font-bold text-red">0</td>
+                <td><span class="pill pill-fail">Untested</span></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="text-xs text-tertiary mt-sm">Showing 10 of 26 endpoints. 15 more endpoints in Loans (4), Credit (2), Documents (2), Underwriting (3), Closing (4).</div>
+
+          <div class="mt-lg flex justify-between items-center">
+            <span class="text-xs text-tertiary">Spec Version: OpenAPI 3.0.2 &middot; Auto-synced every 24h</span>
+            <div class="flex gap-sm">
+              <button class="btn btn-secondary btn-sm">Re-sync Spec</button>
+              <button class="btn btn-primary btn-sm">Generate API Tests for Missing</button>
+            </div>
+          </div>
+        </div>
+
         <!-- Per-Page CCS Table -->
         <div class="panel">
           <div class="panel-header">
@@ -569,7 +722,7 @@
         <div class="not-connected-card mt-xl">
           <div class="nc-icon">&#128279;</div>
           <h3>Source Code Not Connected</h3>
-          <p>Connecting your frontend repository will increase CCS from 48% to ~83%. The platform will extract precise selectors, component trees, and data-testid attributes for reliable test automation.</p>
+          <p>Connecting your frontend repository will increase CCS from 55% to ~88%. The platform will extract precise selectors, component trees, and data-testid attributes for reliable test automation.</p>
           <button class="btn btn-primary btn-lg">Connect GitHub Repository</button>
           <div class="text-xs text-tertiary mt-md">Read-only access &middot; SOC 2 compliant &middot; Disconnect anytime</div>
         </div>

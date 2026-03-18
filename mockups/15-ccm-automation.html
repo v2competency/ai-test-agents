@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUALINT — CCM Automation Code</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .code-layout { display: grid; grid-template-columns: 260px 1fr; gap: 0; background: var(--card-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow: hidden; min-height: 600px; }
+    .file-tree { background: #FAF8F2; border-right: 1px solid var(--border-color); padding: var(--sp-md); font-size: 12px; overflow-y: auto; }
+    .file-tree .tree-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-tertiary); padding: var(--sp-sm) var(--sp-sm); }
+    .tree-item { display: flex; align-items: center; gap: var(--sp-sm); padding: 4px var(--sp-sm); border-radius: var(--radius-xs); cursor: pointer; transition: all 0.1s; font-family: var(--font-mono); font-size: 11px; }
+    .tree-item:hover { background: var(--border-light); }
+    .tree-item.active { background: var(--brand-orange-light); color: var(--brand-orange); font-weight: 600; }
+    .tree-item .tree-icon { font-size: 12px; width: 16px; text-align: center; color: var(--ink-tertiary); }
+    .tree-item.active .tree-icon { color: var(--brand-orange); }
+    .tree-folder { padding-left: 0; }
+    .tree-file { padding-left: var(--sp-xl); }
+    .tree-file-nested { padding-left: var(--sp-3xl); }
+    .code-panel { display: flex; flex-direction: column; }
+    .code-toolbar { display: flex; align-items: center; padding: var(--sp-sm) var(--sp-lg); border-bottom: 1px solid var(--border-color); gap: var(--sp-md); background: white; }
+    .code-toolbar .file-path { font-family: var(--font-mono); font-size: 11px; color: var(--ink-secondary); flex: 1; }
+    .code-toolbar .file-path strong { color: var(--ink); }
+    .code-area { flex: 1; background: var(--terminal-bg); padding: var(--sp-lg); overflow: auto; font-family: var(--font-mono); font-size: 11px; line-height: 1.7; color: #E8E0D0; }
+    .code-area .line { display: flex; }
+    .code-area .ln { width: 35px; text-align: right; padding-right: var(--sp-md); color: #64605F; user-select: none; flex-shrink: 0; }
+    .code-area .kw { color: #FF9D45; }
+    .code-area .str { color: #A8D08D; }
+    .code-area .cm { color: #64605F; font-style: italic; }
+    .code-area .tp { color: #CAAB84; }
+    .code-area .fn { color: #7DC4E4; }
+    .code-area .pr { color: #E8E0D0; }
+    .code-area .op { color: #9C9998; }
+    .code-area .num { color: #F5A97F; }
+    .selector-health { padding: var(--sp-lg); border-top: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.2); }
+    .selector-health .sh-title { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-tertiary); margin-bottom: var(--sp-sm); }
+    .selector-health-row { display: flex; align-items: center; gap: var(--sp-md); padding: 3px 0; font-size: 11px; color: #CAAB84; }
+    .selector-health-row .sh-grade { width: 24px; height: 18px; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; flex-shrink: 0; }
+    .sh-grade.a-plus { background: rgba(22,163,68,0.2); color: #16A344; }
+    .sh-grade.a { background: rgba(22,163,68,0.2); color: #16A344; }
+    .sh-grade.b { background: rgba(202,139,4,0.2); color: #CA8B04; }
+    .sh-grade.c { background: rgba(198,40,40,0.2); color: #C62828; }
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo-mark"></div>
+      <div class="brand-text">QUALINT<small>Quality Intelligence Platform</small></div>
+    </div>
+    <div class="sidebar-nav">
+      <a href="02-projects.html"><span class="nav-icon">&#9634;</span><span class="nav-label">All Projects</span></a>
+
+      <div class="sidebar-section-label">CCM Mortgage</div>
+      <a href="09-ccm-dashboard.html"><span class="nav-icon">&#9632;</span><span class="nav-label">Dashboard</span></a>
+      <a href="10-ccm-context.html"><span class="nav-icon">&#128206;</span><span class="nav-label">Context</span></a>
+      <a href="11-ccm-tests.html"><span class="nav-icon">&#9745;</span><span class="nav-label">Test Cases</span><span class="badge">14</span></a>
+      <a href="15-ccm-automation.html" class="active"><span class="nav-icon">&#60;/&#62;</span><span class="nav-label">Automation</span></a>
+      <a href="12-ccm-execution.html"><span class="nav-icon">&#9654;</span><span class="nav-label">Execution</span></a>
+      <a href="#"><span class="nav-icon">&#9776;</span><span class="nav-label">Results</span></a>
+      <a href="14-accessibility-ccm.html"><span class="nav-icon">&#9855;</span><span class="nav-label">Accessibility</span></a>
+
+      <div class="sidebar-section-label">Settings</div>
+      <a href="#"><span class="nav-icon">&#9881;</span><span class="nav-label">Environments</span></a>
+      <a href="#"><span class="nav-icon">&#128101;</span><span class="nav-label">Team (4)</span></a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">AK</div>
+        <div class="user-info">
+          <div class="name">Alex Kim</div>
+          <div class="role">Acme Startup &middot; Admin</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="main-content">
+    <div class="breadcrumb">
+      <a href="02-projects.html">Projects</a><span class="sep">/</span>
+      <a href="09-ccm-dashboard.html">CCM Mortgage</a><span class="sep">/</span>
+      <span>Automation</span>
+    </div>
+
+    <div class="page-header">
+      <div>
+        <h1>Automation Code</h1>
+        <p class="subtitle">AI-generated Playwright project &middot; Page Object Model &middot; Mortgage workflows</p>
+      </div>
+      <div class="flex gap-sm">
+        <button class="btn btn-secondary">Generate Automation</button>
+        <button class="btn btn-primary">Export Project (.zip)</button>
+      </div>
+    </div>
+
+    <!-- Selector Health Summary -->
+    <div class="kpi-grid mb-xl">
+      <div class="kpi-card state-warning">
+        <div class="kpi-eyebrow">Selector Health</div>
+        <div class="kpi-value">B+</div>
+        <div class="kpi-meta">62% grade A+ or A</div>
+      </div>
+      <div class="kpi-card state-brand">
+        <div class="kpi-eyebrow">Page Objects</div>
+        <div class="kpi-value">7</div>
+        <div class="kpi-meta">auto-generated</div>
+      </div>
+      <div class="kpi-card state-brand">
+        <div class="kpi-eyebrow">Spec Files</div>
+        <div class="kpi-value">9</div>
+        <div class="kpi-meta">covering 96 UI tests</div>
+      </div>
+      <div class="kpi-card state-neutral">
+        <div class="kpi-eyebrow">User Modified</div>
+        <div class="kpi-value">1</div>
+        <div class="kpi-meta">files with custom edits</div>
+      </div>
+    </div>
+
+    <!-- Code Editor Layout -->
+    <div class="code-layout">
+      <!-- File Tree -->
+      <div class="file-tree">
+        <div class="tree-label">Project Files</div>
+        <div class="tree-item tree-folder"><span class="tree-icon">&#128193;</span> ccm-mortgage/</div>
+
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> playwright.config.ts</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> package.json</div>
+
+        <div class="tree-label mt-md">Page Objects</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> LoginPage.ts</div>
+        <div class="tree-item tree-file active"><span class="tree-icon">&#128196;</span> LoanApplicationPage.ts</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> RateCalculatorPage.ts</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> CreditCheckPage.ts</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> DocumentUploadPage.ts</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> UnderwritingPage.ts</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> ESignaturePage.ts</div>
+
+        <div class="tree-label mt-md">Specs</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> login.spec.ts</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> loan-application.spec.ts</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> loan-negative.spec.ts</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> rate-calculator.spec.ts</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> credit-check.spec.ts</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> document-upload.spec.ts</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> underwriting.spec.ts</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> esignature.spec.ts</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> e2e-full-flow.spec.ts</div>
+
+        <div class="tree-label mt-md">Fixtures</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> auth.fixture.ts</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> loan-test-data.ts</div>
+
+        <div class="tree-label mt-md">Helpers / Custom</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128274;</span> ssn-mask-helper.ts</div>
+      </div>
+
+      <!-- Code Panel -->
+      <div class="code-panel">
+        <div class="code-toolbar">
+          <span class="file-path">page-objects / <strong>LoanApplicationPage.ts</strong></span>
+          <span class="pill pill-pass" style="font-size:9px">AI Generated</span>
+          <button class="btn btn-ghost btn-sm">Edit</button>
+          <button class="btn btn-ghost btn-sm">Revert to AI Version</button>
+          <button class="btn btn-ghost btn-sm">Diff</button>
+        </div>
+
+        <div class="code-area">
+<div class="line"><span class="ln"> 1</span><span class="kw">import</span> { <span class="tp">Page</span>, <span class="tp">Locator</span> } <span class="kw">from</span> <span class="str">'@playwright/test'</span><span class="op">;</span></div>
+<div class="line"><span class="ln"> 2</span></div>
+<div class="line"><span class="ln"> 3</span><span class="cm">/**</span></div>
+<div class="line"><span class="ln"> 4</span><span class="cm"> * LoanApplicationPage - Page Object for /loans/apply</span></div>
+<div class="line"><span class="ln"> 5</span><span class="cm"> * Auto-generated by QUALINT | CCS: 55% (Partial)</span></div>
+<div class="line"><span class="ln"> 6</span><span class="cm"> * &#9888; Lower CCS — some selectors rely on class/text fallbacks</span></div>
+<div class="line"><span class="ln"> 7</span><span class="cm"> */</span></div>
+<div class="line"><span class="ln"> 8</span><span class="kw">export class</span> <span class="tp">LoanApplicationPage</span> {</div>
+<div class="line"><span class="ln"> 9</span>  <span class="kw">readonly</span> <span class="pr">page</span><span class="op">:</span> <span class="tp">Page</span><span class="op">;</span></div>
+<div class="line"><span class="ln">10</span></div>
+<div class="line"><span class="ln">11</span>  <span class="cm">// Locators with fallback chains (self-healing)</span></div>
+<div class="line"><span class="ln">12</span>  <span class="kw">readonly</span> <span class="pr">loanAmountInput</span><span class="op">:</span> <span class="tp">Locator</span><span class="op">;</span>     <span class="cm">// Grade: A</span></div>
+<div class="line"><span class="ln">13</span>  <span class="kw">readonly</span> <span class="pr">loanTermSelect</span><span class="op">:</span> <span class="tp">Locator</span><span class="op">;</span>      <span class="cm">// Grade: B</span></div>
+<div class="line"><span class="ln">14</span>  <span class="kw">readonly</span> <span class="pr">annualIncomeInput</span><span class="op">:</span> <span class="tp">Locator</span><span class="op">;</span>   <span class="cm">// Grade: A</span></div>
+<div class="line"><span class="ln">15</span>  <span class="kw">readonly</span> <span class="pr">employerNameInput</span><span class="op">:</span> <span class="tp">Locator</span><span class="op">;</span>   <span class="cm">// Grade: B</span></div>
+<div class="line"><span class="ln">16</span>  <span class="kw">readonly</span> <span class="pr">ssnInput</span><span class="op">:</span> <span class="tp">Locator</span><span class="op">;</span>           <span class="cm">// Grade: A+</span></div>
+<div class="line"><span class="ln">17</span>  <span class="kw">readonly</span> <span class="pr">propertyAddressInput</span><span class="op">:</span> <span class="tp">Locator</span><span class="op">;</span><span class="cm">// Grade: C</span></div>
+<div class="line"><span class="ln">18</span>  <span class="kw">readonly</span> <span class="pr">submitApplicationBtn</span><span class="op">:</span> <span class="tp">Locator</span><span class="op">;</span><span class="cm">// Grade: A</span></div>
+<div class="line"><span class="ln">19</span>  <span class="kw">readonly</span> <span class="pr">aprDisplay</span><span class="op">:</span> <span class="tp">Locator</span><span class="op">;</span>         <span class="cm">// Grade: B</span></div>
+<div class="line"><span class="ln">20</span>  <span class="kw">readonly</span> <span class="pr">ecoaDisclosure</span><span class="op">:</span> <span class="tp">Locator</span><span class="op">;</span>     <span class="cm">// Grade: C</span></div>
+<div class="line"><span class="ln">21</span></div>
+<div class="line"><span class="ln">22</span>  <span class="fn">constructor</span>(<span class="pr">page</span><span class="op">:</span> <span class="tp">Page</span>) {</div>
+<div class="line"><span class="ln">23</span>    <span class="kw">this</span>.<span class="pr">page</span> <span class="op">=</span> <span class="pr">page</span><span class="op">;</span></div>
+<div class="line"><span class="ln">24</span></div>
+<div class="line"><span class="ln">25</span>    <span class="kw">this</span>.<span class="pr">loanAmountInput</span> <span class="op">=</span> <span class="pr">page</span>.<span class="fn">locator</span>(</div>
+<div class="line"><span class="ln">26</span>      <span class="str">'#loan-amount, input[name="loanAmount"], .loan-amount-field input'</span></div>
+<div class="line"><span class="ln">27</span>    ).<span class="fn">first</span>();</div>
+<div class="line"><span class="ln">28</span></div>
+<div class="line"><span class="ln">29</span>    <span class="kw">this</span>.<span class="pr">loanTermSelect</span> <span class="op">=</span> <span class="pr">page</span>.<span class="fn">locator</span>(</div>
+<div class="line"><span class="ln">30</span>      <span class="str">'select[name="loanTerm"], #loan-term, .term-selector select'</span></div>
+<div class="line"><span class="ln">31</span>    ).<span class="fn">first</span>();</div>
+<div class="line"><span class="ln">32</span></div>
+<div class="line"><span class="ln">33</span>    <span class="kw">this</span>.<span class="pr">annualIncomeInput</span> <span class="op">=</span> <span class="pr">page</span>.<span class="fn">locator</span>(</div>
+<div class="line"><span class="ln">34</span>      <span class="str">'#annual-income, input[name="annualIncome"], [aria-label="Annual income"]'</span></div>
+<div class="line"><span class="ln">35</span>    ).<span class="fn">first</span>();</div>
+<div class="line"><span class="ln">36</span></div>
+<div class="line"><span class="ln">37</span>    <span class="kw">this</span>.<span class="pr">employerNameInput</span> <span class="op">=</span> <span class="pr">page</span>.<span class="fn">locator</span>(</div>
+<div class="line"><span class="ln">38</span>      <span class="str">'input[name="employerName"], .employer-field input'</span></div>
+<div class="line"><span class="ln">39</span>    ).<span class="fn">first</span>();</div>
+<div class="line"><span class="ln">40</span></div>
+<div class="line"><span class="ln">41</span>    <span class="kw">this</span>.<span class="pr">ssnInput</span> <span class="op">=</span> <span class="pr">page</span>.<span class="fn">locator</span>(</div>
+<div class="line"><span class="ln">42</span>      <span class="str">'[data-testid="ssn-input"], #ssn, input[name="ssn"]'</span></div>
+<div class="line"><span class="ln">43</span>    ).<span class="fn">first</span>();</div>
+<div class="line"><span class="ln">44</span></div>
+<div class="line"><span class="ln">45</span>    <span class="kw">this</span>.<span class="pr">propertyAddressInput</span> <span class="op">=</span> <span class="pr">page</span>.<span class="fn">locator</span>(</div>
+<div class="line"><span class="ln">46</span>      <span class="str">'.property-address input, input[placeholder*="property address"]'</span></div>
+<div class="line"><span class="ln">47</span>    ).<span class="fn">first</span>();</div>
+<div class="line"><span class="ln">48</span></div>
+<div class="line"><span class="ln">49</span>    <span class="kw">this</span>.<span class="pr">submitApplicationBtn</span> <span class="op">=</span> <span class="pr">page</span>.<span class="fn">locator</span>(</div>
+<div class="line"><span class="ln">50</span>      <span class="str">'#submit-application, button:has-text("Submit Application"), [type="submit"]'</span></div>
+<div class="line"><span class="ln">51</span>    ).<span class="fn">first</span>();</div>
+<div class="line"><span class="ln">52</span></div>
+<div class="line"><span class="ln">53</span>    <span class="kw">this</span>.<span class="pr">aprDisplay</span> <span class="op">=</span> <span class="pr">page</span>.<span class="fn">locator</span>(</div>
+<div class="line"><span class="ln">54</span>      <span class="str">'.apr-display, [data-field="apr"], .rate-summary .apr'</span></div>
+<div class="line"><span class="ln">55</span>    ).<span class="fn">first</span>();</div>
+<div class="line"><span class="ln">56</span></div>
+<div class="line"><span class="ln">57</span>    <span class="kw">this</span>.<span class="pr">ecoaDisclosure</span> <span class="op">=</span> <span class="pr">page</span>.<span class="fn">locator</span>(</div>
+<div class="line"><span class="ln">58</span>      <span class="str">'.ecoa-disclosure, .compliance-notice:has-text("Equal Credit")'</span></div>
+<div class="line"><span class="ln">59</span>    ).<span class="fn">first</span>();</div>
+<div class="line"><span class="ln">60</span>  }</div>
+<div class="line"><span class="ln">61</span></div>
+<div class="line"><span class="ln">62</span>  <span class="kw">async</span> <span class="fn">goto</span>() {</div>
+<div class="line"><span class="ln">63</span>    <span class="kw">await</span> <span class="kw">this</span>.<span class="pr">page</span>.<span class="fn">goto</span>(<span class="str">'/loans/apply'</span>);</div>
+<div class="line"><span class="ln">64</span>  }</div>
+<div class="line"><span class="ln">65</span></div>
+<div class="line"><span class="ln">66</span>  <span class="kw">async</span> <span class="fn">fillApplication</span>(<span class="pr">data</span><span class="op">:</span> {</div>
+<div class="line"><span class="ln">67</span>    <span class="pr">amount</span><span class="op">:</span> <span class="tp">string</span><span class="op">;</span></div>
+<div class="line"><span class="ln">68</span>    <span class="pr">term</span><span class="op">:</span> <span class="tp">string</span><span class="op">;</span></div>
+<div class="line"><span class="ln">69</span>    <span class="pr">income</span><span class="op">:</span> <span class="tp">string</span><span class="op">;</span></div>
+<div class="line"><span class="ln">70</span>    <span class="pr">employer</span><span class="op">:</span> <span class="tp">string</span><span class="op">;</span></div>
+<div class="line"><span class="ln">71</span>    <span class="pr">ssn</span><span class="op">:</span> <span class="tp">string</span><span class="op">;</span></div>
+<div class="line"><span class="ln">72</span>    <span class="pr">address</span><span class="op">:</span> <span class="tp">string</span><span class="op">;</span></div>
+<div class="line"><span class="ln">73</span>  }) {</div>
+<div class="line"><span class="ln">74</span>    <span class="kw">await</span> <span class="kw">this</span>.<span class="pr">loanAmountInput</span>.<span class="fn">fill</span>(<span class="pr">data</span>.<span class="pr">amount</span>);</div>
+<div class="line"><span class="ln">75</span>    <span class="kw">await</span> <span class="kw">this</span>.<span class="pr">loanTermSelect</span>.<span class="fn">selectOption</span>(<span class="pr">data</span>.<span class="pr">term</span>);</div>
+<div class="line"><span class="ln">76</span>    <span class="kw">await</span> <span class="kw">this</span>.<span class="pr">annualIncomeInput</span>.<span class="fn">fill</span>(<span class="pr">data</span>.<span class="pr">income</span>);</div>
+<div class="line"><span class="ln">77</span>    <span class="kw">await</span> <span class="kw">this</span>.<span class="pr">employerNameInput</span>.<span class="fn">fill</span>(<span class="pr">data</span>.<span class="pr">employer</span>);</div>
+<div class="line"><span class="ln">78</span>    <span class="kw">await</span> <span class="kw">this</span>.<span class="pr">ssnInput</span>.<span class="fn">fill</span>(<span class="pr">data</span>.<span class="pr">ssn</span>);</div>
+<div class="line"><span class="ln">79</span>    <span class="kw">await</span> <span class="kw">this</span>.<span class="pr">propertyAddressInput</span>.<span class="fn">fill</span>(<span class="pr">data</span>.<span class="pr">address</span>);</div>
+<div class="line"><span class="ln">80</span>  }</div>
+<div class="line"><span class="ln">81</span></div>
+<div class="line"><span class="ln">82</span>  <span class="kw">async</span> <span class="fn">submitApplication</span>() {</div>
+<div class="line"><span class="ln">83</span>    <span class="kw">await</span> <span class="kw">this</span>.<span class="pr">submitApplicationBtn</span>.<span class="fn">click</span>();</div>
+<div class="line"><span class="ln">84</span>  }</div>
+<div class="line"><span class="ln">85</span></div>
+<div class="line"><span class="ln">86</span>  <span class="kw">async</span> <span class="fn">getAPR</span>()<span class="op">:</span> <span class="tp">Promise</span><span class="op">&lt;</span><span class="tp">string</span><span class="op">&gt;</span> {</div>
+<div class="line"><span class="ln">87</span>    <span class="kw">return</span> <span class="kw">await</span> <span class="kw">this</span>.<span class="pr">aprDisplay</span>.<span class="fn">textContent</span>() <span class="op">??</span> <span class="str">''</span>;</div>
+<div class="line"><span class="ln">88</span>  }</div>
+<div class="line"><span class="ln">89</span></div>
+<div class="line"><span class="ln">90</span>  <span class="kw">async</span> <span class="fn">isEcoaDisclosureVisible</span>()<span class="op">:</span> <span class="tp">Promise</span><span class="op">&lt;</span><span class="tp">boolean</span><span class="op">&gt;</span> {</div>
+<div class="line"><span class="ln">91</span>    <span class="kw">return</span> <span class="kw">await</span> <span class="kw">this</span>.<span class="pr">ecoaDisclosure</span>.<span class="fn">isVisible</span>();</div>
+<div class="line"><span class="ln">92</span>  }</div>
+<div class="line"><span class="ln">93</span>}</div>
+        </div>
+
+        <!-- Selector Health for this file -->
+        <div class="selector-health">
+          <div class="sh-title">Selector Health &mdash; LoanApplicationPage.ts</div>
+          <div class="selector-health-row">
+            <span class="sh-grade a-plus">A+</span>
+            <span style="flex:1">ssnInput</span>
+            <span class="font-mono text-xs" style="color:#64605F">[data-testid="ssn-input"]</span>
+          </div>
+          <div class="selector-health-row">
+            <span class="sh-grade a">A</span>
+            <span style="flex:1">loanAmountInput</span>
+            <span class="font-mono text-xs" style="color:#64605F">#loan-amount + name fallback</span>
+          </div>
+          <div class="selector-health-row">
+            <span class="sh-grade a">A</span>
+            <span style="flex:1">annualIncomeInput</span>
+            <span class="font-mono text-xs" style="color:#64605F">#annual-income + aria-label</span>
+          </div>
+          <div class="selector-health-row">
+            <span class="sh-grade a">A</span>
+            <span style="flex:1">submitApplicationBtn</span>
+            <span class="font-mono text-xs" style="color:#64605F">#submit-application + text</span>
+          </div>
+          <div class="selector-health-row">
+            <span class="sh-grade b">B</span>
+            <span style="flex:1">loanTermSelect</span>
+            <span class="font-mono text-xs" style="color:#64605F">name attr + class fallback</span>
+          </div>
+          <div class="selector-health-row">
+            <span class="sh-grade b">B</span>
+            <span style="flex:1">employerNameInput</span>
+            <span class="font-mono text-xs" style="color:#64605F">name attr + class fallback</span>
+          </div>
+          <div class="selector-health-row">
+            <span class="sh-grade b">B</span>
+            <span style="flex:1">aprDisplay</span>
+            <span class="font-mono text-xs" style="color:#64605F">class-based selectors only</span>
+          </div>
+          <div class="selector-health-row">
+            <span class="sh-grade c">C</span>
+            <span style="flex:1">propertyAddressInput</span>
+            <span class="font-mono text-xs" style="color:#64605F">class + placeholder (fragile)</span>
+          </div>
+          <div class="selector-health-row">
+            <span class="sh-grade c">C</span>
+            <span style="flex:1">ecoaDisclosure</span>
+            <span class="font-mono text-xs" style="color:#64605F">class + text selector (fragile)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

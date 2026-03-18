@@ -240,6 +240,69 @@
       font-weight: 600;
     }
 
+    /* Accessibility Mini Widget */
+    .a11y-api-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--card-gap);
+      margin-bottom: var(--sp-xl);
+    }
+
+    .a11y-widget { display: flex; gap: var(--sp-lg); align-items: flex-start; }
+
+    .a11y-score-ring {
+      width: 80px; height: 80px; border-radius: 50%; position: relative;
+      display: flex; align-items: center; justify-content: center; flex-direction: column; flex-shrink: 0;
+    }
+
+    .a11y-score-ring svg { position: absolute; width: 100%; height: 100%; transform: rotate(-90deg); }
+    .a11y-score-ring .ring-bg { fill: none; stroke: var(--border-light); stroke-width: 6; }
+    .a11y-score-ring .ring-fill { fill: none; stroke-width: 6; stroke-linecap: round; stroke-dasharray: 226.195; }
+    .a11y-score-ring .ring-value { font-size: 20px; font-weight: 700; position: relative; z-index: 1; }
+    .a11y-score-ring .ring-label { font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-secondary); position: relative; z-index: 1; }
+
+    .a11y-details { flex: 1; }
+
+    .a11y-conformance { display: flex; gap: var(--sp-lg); margin-top: var(--sp-sm); }
+
+    .conf-level { text-align: center; }
+    .conf-level .conf-bar { width: 40px; height: 4px; background: var(--border-light); border-radius: var(--radius-pill); overflow: hidden; margin: 3px auto; }
+    .conf-level .conf-bar-fill { height: 100%; border-radius: var(--radius-pill); }
+    .conf-level .conf-label { font-size: 9px; font-weight: 700; color: var(--ink-secondary); }
+    .conf-level .conf-value { font-family: var(--font-mono); font-size: 10px; font-weight: 600; }
+
+    .a11y-issues { display: flex; gap: var(--sp-lg); margin-top: var(--sp-md); font-size: 11px; }
+    .a11y-issues .issue-item { display: flex; align-items: center; gap: var(--sp-xs); }
+    .a11y-issues .issue-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+    .api-widget { display: flex; gap: var(--sp-lg); align-items: flex-start; }
+    .api-summary { flex: 1; }
+
+    .api-endpoint-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-xs); margin-top: var(--sp-md); }
+
+    .api-endpoint-item {
+      display: flex; align-items: center; gap: var(--sp-xs); font-size: 10px;
+      padding: 3px 6px; border-radius: var(--radius-xs); background: var(--hover-bg);
+    }
+
+    .api-endpoint-item .method-badge {
+      font-family: var(--font-mono); font-size: 8px; font-weight: 700;
+      padding: 1px 4px; border-radius: 2px; color: white;
+    }
+
+    .method-get { background: #16A344; }
+    .method-post { background: #1D4ED8; }
+    .method-put { background: #CA8B04; }
+    .method-delete { background: #C62828; }
+
+    .swagger-badge {
+      display: inline-flex; align-items: center; gap: var(--sp-xs);
+      padding: 3px 10px; border-radius: var(--radius-pill);
+      font-size: 10px; font-weight: 700; background: #1B3A2A; color: #85E89D;
+    }
+
+    .swagger-badge .sw-dot { width: 6px; height: 6px; border-radius: 50%; background: #85E89D; }
+
     /* Mortgage-specific: Risk Heatmap */
     .risk-heatmap {
       display: grid;
@@ -379,7 +442,7 @@
       <a href="09-ccm-dashboard.html" class="active"><span class="nav-icon">&#9632;</span><span class="nav-label">Dashboard</span></a>
       <a href="10-ccm-context.html"><span class="nav-icon">&#128206;</span><span class="nav-label">Context</span></a>
       <a href="11-ccm-tests.html"><span class="nav-icon">&#9745;</span><span class="nav-label">Test Cases</span><span class="badge">14</span></a>
-      <a href="#"><span class="nav-icon">&#60;/&#62;</span><span class="nav-label">Automation</span></a>
+      <a href="15-ccm-automation.html"><span class="nav-icon">&#60;/&#62;</span><span class="nav-label">Automation</span></a>
       <a href="12-ccm-execution.html"><span class="nav-icon">&#9654;</span><span class="nav-label">Execution</span></a>
       <a href="#"><span class="nav-icon">&#9776;</span><span class="nav-label">Results</span></a>
       <a href="14-accessibility-ccm.html"><span class="nav-icon">&#9855;</span><span class="nav-label">Accessibility</span></a>
@@ -412,7 +475,7 @@
         <h1>CCM Mortgage</h1>
         <p class="subtitle flex items-center gap-sm">
           <span class="font-mono text-sm text-tertiary">portal.ccmmortgage.com</span>
-          <span class="ccs-badge partial"><span class="ccs-dot"></span> Context: Partial (48%)</span>
+          <span class="ccs-badge partial"><span class="ccs-dot"></span> Context: Partial (55%)</span>
         </p>
       </div>
       <div class="flex gap-sm">
@@ -461,9 +524,9 @@
           <div class="score-ring">
             <svg viewBox="0 0 120 120">
               <circle class="ring-bg" cx="60" cy="60" r="54"/>
-              <circle class="ring-fill" cx="60" cy="60" r="54" stroke="var(--warm-amber)" stroke-dashoffset="176"/>
+              <circle class="ring-fill" cx="60" cy="60" r="54" stroke="var(--warm-amber)" stroke-dashoffset="162.9"/>
             </svg>
-            <span class="ring-value text-amber">48%</span>
+            <span class="ring-value text-amber">52%</span>
             <span class="ring-label">Coverage</span>
           </div>
           <div class="pill pill-warn mt-sm" style="font-size:9px">Moderate</div>
@@ -474,9 +537,9 @@
           <div class="score-ring">
             <svg viewBox="0 0 120 120">
               <circle class="ring-bg" cx="60" cy="60" r="54"/>
-              <circle class="ring-fill" cx="60" cy="60" r="54" stroke="var(--warm-amber)" stroke-dashoffset="176"/>
+              <circle class="ring-fill" cx="60" cy="60" r="54" stroke="var(--warm-amber)" stroke-dashoffset="152.7"/>
             </svg>
-            <span class="ring-value text-amber">48%</span>
+            <span class="ring-value text-amber">55%</span>
             <span class="ring-label">Context</span>
           </div>
           <div class="ccs-badge partial mt-sm" style="font-size:9px">Partial</div>
@@ -509,6 +572,11 @@
             <span class="detail-label">Pass-Through Rate</span>
             <div class="detail-bar"><div class="detail-bar-fill" style="width:81%; background:var(--success-green)"></div></div>
             <span class="detail-value text-green">81%</span>
+          </div>
+          <div class="score-detail-row">
+            <span class="detail-label">API Coverage</span>
+            <div class="detail-bar"><div class="detail-bar-fill" style="width:42%; background:var(--warm-amber)"></div></div>
+            <span class="detail-value text-amber">42%</span>
           </div>
         </div>
       </div>
@@ -551,13 +619,13 @@
     <div class="kpi-grid mb-xl">
       <div class="kpi-card state-brand">
         <div class="kpi-eyebrow">Test Cases</div>
-        <div class="kpi-value">96</div>
-        <div class="kpi-meta">+14 pending review</div>
+        <div class="kpi-value">114</div>
+        <div class="kpi-meta">96 UI + 18 API</div>
       </div>
       <div class="kpi-card state-warning">
         <div class="kpi-eyebrow">Last Run Pass Rate</div>
-        <div class="kpi-value">81%</div>
-        <div class="kpi-meta">72/89 passed</div>
+        <div class="kpi-value">79%</div>
+        <div class="kpi-meta">90/114 passed</div>
       </div>
       <div class="kpi-card state-neutral">
         <div class="kpi-eyebrow">Total Runs</div>
@@ -566,13 +634,147 @@
       </div>
       <div class="kpi-card state-critical">
         <div class="kpi-eyebrow">Failing Tests</div>
-        <div class="kpi-value">17</div>
-        <div class="kpi-meta">mostly Closing &amp; Underwriting</div>
+        <div class="kpi-value">24</div>
+        <div class="kpi-meta">17 UI + 7 API failures</div>
+      </div>
+      <div class="kpi-card state-critical">
+        <div class="kpi-eyebrow">WCAG Score</div>
+        <div class="kpi-value">44%</div>
+        <div class="kpi-meta">28 critical issues</div>
       </div>
       <div class="kpi-card state-neutral">
         <div class="kpi-eyebrow">Avg Duration</div>
         <div class="kpi-value">3m 28s</div>
         <div class="kpi-meta">full regression</div>
+      </div>
+    </div>
+
+    <!-- Accessibility & API Coverage -->
+    <div class="a11y-api-grid">
+      <!-- Accessibility Health -->
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Accessibility Health</div>
+            <div class="panel-subtitle">ECOA / ADA / Section 508 compliance</div>
+          </div>
+          <a href="14-accessibility-ccm.html" class="btn btn-ghost btn-sm">Full Report &rarr;</a>
+        </div>
+        <div class="a11y-widget">
+          <div class="a11y-score-ring">
+            <svg viewBox="0 0 80 80">
+              <circle class="ring-bg" cx="40" cy="40" r="36"/>
+              <circle class="ring-fill" cx="40" cy="40" r="36" stroke="var(--critical-red)" stroke-dashoffset="126.7"/>
+            </svg>
+            <span class="ring-value text-red">44%</span>
+            <span class="ring-label">WCAG</span>
+          </div>
+          <div class="a11y-details">
+            <div class="a11y-conformance">
+              <div class="conf-level">
+                <div class="conf-label">Level A</div>
+                <div class="conf-bar"><div class="conf-bar-fill" style="width:58%; background:var(--warm-amber)"></div></div>
+                <div class="conf-value text-amber">58%</div>
+              </div>
+              <div class="conf-level">
+                <div class="conf-label">Level AA</div>
+                <div class="conf-bar"><div class="conf-bar-fill" style="width:41%; background:var(--critical-red)"></div></div>
+                <div class="conf-value text-red">41%</div>
+              </div>
+              <div class="conf-level">
+                <div class="conf-label">Level AAA</div>
+                <div class="conf-bar"><div class="conf-bar-fill" style="width:11%; background:var(--critical-red)"></div></div>
+                <div class="conf-value text-red">11%</div>
+              </div>
+            </div>
+            <div class="a11y-issues">
+              <div class="issue-item">
+                <span class="issue-dot" style="background:var(--critical-red)"></span>
+                <span><strong class="text-red">28</strong> critical</span>
+              </div>
+              <div class="issue-item">
+                <span class="issue-dot" style="background:var(--warm-amber)"></span>
+                <span><strong class="text-amber">34</strong> major</span>
+              </div>
+              <div class="issue-item">
+                <span class="issue-dot" style="background:var(--ink-tertiary)"></span>
+                <span><strong>22</strong> minor</span>
+              </div>
+              <div class="issue-item">
+                <span class="issue-dot" style="background:var(--success-green)"></span>
+                <span><strong class="text-green">52</strong> passed</span>
+              </div>
+            </div>
+            <div class="mt-md" style="font-size:10px; padding:6px 8px; background:var(--critical-red-light); border-radius:var(--radius-sm); color:var(--critical-red)">
+              <strong>ECOA Risk:</strong> Loan Application (F) &mdash; Keyboard nav broken, missing form labels, color-only indicators
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- API Coverage -->
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">API Test Coverage</div>
+            <div class="panel-subtitle">Mortgage API endpoints from Swagger</div>
+          </div>
+          <div class="swagger-badge"><span class="sw-dot"></span> Swagger Connected</div>
+        </div>
+        <div class="api-widget">
+          <div class="a11y-score-ring">
+            <svg viewBox="0 0 80 80">
+              <circle class="ring-bg" cx="40" cy="40" r="36"/>
+              <circle class="ring-fill" cx="40" cy="40" r="36" stroke="var(--warm-amber)" stroke-dashoffset="131.2"/>
+            </svg>
+            <span class="ring-value text-amber">42%</span>
+            <span class="ring-label">API</span>
+          </div>
+          <div class="api-summary" style="flex:1">
+            <div class="flex justify-between items-center mb-sm">
+              <span class="text-xs text-secondary">26 endpoints discovered &middot; 11 tested</span>
+              <span class="font-mono text-xs font-bold">18 API tests</span>
+            </div>
+            <div class="coverage-bar-row" style="padding:2px 0">
+              <span class="coverage-bar-label" style="width:90px;font-size:10px">Auth (3)</span>
+              <div class="coverage-bar-track" style="height:5px"><div class="coverage-bar-fill excellent" style="width:100%"></div></div>
+              <span class="coverage-bar-value text-green" style="width:30px;font-size:10px">3/3</span>
+            </div>
+            <div class="coverage-bar-row" style="padding:2px 0">
+              <span class="coverage-bar-label" style="width:90px;font-size:10px">Loans (8)</span>
+              <div class="coverage-bar-track" style="height:5px"><div class="coverage-bar-fill partial" style="width:50%"></div></div>
+              <span class="coverage-bar-value text-amber" style="width:30px;font-size:10px">4/8</span>
+            </div>
+            <div class="coverage-bar-row" style="padding:2px 0">
+              <span class="coverage-bar-label" style="width:90px;font-size:10px">Credit (4)</span>
+              <div class="coverage-bar-track" style="height:5px"><div class="coverage-bar-fill partial" style="width:50%"></div></div>
+              <span class="coverage-bar-value text-amber" style="width:30px;font-size:10px">2/4</span>
+            </div>
+            <div class="coverage-bar-row" style="padding:2px 0">
+              <span class="coverage-bar-label" style="width:90px;font-size:10px">Documents (4)</span>
+              <div class="coverage-bar-track" style="height:5px"><div class="coverage-bar-fill partial" style="width:50%"></div></div>
+              <span class="coverage-bar-value text-amber" style="width:30px;font-size:10px">2/4</span>
+            </div>
+            <div class="coverage-bar-row" style="padding:2px 0">
+              <span class="coverage-bar-label" style="width:90px;font-size:10px">Rates (3)</span>
+              <div class="coverage-bar-track" style="height:5px"><div class="coverage-bar-fill minimal" style="width:0%"></div></div>
+              <span class="coverage-bar-value text-red" style="width:30px;font-size:10px">0/3</span>
+            </div>
+            <div class="coverage-bar-row" style="padding:2px 0">
+              <span class="coverage-bar-label" style="width:90px;font-size:10px">E-Sign (4)</span>
+              <div class="coverage-bar-track" style="height:5px"><div class="coverage-bar-fill minimal" style="width:0%"></div></div>
+              <span class="coverage-bar-value text-red" style="width:30px;font-size:10px">0/4</span>
+            </div>
+            <div class="api-endpoint-grid">
+              <div class="api-endpoint-item"><span class="method-badge method-post">POST</span> /loans/apply</div>
+              <div class="api-endpoint-item"><span class="method-badge method-get">GET</span> /loans/:id/status</div>
+              <div class="api-endpoint-item"><span class="method-badge method-post">POST</span> /credit/pull</div>
+              <div class="api-endpoint-item"><span class="method-badge method-post">POST</span> /docs/upload</div>
+              <div class="api-endpoint-item" style="opacity:0.4"><span class="method-badge method-get">GET</span> /rates/current</div>
+              <div class="api-endpoint-item" style="opacity:0.4"><span class="method-badge method-post">POST</span> /esign/initiate</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -644,7 +846,7 @@
       <div class="panel">
         <div class="panel-header">
           <div class="panel-title">Category Distribution</div>
-          <span class="text-xs text-tertiary">96 total tests</span>
+          <span class="text-xs text-tertiary">114 total tests</span>
         </div>
         <div class="category-chart">
           <div class="category-bar">
@@ -676,6 +878,11 @@
             <div class="bar-value">6</div>
             <div class="bar" style="height:14px; background:var(--ink-tertiary);"></div>
             <div class="bar-label">Edge</div>
+          </div>
+          <div class="category-bar">
+            <div class="bar-value" style="color:#1D4ED8">18</div>
+            <div class="bar" style="height:41px; background:#1D4ED8;"></div>
+            <div class="bar-label">API</div>
           </div>
         </div>
         <div class="mt-md" style="font-size:11px; padding:8px; background:var(--critical-red-light); border-radius:var(--radius-sm); color:var(--critical-red)">
@@ -901,6 +1108,14 @@
           <div class="activity-icon" style="background:var(--success-green-light);color:var(--success-green)">&#10003;</div>
           <div class="activity-text">
             <strong>Rachel M.</strong> approved 8 test cases for Document Upload
+          </div>
+          <span class="activity-time">1d ago</span>
+        </div>
+
+        <div class="activity-item">
+          <div class="activity-icon" style="background:#ECFDF5;color:#16A344">&#128206;</div>
+          <div class="activity-text">
+            <strong>Swagger spec synced</strong> &mdash; api.ccmmortgage.com/v1/openapi.json (26 endpoints, 18 API tests generated)
           </div>
           <span class="activity-time">1d ago</span>
         </div>

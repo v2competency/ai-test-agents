@@ -250,6 +250,163 @@
       font-size: 10px;
       font-weight: 600;
     }
+
+    /* Accessibility Mini Widget */
+    .a11y-api-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--card-gap);
+      margin-bottom: var(--sp-xl);
+    }
+
+    .a11y-widget {
+      display: flex;
+      gap: var(--sp-lg);
+      align-items: flex-start;
+    }
+
+    .a11y-score-ring {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .a11y-score-ring svg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .a11y-score-ring .ring-bg { fill: none; stroke: var(--border-light); stroke-width: 6; }
+    .a11y-score-ring .ring-fill { fill: none; stroke-width: 6; stroke-linecap: round; stroke-dasharray: 226.195; }
+    .a11y-score-ring .ring-value { font-size: 20px; font-weight: 700; position: relative; z-index: 1; }
+    .a11y-score-ring .ring-label { font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-secondary); position: relative; z-index: 1; }
+
+    .a11y-details { flex: 1; }
+
+    .a11y-conformance {
+      display: flex;
+      gap: var(--sp-lg);
+      margin-top: var(--sp-sm);
+    }
+
+    .conf-level {
+      text-align: center;
+    }
+
+    .conf-level .conf-bar {
+      width: 40px;
+      height: 4px;
+      background: var(--border-light);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+      margin: 3px auto;
+    }
+
+    .conf-level .conf-bar-fill {
+      height: 100%;
+      border-radius: var(--radius-pill);
+    }
+
+    .conf-level .conf-label {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--ink-secondary);
+    }
+
+    .conf-level .conf-value {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .a11y-issues {
+      display: flex;
+      gap: var(--sp-lg);
+      margin-top: var(--sp-md);
+      font-size: 11px;
+    }
+
+    .a11y-issues .issue-item {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-xs);
+    }
+
+    .a11y-issues .issue-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* API Coverage Widget */
+    .api-widget {
+      display: flex;
+      gap: var(--sp-lg);
+      align-items: flex-start;
+    }
+
+    .api-summary {
+      flex: 1;
+    }
+
+    .api-endpoint-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--sp-xs);
+      margin-top: var(--sp-md);
+    }
+
+    .api-endpoint-item {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-xs);
+      font-size: 10px;
+      padding: 3px 6px;
+      border-radius: var(--radius-xs);
+      background: var(--hover-bg);
+    }
+
+    .api-endpoint-item .method-badge {
+      font-family: var(--font-mono);
+      font-size: 8px;
+      font-weight: 700;
+      padding: 1px 4px;
+      border-radius: 2px;
+      color: white;
+    }
+
+    .method-get { background: #16A344; }
+    .method-post { background: #1D4ED8; }
+    .method-put { background: #CA8B04; }
+    .method-delete { background: #C62828; }
+
+    .swagger-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-xs);
+      padding: 3px 10px;
+      border-radius: var(--radius-pill);
+      font-size: 10px;
+      font-weight: 700;
+      background: #1B3A2A;
+      color: #85E89D;
+    }
+
+    .swagger-badge .sw-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #85E89D;
+    }
   </style>
 </head>
 <body>
@@ -301,7 +458,7 @@
         <h1>SaaS Dashboard</h1>
         <p class="subtitle flex items-center gap-sm">
           <span class="font-mono text-sm text-tertiary">app.acmedash.com</span>
-          <span class="ccs-badge good"><span class="ccs-dot"></span> Context: Good (78%)</span>
+          <span class="ccs-badge good"><span class="ccs-dot"></span> Context: Good (82%)</span>
         </p>
       </div>
       <div class="flex gap-sm">
@@ -318,9 +475,9 @@
           <div class="score-ring">
             <svg viewBox="0 0 120 120">
               <circle class="ring-bg" cx="60" cy="60" r="54"/>
-              <circle class="ring-fill" cx="60" cy="60" r="54" stroke="var(--success-green)" stroke-dashoffset="74.8"/>
+              <circle class="ring-fill" cx="60" cy="60" r="54" stroke="var(--success-green)" stroke-dashoffset="61.1"/>
             </svg>
-            <span class="ring-value text-green">78%</span>
+            <span class="ring-value text-green">82%</span>
             <span class="ring-label">Coverage</span>
           </div>
           <div class="pill pill-pass mt-sm" style="font-size:9px">Strong</div>
@@ -331,9 +488,9 @@
           <div class="score-ring">
             <svg viewBox="0 0 120 120">
               <circle class="ring-bg" cx="60" cy="60" r="54"/>
-              <circle class="ring-fill" cx="60" cy="60" r="54" stroke="#1D4ED8" stroke-dashoffset="84.8"/>
+              <circle class="ring-fill" cx="60" cy="60" r="54" stroke="#1D4ED8" stroke-dashoffset="61.1"/>
             </svg>
-            <span class="ring-value" style="color:#1D4ED8">75%</span>
+            <span class="ring-value" style="color:#1D4ED8">82%</span>
             <span class="ring-label">Context</span>
           </div>
           <div class="ccs-badge good mt-sm" style="font-size:9px">Good</div>
@@ -366,6 +523,11 @@
             <span class="detail-label">Pass-Through Rate</span>
             <div class="detail-bar"><div class="detail-bar-fill" style="width:91%; background:var(--success-green)"></div></div>
             <span class="detail-value text-green">91%</span>
+          </div>
+          <div class="score-detail-row">
+            <span class="detail-label">API Coverage</span>
+            <div class="detail-bar"><div class="detail-bar-fill" style="width:71%; background:var(--success-green)"></div></div>
+            <span class="detail-value text-green">71%</span>
           </div>
         </div>
       </div>
@@ -408,13 +570,13 @@
     <div class="kpi-grid mb-xl">
       <div class="kpi-card state-healthy">
         <div class="kpi-eyebrow">Test Cases</div>
-        <div class="kpi-value">84</div>
-        <div class="kpi-meta">+12 this week</div>
+        <div class="kpi-value">106</div>
+        <div class="kpi-meta">84 UI + 22 API</div>
       </div>
       <div class="kpi-card state-healthy">
         <div class="kpi-eyebrow">Last Run Pass Rate</div>
         <div class="kpi-value">94%</div>
-        <div class="kpi-meta">79/84 passed</div>
+        <div class="kpi-meta">100/106 passed</div>
       </div>
       <div class="kpi-card state-brand">
         <div class="kpi-eyebrow">Total Runs</div>
@@ -427,9 +589,135 @@
         <div class="kpi-meta">drafts pending</div>
       </div>
       <div class="kpi-card state-neutral">
+        <div class="kpi-eyebrow">WCAG Score</div>
+        <div class="kpi-value">64%</div>
+        <div class="kpi-meta">12 critical issues</div>
+      </div>
+      <div class="kpi-card state-neutral">
         <div class="kpi-eyebrow">Avg Duration</div>
         <div class="kpi-value">1m 42s</div>
         <div class="kpi-meta">full suite</div>
+      </div>
+    </div>
+
+    <!-- Accessibility & API Coverage -->
+    <div class="a11y-api-grid">
+      <!-- Accessibility Health -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Accessibility Health</div>
+          <a href="13-accessibility-saas.html" class="btn btn-ghost btn-sm">Full Report &rarr;</a>
+        </div>
+        <div class="a11y-widget">
+          <div class="a11y-score-ring">
+            <svg viewBox="0 0 80 80">
+              <circle class="ring-bg" cx="40" cy="40" r="36"/>
+              <circle class="ring-fill" cx="40" cy="40" r="36" stroke="var(--warm-amber)" stroke-dashoffset="81.4"/>
+            </svg>
+            <span class="ring-value text-amber">64%</span>
+            <span class="ring-label">WCAG</span>
+          </div>
+          <div class="a11y-details">
+            <div class="a11y-conformance">
+              <div class="conf-level">
+                <div class="conf-label">Level A</div>
+                <div class="conf-bar"><div class="conf-bar-fill" style="width:78%; background:var(--success-green)"></div></div>
+                <div class="conf-value text-green">78%</div>
+              </div>
+              <div class="conf-level">
+                <div class="conf-label">Level AA</div>
+                <div class="conf-bar"><div class="conf-bar-fill" style="width:55%; background:var(--warm-amber)"></div></div>
+                <div class="conf-value text-amber">55%</div>
+              </div>
+              <div class="conf-level">
+                <div class="conf-label">Level AAA</div>
+                <div class="conf-bar"><div class="conf-bar-fill" style="width:28%; background:var(--critical-red)"></div></div>
+                <div class="conf-value text-red">28%</div>
+              </div>
+            </div>
+            <div class="a11y-issues">
+              <div class="issue-item">
+                <span class="issue-dot" style="background:var(--critical-red)"></span>
+                <span><strong class="text-red">12</strong> critical</span>
+              </div>
+              <div class="issue-item">
+                <span class="issue-dot" style="background:var(--warm-amber)"></span>
+                <span><strong class="text-amber">23</strong> major</span>
+              </div>
+              <div class="issue-item">
+                <span class="issue-dot" style="background:var(--ink-tertiary)"></span>
+                <span><strong>18</strong> minor</span>
+              </div>
+              <div class="issue-item">
+                <span class="issue-dot" style="background:var(--success-green)"></span>
+                <span><strong class="text-green">89</strong> passed</span>
+              </div>
+            </div>
+            <div class="mt-md" style="font-size:10px; padding:6px 8px; background:var(--warm-amber-light); border-radius:var(--radius-sm); color:var(--warm-amber)">
+              <strong>Worst page:</strong> Integrations (D) &mdash; Missing alt text, keyboard traps on modals
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- API Coverage -->
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">API Test Coverage</div>
+            <div class="panel-subtitle">From Swagger / OpenAPI specification</div>
+          </div>
+          <div class="swagger-badge"><span class="sw-dot"></span> Swagger Connected</div>
+        </div>
+        <div class="api-widget">
+          <div class="a11y-score-ring">
+            <svg viewBox="0 0 80 80">
+              <circle class="ring-bg" cx="40" cy="40" r="36"/>
+              <circle class="ring-fill" cx="40" cy="40" r="36" stroke="var(--success-green)" stroke-dashoffset="65.6"/>
+            </svg>
+            <span class="ring-value text-green">71%</span>
+            <span class="ring-label">API</span>
+          </div>
+          <div class="api-summary">
+            <div class="flex justify-between items-center mb-sm">
+              <span class="text-xs text-secondary">14 endpoints discovered &middot; 10 tested</span>
+              <span class="font-mono text-xs font-bold">22 API tests</span>
+            </div>
+            <div class="coverage-bar-row" style="padding:2px 0">
+              <span class="coverage-bar-label" style="width:80px;font-size:10px">Auth (3)</span>
+              <div class="coverage-bar-track" style="height:5px"><div class="coverage-bar-fill excellent" style="width:100%"></div></div>
+              <span class="coverage-bar-value text-green" style="width:30px;font-size:10px">3/3</span>
+            </div>
+            <div class="coverage-bar-row" style="padding:2px 0">
+              <span class="coverage-bar-label" style="width:80px;font-size:10px">Users (4)</span>
+              <div class="coverage-bar-track" style="height:5px"><div class="coverage-bar-fill good" style="width:75%"></div></div>
+              <span class="coverage-bar-value text-green" style="width:30px;font-size:10px">3/4</span>
+            </div>
+            <div class="coverage-bar-row" style="padding:2px 0">
+              <span class="coverage-bar-label" style="width:80px;font-size:10px">Billing (3)</span>
+              <div class="coverage-bar-track" style="height:5px"><div class="coverage-bar-fill partial" style="width:67%"></div></div>
+              <span class="coverage-bar-value text-amber" style="width:30px;font-size:10px">2/3</span>
+            </div>
+            <div class="coverage-bar-row" style="padding:2px 0">
+              <span class="coverage-bar-label" style="width:80px;font-size:10px">Reports (2)</span>
+              <div class="coverage-bar-track" style="height:5px"><div class="coverage-bar-fill good" style="width:100%"></div></div>
+              <span class="coverage-bar-value text-green" style="width:30px;font-size:10px">2/2</span>
+            </div>
+            <div class="coverage-bar-row" style="padding:2px 0">
+              <span class="coverage-bar-label" style="width:80px;font-size:10px">Integrations (2)</span>
+              <div class="coverage-bar-track" style="height:5px"><div class="coverage-bar-fill minimal" style="width:0%"></div></div>
+              <span class="coverage-bar-value text-red" style="width:30px;font-size:10px">0/2</span>
+            </div>
+            <div class="api-endpoint-grid">
+              <div class="api-endpoint-item"><span class="method-badge method-post">POST</span> /auth/login</div>
+              <div class="api-endpoint-item"><span class="method-badge method-get">GET</span> /users/me</div>
+              <div class="api-endpoint-item"><span class="method-badge method-put">PUT</span> /users/:id</div>
+              <div class="api-endpoint-item"><span class="method-badge method-get">GET</span> /billing/plans</div>
+              <div class="api-endpoint-item"><span class="method-badge method-post">POST</span> /reports/export</div>
+              <div class="api-endpoint-item" style="opacity:0.4"><span class="method-badge method-delete">DEL</span> /integrations/:id</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -478,7 +766,7 @@
       <div class="panel">
         <div class="panel-header">
           <div class="panel-title">Category Distribution</div>
-          <span class="text-xs text-tertiary">84 total tests</span>
+          <span class="text-xs text-tertiary">106 total tests</span>
         </div>
         <div class="category-chart">
           <div class="category-bar">
@@ -510,6 +798,11 @@
             <div class="bar-value">6</div>
             <div class="bar" style="height:15px; background:var(--ink-tertiary);"></div>
             <div class="bar-label">Edge</div>
+          </div>
+          <div class="category-bar">
+            <div class="bar-value" style="color:#1D4ED8">22</div>
+            <div class="bar" style="height:55px; background:#1D4ED8;"></div>
+            <div class="bar-label">API</div>
           </div>
         </div>
         <div class="mt-md" style="font-size:11px; padding:8px; background:var(--warm-amber-light); border-radius:var(--radius-sm); color:var(--warm-amber)">
@@ -607,10 +900,19 @@
           <div class="rec-item">
             <span class="rec-num">4</span>
             <div style="flex:1">
-              <div>Approve <strong>7 pending draft</strong> tests</div>
-              <div class="text-xs text-tertiary mt-sm">Already generated, waiting for review</div>
+              <div>Add API tests for <strong>Integrations</strong> endpoints</div>
+              <div class="text-xs text-tertiary mt-sm">0/2 endpoints tested, Swagger spec available</div>
             </div>
-            <span class="rec-impact">+4% TCS</span>
+            <span class="rec-impact">+3% TCS</span>
+          </div>
+
+          <div class="rec-item">
+            <span class="rec-num">5</span>
+            <div style="flex:1">
+              <div>Fix <strong>12 critical WCAG</strong> accessibility issues</div>
+              <div class="text-xs text-tertiary mt-sm">Integrations &amp; Billing pages have keyboard traps</div>
+            </div>
+            <span class="rec-impact">+5% A11y</span>
           </div>
         </div>
         <div class="mt-lg" style="font-size:12px; text-align:center; color:var(--ink-secondary)">
@@ -654,6 +956,14 @@
         <div class="activity-icon" style="background:#F1F0EB;color:var(--risk-slate)">&#60;/&#62;</div>
         <div class="activity-text">
           <strong>Automation code generated</strong> &mdash; 6 page objects, 12 spec files updated
+        </div>
+        <span class="activity-time">1d ago</span>
+      </div>
+
+      <div class="activity-item">
+        <div class="activity-icon" style="background:#ECFDF5;color:#16A344">&#128206;</div>
+        <div class="activity-text">
+          <strong>Swagger spec synced</strong> &mdash; api.acmedash.com/v2/openapi.json (14 endpoints, 22 API tests generated)
         </div>
         <span class="activity-time">1d ago</span>
       </div>
