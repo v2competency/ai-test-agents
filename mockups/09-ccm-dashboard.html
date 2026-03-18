@@ -424,6 +424,46 @@
       color: var(--ink-tertiary);
       width: 100px;
     }
+
+    /* Time Filter Toggle */
+    .time-filter { display:flex; background:var(--border-light); border-radius:var(--radius-pill); padding:2px; gap:2px; }
+    .time-filter .tf-btn { padding:4px 12px; border-radius:var(--radius-pill); font-size:10px; font-weight:600; color:var(--ink-tertiary); cursor:pointer; transition:all 0.15s; border:none; background:transparent; }
+    .time-filter .tf-btn.active { background:white; color:var(--ink); box-shadow:0 1px 3px rgba(0,0,0,0.1); }
+    .time-filter .tf-btn:hover:not(.active) { color:var(--ink-secondary); }
+
+    /* Environment Health Strip */
+    .env-strip { display:flex; align-items:center; gap:var(--sp-lg); padding:8px var(--sp-lg); background:var(--card-surface); border:1px solid var(--border-color); border-radius:var(--radius-md); margin-bottom:var(--sp-xl); }
+    .env-strip .env-label { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-tertiary); flex-shrink:0; }
+    .env-strip .env-items { display:flex; gap:var(--sp-md); flex:1; }
+    .env-strip .env-item { display:flex; align-items:center; gap:6px; font-size:11px; font-weight:500; padding:3px 10px; border-radius:var(--radius-sm); background:var(--hover-bg); }
+    .env-item .env-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+    .env-item .env-status { font-family:var(--font-mono); font-size:9px; font-weight:700; }
+
+    /* Insights Row */
+    .insights-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:var(--card-gap); margin-bottom:var(--sp-xl); }
+    .flaky-header { display:flex; align-items:center; gap:var(--sp-md); margin-bottom:var(--sp-md); }
+    .flaky-big { font-size:32px; font-weight:700; line-height:1; }
+    .flaky-sub { font-size:11px; color:var(--ink-secondary); }
+    .flaky-list { display:flex; flex-direction:column; gap:4px; }
+    .flaky-item { display:flex; align-items:center; gap:var(--sp-sm); padding:5px 8px; border-radius:var(--radius-xs); font-size:11px; background:var(--hover-bg); }
+    .flaky-item .flaky-name { flex:1; font-weight:500; }
+    .flaky-item .flaky-rate { font-family:var(--font-mono); font-size:10px; font-weight:700; }
+    .flaky-sparkline { display:flex; gap:2px; align-items:flex-end; height:16px; }
+    .flaky-sparkline .spark-bar { width:3px; border-radius:1px; }
+    .failure-cluster { display:flex; flex-direction:column; gap:6px; }
+    .cluster-item { display:flex; align-items:center; gap:var(--sp-sm); padding:6px 8px; border-radius:var(--radius-xs); background:var(--hover-bg); font-size:11px; }
+    .cluster-item .cluster-icon { width:22px; height:22px; border-radius:var(--radius-xs); display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; }
+    .cluster-item .cluster-label { flex:1; }
+    .cluster-item .cluster-count { font-family:var(--font-mono); font-size:12px; font-weight:700; }
+    .cluster-bar { height:4px; border-radius:var(--radius-pill); background:var(--border-light); margin-top:3px; overflow:hidden; }
+    .cluster-bar-fill { height:100%; border-radius:var(--radius-pill); }
+    .change-item { display:flex; align-items:center; gap:var(--sp-sm); padding:6px 8px; border-radius:var(--radius-xs); background:var(--hover-bg); font-size:11px; margin-bottom:4px; }
+    .change-item .change-file { flex:1; font-weight:500; }
+    .change-item .change-time { font-size:9px; color:var(--ink-tertiary); }
+    .change-status-pill { font-size:9px; font-weight:700; padding:2px 8px; border-radius:var(--radius-pill); }
+    .change-status-pill.pass { background:var(--success-green-light); color:var(--success-green); }
+    .change-status-pill.fail { background:var(--critical-red-light); color:var(--critical-red); }
+    .change-status-pill.untested { background:var(--border-light); color:var(--ink-tertiary); }
   </style>
 </head>
 <body>
@@ -478,10 +518,50 @@
           <span class="ccs-badge partial"><span class="ccs-dot"></span> Context: Partial (55%)</span>
         </p>
       </div>
-      <div class="flex gap-sm">
-        <a href="11-ccm-tests.html" class="btn btn-secondary">Review Queue <span class="pill pill-review" style="margin-left:4px">14</span></a>
+      <div class="flex gap-sm items-center">
+        <div class="time-filter">
+          <button class="tf-btn active">Today</button>
+          <button class="tf-btn">This Sprint</button>
+          <button class="tf-btn">This Release</button>
+        </div>
+        <a href="11-ccm-tests.html" class="review-queue-btn">
+          <span class="rq-icon">&#9998;</span>
+          <span class="rq-text">
+            <span class="rq-label">Review Queue</span>
+            <span class="rq-sub">AI drafts pending approval</span>
+          </span>
+          <span class="rq-count critical">14</span>
+        </a>
         <a href="12-ccm-execution.html" class="btn btn-primary">Run Tests</a>
       </div>
+    </div>
+
+    <!-- Environment Health Strip -->
+    <div class="env-strip">
+      <span class="env-label">Environments</span>
+      <div class="env-items">
+        <div class="env-item">
+          <span class="env-dot" style="background:var(--success-green)"></span>
+          <span>DEV</span>
+          <span class="env-status" style="color:var(--success-green)">Passing</span>
+        </div>
+        <div class="env-item">
+          <span class="env-dot" style="background:var(--critical-red)"></span>
+          <span>STAGING</span>
+          <span class="env-status" style="color:var(--critical-red)">17 failing</span>
+        </div>
+        <div class="env-item">
+          <span class="env-dot" style="background:var(--warm-amber)"></span>
+          <span>UAT</span>
+          <span class="env-status" style="color:var(--warm-amber)">5 flaky</span>
+        </div>
+        <div class="env-item">
+          <span class="env-dot" style="background:var(--ink-tertiary)"></span>
+          <span>PROD</span>
+          <span class="env-status" style="color:var(--ink-tertiary)">Not configured</span>
+        </div>
+      </div>
+      <span class="text-xs text-tertiary">Last checked 4h ago</span>
     </div>
 
     <!-- Compliance Quick Bar -->
@@ -646,6 +726,161 @@
         <div class="kpi-eyebrow">Avg Duration</div>
         <div class="kpi-value">3m 28s</div>
         <div class="kpi-meta">full regression</div>
+      </div>
+    </div>
+
+    <!-- Insights Row: Flaky Tests, Failure Clustering, Change Impact -->
+    <div class="insights-grid">
+      <!-- Flaky Tests -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Flaky Tests</div>
+          <span class="pill pill-fail" style="font-size:9px">5 quarantined</span>
+        </div>
+        <div class="flaky-header">
+          <div>
+            <div class="flaky-big text-red">7</div>
+            <div class="flaky-sub">flaky this sprint</div>
+          </div>
+          <div style="margin-left:auto; text-align:right">
+            <div class="font-mono text-xs" style="color:var(--critical-red)">&#9650; 3 vs last sprint</div>
+            <div class="text-xs text-tertiary">4 &rarr; 7 trend worsening</div>
+          </div>
+        </div>
+        <div class="flaky-list">
+          <div class="flaky-item">
+            <span style="color:var(--critical-red)">&#9888;</span>
+            <span class="flaky-name">Loan App &rsaquo; Submit with SSN mask</span>
+            <div class="flaky-sparkline">
+              <div class="spark-bar" style="height:4px; background:var(--critical-red)"></div>
+              <div class="spark-bar" style="height:12px; background:var(--success-green)"></div>
+              <div class="spark-bar" style="height:4px; background:var(--critical-red)"></div>
+              <div class="spark-bar" style="height:4px; background:var(--critical-red)"></div>
+              <div class="spark-bar" style="height:12px; background:var(--success-green)"></div>
+              <div class="spark-bar" style="height:4px; background:var(--critical-red)"></div>
+            </div>
+            <span class="flaky-rate text-red">67%</span>
+          </div>
+          <div class="flaky-item">
+            <span style="color:var(--warm-amber)">&#9888;</span>
+            <span class="flaky-name">Credit Check &rsaquo; Pull report timeout</span>
+            <div class="flaky-sparkline">
+              <div class="spark-bar" style="height:12px; background:var(--success-green)"></div>
+              <div class="spark-bar" style="height:4px; background:var(--critical-red)"></div>
+              <div class="spark-bar" style="height:12px; background:var(--success-green)"></div>
+              <div class="spark-bar" style="height:12px; background:var(--success-green)"></div>
+              <div class="spark-bar" style="height:4px; background:var(--critical-red)"></div>
+              <div class="spark-bar" style="height:12px; background:var(--success-green)"></div>
+            </div>
+            <span class="flaky-rate text-amber">33%</span>
+          </div>
+          <div class="flaky-item">
+            <span style="color:var(--warm-amber)">&#9888;</span>
+            <span class="flaky-name">Doc Upload &rsaquo; Large PDF processing</span>
+            <div class="flaky-sparkline">
+              <div class="spark-bar" style="height:12px; background:var(--success-green)"></div>
+              <div class="spark-bar" style="height:12px; background:var(--success-green)"></div>
+              <div class="spark-bar" style="height:12px; background:var(--success-green)"></div>
+              <div class="spark-bar" style="height:4px; background:var(--critical-red)"></div>
+              <div class="spark-bar" style="height:12px; background:var(--success-green)"></div>
+              <div class="spark-bar" style="height:4px; background:var(--critical-red)"></div>
+            </div>
+            <span class="flaky-rate text-amber">25%</span>
+          </div>
+          <div class="flaky-item" style="opacity:0.5">
+            <span style="color:var(--ink-tertiary)">&#9724;</span>
+            <span class="flaky-name">Rate Calc &rsaquo; APR rounding</span>
+            <span class="change-status-pill" style="background:var(--border-light);color:var(--ink-tertiary);font-size:8px">Quarantined</span>
+            <span class="flaky-rate text-tertiary">50%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Failure Clustering -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Failure Clustering</div>
+          <span class="text-xs text-tertiary">Last run &middot; 24 failures</span>
+        </div>
+        <div class="failure-cluster">
+          <div class="cluster-item">
+            <div class="cluster-icon" style="background:var(--critical-red-light);color:var(--critical-red)">&#9201;</div>
+            <div class="cluster-label">
+              <div class="font-bold">Timeout</div>
+              <div class="cluster-bar"><div class="cluster-bar-fill" style="width:42%; background:var(--critical-red)"></div></div>
+            </div>
+            <span class="cluster-count text-red">10</span>
+          </div>
+          <div class="cluster-item">
+            <div class="cluster-icon" style="background:var(--warm-amber-light);color:var(--warm-amber)">&#8709;</div>
+            <div class="cluster-label">
+              <div class="font-bold">Element Not Found</div>
+              <div class="cluster-bar"><div class="cluster-bar-fill" style="width:29%; background:var(--warm-amber)"></div></div>
+            </div>
+            <span class="cluster-count text-amber">7</span>
+          </div>
+          <div class="cluster-item">
+            <div class="cluster-icon" style="background:#EDE9FE;color:#7C3AED">&#8800;</div>
+            <div class="cluster-label">
+              <div class="font-bold">Assertion Mismatch</div>
+              <div class="cluster-bar"><div class="cluster-bar-fill" style="width:17%; background:#7C3AED"></div></div>
+            </div>
+            <span class="cluster-count" style="color:#7C3AED">4</span>
+          </div>
+          <div class="cluster-item">
+            <div class="cluster-icon" style="background:var(--brand-orange-light);color:var(--brand-orange)">&#9889;</div>
+            <div class="cluster-label">
+              <div class="font-bold">API 500 Error</div>
+              <div class="cluster-bar"><div class="cluster-bar-fill" style="width:12%; background:var(--brand-orange)"></div></div>
+            </div>
+            <span class="cluster-count" style="color:var(--brand-orange)">3</span>
+          </div>
+        </div>
+        <div class="mt-md" style="font-size:10px; padding:6px 8px; background:var(--critical-red-light); border-radius:var(--radius-sm); color:var(--critical-red)">
+          <strong>Pattern detected:</strong> 10 timeouts concentrated on Credit Check &amp; Underwriting &mdash; staging API latency spike (>8s avg response)
+        </div>
+      </div>
+
+      <!-- Change Impact -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Change Impact</div>
+          <span class="text-xs text-tertiary">Screenshot diff &middot; 72h</span>
+        </div>
+        <div style="font-size:10px; color:var(--ink-secondary); margin-bottom:var(--sp-md)">Recently modified pages and their test status</div>
+        <div class="change-item">
+          <span style="font-size:12px">&#128196;</span>
+          <span class="change-file">Loan Application</span>
+          <span class="change-time">4h ago</span>
+          <span class="change-status-pill fail">5 failing</span>
+        </div>
+        <div class="change-item">
+          <span style="font-size:12px">&#128196;</span>
+          <span class="change-file">Credit Check</span>
+          <span class="change-time">4h ago</span>
+          <span class="change-status-pill fail">3 failing</span>
+        </div>
+        <div class="change-item">
+          <span style="font-size:12px">&#128196;</span>
+          <span class="change-file">Document Upload</span>
+          <span class="change-time">1d ago</span>
+          <span class="change-status-pill pass">10/10 passing</span>
+        </div>
+        <div class="change-item">
+          <span style="font-size:12px">&#128196;</span>
+          <span class="change-file">Borrower Dashboard</span>
+          <span class="change-time">2d ago</span>
+          <span class="change-status-pill pass">12/12 passing</span>
+        </div>
+        <div class="change-item" style="border-left:2px solid var(--critical-red); padding-left:6px">
+          <span style="font-size:12px">&#128196;</span>
+          <span class="change-file">Closing / Settlement</span>
+          <span class="change-time">3d ago</span>
+          <span class="change-status-pill untested">No tests</span>
+        </div>
+        <div class="mt-md" style="font-size:10px; padding:6px 8px; background:var(--critical-red-light); border-radius:var(--radius-sm); color:var(--critical-red)">
+          <strong>Critical:</strong> Loan Application &amp; Credit Check deployed 4h ago with 8 test failures. Closing/Settlement still has 0 test coverage.
+        </div>
       </div>
     </div>
 

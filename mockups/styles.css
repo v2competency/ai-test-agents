@@ -418,6 +418,87 @@ body {
   font-size: 11px;
 }
 
+/* Review Queue Button */
+.review-queue-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px 6px 10px;
+  background: var(--card-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.review-queue-btn:hover {
+  border-color: var(--brand-orange);
+  background: var(--brand-orange-light);
+  box-shadow: 0 2px 8px rgba(233,92,8,0.12);
+}
+
+.review-queue-btn .rq-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  background: var(--brand-orange-light);
+  color: var(--brand-orange);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.review-queue-btn .rq-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.review-queue-btn .rq-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.review-queue-btn .rq-sub {
+  font-size: 9px;
+  font-weight: 400;
+  color: var(--ink-tertiary);
+}
+
+.review-queue-btn .rq-count {
+  min-width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--brand-orange);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 4px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(233,92,8,0.3);
+}
+
+.review-queue-btn .rq-count.critical {
+  background: var(--critical-red);
+  box-shadow: 0 2px 6px rgba(198,40,40,0.3);
+  animation: rq-pulse 2s ease-in-out infinite;
+}
+
+@keyframes rq-pulse {
+  0%, 100% { box-shadow: 0 2px 6px rgba(198,40,40,0.3); }
+  50% { box-shadow: 0 2px 12px rgba(198,40,40,0.5); }
+}
+
 .btn-lg {
   padding: 10px 24px;
   font-size: 14px;
