@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUALINT — Sign In</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      background: var(--sidebar-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .login-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      width: 900px;
+      min-height: 560px;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-modal);
+    }
+
+    .login-hero {
+      background: linear-gradient(135deg, #1C1A18 0%, #2A2420 100%);
+      padding: var(--sp-4xl);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: white;
+    }
+
+    .login-hero .hero-logo {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-md);
+      margin-bottom: var(--sp-4xl);
+    }
+
+    .login-hero .hero-logo .logo-mark {
+      width: 40px;
+      height: 40px;
+      background: var(--brand-orange);
+      border-radius: var(--radius-sm);
+      transform: rotate(45deg);
+    }
+
+    .login-hero .hero-logo .logo-text {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .login-hero h2 {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: var(--sp-lg);
+      letter-spacing: -0.02em;
+    }
+
+    .login-hero h2 span { color: var(--brand-orange); }
+
+    .login-hero p {
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.6;
+    }
+
+    .login-features {
+      margin-top: var(--sp-3xl);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-lg);
+    }
+
+    .login-feature {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--sp-md);
+    }
+
+    .login-feature .feat-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      background: rgba(233,92,8,0.15);
+      color: var(--brand-orange);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .login-feature .feat-text {
+      font-size: 12px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .login-feature .feat-text strong {
+      display: block;
+      color: white;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .login-form-panel {
+      background: var(--card-surface);
+      padding: var(--sp-4xl);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .login-form-panel h3 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: var(--sp-xs);
+    }
+
+    .login-form-panel .login-subtitle {
+      font-size: 13px;
+      color: var(--ink-secondary);
+      margin-bottom: var(--sp-3xl);
+    }
+
+    .oauth-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-sm);
+      margin-bottom: var(--sp-2xl);
+    }
+
+    .oauth-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--sp-sm);
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      background: white;
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .oauth-btn:hover {
+      border-color: var(--ink-tertiary);
+      background: var(--hover-bg);
+    }
+
+    .oauth-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-lg);
+      margin-bottom: var(--sp-2xl);
+      color: var(--ink-tertiary);
+      font-size: 11px;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border-color);
+    }
+
+    .login-form .form-group { margin-bottom: var(--sp-lg); }
+
+    .login-form .form-input {
+      padding: 10px 14px;
+      font-size: 13px;
+    }
+
+    .login-form .form-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--sp-2xl);
+    }
+
+    .login-form .form-footer label {
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: var(--sp-xs);
+      color: var(--ink-secondary);
+    }
+
+    .login-form .form-footer a {
+      font-size: 12px;
+      color: var(--brand-orange);
+      text-decoration: none;
+    }
+
+    .login-form .btn-primary {
+      width: 100%;
+      padding: 11px;
+      font-size: 14px;
+    }
+
+    .login-form .signup-link {
+      text-align: center;
+      margin-top: var(--sp-xl);
+      font-size: 12px;
+      color: var(--ink-secondary);
+    }
+
+    .login-form .signup-link a {
+      color: var(--brand-orange);
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<div class="login-container">
+  <!-- Left: Hero -->
+  <div class="login-hero">
+    <div class="hero-logo">
+      <div class="logo-mark"></div>
+      <div class="logo-text">QUALINT</div>
+    </div>
+
+    <h2>From requirements to running tests &mdash; <span>zero code, full control.</span></h2>
+    <p>AI-powered quality engineering for teams that ship fast.</p>
+
+    <div class="login-features">
+      <div class="login-feature">
+        <div class="feat-icon">&#9672;</div>
+        <div class="feat-text">
+          <strong>AI Test Generation</strong>
+          Upload screenshots or connect your repo. Get comprehensive tests in seconds.
+        </div>
+      </div>
+      <div class="login-feature">
+        <div class="feat-icon">&#9654;</div>
+        <div class="feat-text">
+          <strong>One-Click Execution</strong>
+          Run Playwright tests in the cloud. No infrastructure setup required.
+        </div>
+      </div>
+      <div class="login-feature">
+        <div class="feat-icon">&#9733;</div>
+        <div class="feat-text">
+          <strong>Coverage Intelligence</strong>
+          Know exactly what's tested, what's not, and where to focus next.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: Form -->
+  <div class="login-form-panel">
+    <h3>Welcome back</h3>
+    <p class="login-subtitle">Sign in to your QUALINT account</p>
+
+    <div class="oauth-buttons">
+      <button class="oauth-btn">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        Continue with Google
+      </button>
+      <button class="oauth-btn">
+        <svg viewBox="0 0 24 24" fill="#1B171A"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        Continue with GitHub
+      </button>
+    </div>
+
+    <div class="divider">or sign in with email</div>
+
+    <form class="login-form">
+      <div class="form-group">
+        <label class="form-label">Email address</label>
+        <input type="email" class="form-input" placeholder="you@company.com" value="alex@acmestartup.com">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-input" placeholder="Enter your password" value="••••••••••">
+      </div>
+
+      <div class="form-footer">
+        <label><input type="checkbox" checked> Remember me</label>
+        <a href="#">Forgot password?</a>
+      </div>
+
+      <button type="button" class="btn btn-primary btn-lg" onclick="window.location.href='02-projects.html'">Sign in</button>
+
+      <p class="signup-link">
+        Don't have an account? <a href="#">Create one free</a>
+      </p>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>

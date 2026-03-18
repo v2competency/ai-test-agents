@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUALINT — Automation Code</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .code-layout {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 0;
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      min-height: 600px;
+    }
+
+    .file-tree {
+      background: #FAF8F2;
+      border-right: 1px solid var(--border-color);
+      padding: var(--sp-md);
+      font-size: 12px;
+      overflow-y: auto;
+    }
+
+    .file-tree .tree-label {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-tertiary);
+      padding: var(--sp-sm) var(--sp-sm);
+    }
+
+    .tree-item {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+      padding: 4px var(--sp-sm);
+      border-radius: var(--radius-xs);
+      cursor: pointer;
+      transition: all 0.1s;
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+
+    .tree-item:hover { background: var(--border-light); }
+    .tree-item.active { background: var(--brand-orange-light); color: var(--brand-orange); font-weight: 600; }
+
+    .tree-item .tree-icon {
+      font-size: 12px;
+      width: 16px;
+      text-align: center;
+      color: var(--ink-tertiary);
+    }
+
+    .tree-item.active .tree-icon { color: var(--brand-orange); }
+
+    .tree-folder { padding-left: 0; }
+    .tree-file { padding-left: var(--sp-xl); }
+    .tree-file-nested { padding-left: var(--sp-3xl); }
+
+    .code-panel {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .code-toolbar {
+      display: flex;
+      align-items: center;
+      padding: var(--sp-sm) var(--sp-lg);
+      border-bottom: 1px solid var(--border-color);
+      gap: var(--sp-md);
+      background: white;
+    }
+
+    .code-toolbar .file-path {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-secondary);
+      flex: 1;
+    }
+
+    .code-toolbar .file-path strong {
+      color: var(--ink);
+    }
+
+    .code-area {
+      flex: 1;
+      background: var(--terminal-bg);
+      padding: var(--sp-lg);
+      overflow: auto;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1.7;
+      color: #E8E0D0;
+    }
+
+    .code-area .line {
+      display: flex;
+    }
+
+    .code-area .ln {
+      width: 35px;
+      text-align: right;
+      padding-right: var(--sp-md);
+      color: #64605F;
+      user-select: none;
+      flex-shrink: 0;
+    }
+
+    .code-area .kw { color: #FF9D45; }
+    .code-area .str { color: #A8D08D; }
+    .code-area .cm { color: #64605F; font-style: italic; }
+    .code-area .tp { color: #CAAB84; }
+    .code-area .fn { color: #7DC4E4; }
+    .code-area .pr { color: #E8E0D0; }
+    .code-area .op { color: #9C9998; }
+    .code-area .num { color: #F5A97F; }
+
+    .selector-health {
+      padding: var(--sp-lg);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.2);
+    }
+
+    .selector-health .sh-title {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-tertiary);
+      margin-bottom: var(--sp-sm);
+    }
+
+    .selector-health-row {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-md);
+      padding: 3px 0;
+      font-size: 11px;
+      color: #E8E0D0;
+    }
+
+    .selector-health-row .sh-grade {
+      width: 24px;
+      height: 18px;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .sh-grade.a-plus { background: rgba(22,163,68,0.2); color: #16A344; }
+    .sh-grade.a { background: rgba(22,163,68,0.2); color: #16A344; }
+    .sh-grade.b { background: rgba(202,139,4,0.2); color: #CA8B04; }
+    .sh-grade.c { background: rgba(198,40,40,0.2); color: #C62828; }
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo-mark"></div>
+      <div class="brand-text">QUALINT<small>Quality Intelligence Platform</small></div>
+    </div>
+    <div class="sidebar-nav">
+      <a href="02-projects.html"><span class="nav-icon">&#9634;</span><span class="nav-label">All Projects</span></a>
+      <div class="sidebar-section-label">SaaS Dashboard</div>
+      <a href="03-dashboard.html"><span class="nav-icon">&#9632;</span><span class="nav-label">Dashboard</span></a>
+      <a href="04-context.html"><span class="nav-icon">&#128206;</span><span class="nav-label">Context</span></a>
+      <a href="05-test-cases.html"><span class="nav-icon">&#9745;</span><span class="nav-label">Test Cases</span><span class="badge">7</span></a>
+      <a href="06-automation.html" class="active"><span class="nav-icon">&#60;/&#62;</span><span class="nav-label">Automation</span></a>
+      <a href="07-execution.html"><span class="nav-icon">&#9654;</span><span class="nav-label">Execution</span></a>
+      <a href="08-results.html"><span class="nav-icon">&#9776;</span><span class="nav-label">Results</span></a>
+      <div class="sidebar-section-label">Settings</div>
+      <a href="#"><span class="nav-icon">&#9881;</span><span class="nav-label">Environments</span></a>
+      <a href="#"><span class="nav-icon">&#128101;</span><span class="nav-label">Team</span></a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">AK</div>
+        <div class="user-info"><div class="name">Alex Kim</div><div class="role">Acme Startup &middot; Admin</div></div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="main-content">
+    <div class="breadcrumb">
+      <a href="02-projects.html">Projects</a><span class="sep">/</span>
+      <a href="03-dashboard.html">SaaS Dashboard</a><span class="sep">/</span>
+      <span>Automation</span>
+    </div>
+
+    <div class="page-header">
+      <div>
+        <h1>Automation Code</h1>
+        <p class="subtitle">AI-generated Playwright project &middot; Page Object Model</p>
+      </div>
+      <div class="flex gap-sm">
+        <button class="btn btn-secondary">Generate Automation</button>
+        <button class="btn btn-primary">Export Project (.zip)</button>
+      </div>
+    </div>
+
+    <!-- Selector Health Summary -->
+    <div class="kpi-grid mb-xl">
+      <div class="kpi-card state-healthy">
+        <div class="kpi-eyebrow">Selector Health</div>
+        <div class="kpi-value">A-</div>
+        <div class="kpi-meta">88% grade A+ or A</div>
+      </div>
+      <div class="kpi-card state-brand">
+        <div class="kpi-eyebrow">Page Objects</div>
+        <div class="kpi-value">6</div>
+        <div class="kpi-meta">auto-generated</div>
+      </div>
+      <div class="kpi-card state-brand">
+        <div class="kpi-eyebrow">Spec Files</div>
+        <div class="kpi-value">12</div>
+        <div class="kpi-meta">covering 84 tests</div>
+      </div>
+      <div class="kpi-card state-neutral">
+        <div class="kpi-eyebrow">User Modified</div>
+        <div class="kpi-value">2</div>
+        <div class="kpi-meta">files with custom edits</div>
+      </div>
+    </div>
+
+    <!-- Code Editor Layout -->
+    <div class="code-layout">
+      <!-- File Tree -->
+      <div class="file-tree">
+        <div class="tree-label">Project Files</div>
+        <div class="tree-item tree-folder"><span class="tree-icon">&#128193;</span> saas-dashboard/</div>
+
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> playwright.config.ts</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> package.json</div>
+
+        <div class="tree-label mt-md">Page Objects</div>
+        <div class="tree-item tree-file active"><span class="tree-icon">&#128196;</span> LoginPage.ts</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> DashboardPage.ts</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> SettingsPage.ts</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> ReportsPage.ts</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> BillingPage.ts</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> TeamPage.ts</div>
+
+        <div class="tree-label mt-md">Specs</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> login.spec.ts</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> login-negative.spec.ts</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> dashboard.spec.ts</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> settings.spec.ts</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> reports.spec.ts</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> billing.spec.ts</div>
+
+        <div class="tree-label mt-md">Fixtures</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> auth.fixture.ts</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128196;</span> test-data.ts</div>
+
+        <div class="tree-label mt-md">Helpers / Custom</div>
+        <div class="tree-item tree-file"><span class="tree-icon">&#128274;</span> custom-auth.ts</div>
+      </div>
+
+      <!-- Code Panel -->
+      <div class="code-panel">
+        <div class="code-toolbar">
+          <span class="file-path">page-objects / <strong>LoginPage.ts</strong></span>
+          <span class="pill pill-pass" style="font-size:9px">AI Generated</span>
+          <button class="btn btn-ghost btn-sm">Edit</button>
+          <button class="btn btn-ghost btn-sm">Revert to AI Version</button>
+          <button class="btn btn-ghost btn-sm">Diff</button>
+        </div>
+
+        <div class="code-area">
+<div class="line"><span class="ln"> 1</span><span class="kw">import</span> { <span class="tp">Page</span>, <span class="tp">Locator</span> } <span class="kw">from</span> <span class="str">'@playwright/test'</span><span class="op">;</span></div>
+<div class="line"><span class="ln"> 2</span></div>
+<div class="line"><span class="ln"> 3</span><span class="cm">/**</span></div>
+<div class="line"><span class="ln"> 4</span><span class="cm"> * LoginPage - Page Object for /login</span></div>
+<div class="line"><span class="ln"> 5</span><span class="cm"> * Auto-generated by QUALINT | CCS: 90% (Excellent)</span></div>
+<div class="line"><span class="ln"> 6</span><span class="cm"> * Selectors use fallback chains for self-healing</span></div>
+<div class="line"><span class="ln"> 7</span><span class="cm"> */</span></div>
+<div class="line"><span class="ln"> 8</span><span class="kw">export class</span> <span class="tp">LoginPage</span> {</div>
+<div class="line"><span class="ln"> 9</span>  <span class="kw">readonly</span> <span class="pr">page</span><span class="op">:</span> <span class="tp">Page</span><span class="op">;</span></div>
+<div class="line"><span class="ln">10</span></div>
+<div class="line"><span class="ln">11</span>  <span class="cm">// Locators with fallback chains (self-healing)</span></div>
+<div class="line"><span class="ln">12</span>  <span class="kw">readonly</span> <span class="pr">emailInput</span><span class="op">:</span> <span class="tp">Locator</span><span class="op">;</span>    <span class="cm">// Grade: A+</span></div>
+<div class="line"><span class="ln">13</span>  <span class="kw">readonly</span> <span class="pr">passwordInput</span><span class="op">:</span> <span class="tp">Locator</span><span class="op">;</span> <span class="cm">// Grade: A+</span></div>
+<div class="line"><span class="ln">14</span>  <span class="kw">readonly</span> <span class="pr">signInButton</span><span class="op">:</span> <span class="tp">Locator</span><span class="op">;</span>  <span class="cm">// Grade: A</span></div>
+<div class="line"><span class="ln">15</span>  <span class="kw">readonly</span> <span class="pr">errorMessage</span><span class="op">:</span> <span class="tp">Locator</span><span class="op">;</span>  <span class="cm">// Grade: A</span></div>
+<div class="line"><span class="ln">16</span>  <span class="kw">readonly</span> <span class="pr">forgotPassword</span><span class="op">:</span> <span class="tp">Locator</span><span class="op">;</span><span class="cm">// Grade: B</span></div>
+<div class="line"><span class="ln">17</span></div>
+<div class="line"><span class="ln">18</span>  <span class="fn">constructor</span>(<span class="pr">page</span><span class="op">:</span> <span class="tp">Page</span>) {</div>
+<div class="line"><span class="ln">19</span>    <span class="kw">this</span>.<span class="pr">page</span> <span class="op">=</span> <span class="pr">page</span><span class="op">;</span></div>
+<div class="line"><span class="ln">20</span></div>
+<div class="line"><span class="ln">21</span>    <span class="cm">// data-testid (A+) > role (A) > id (B) > class (C)</span></div>
+<div class="line"><span class="ln">22</span>    <span class="kw">this</span>.<span class="pr">emailInput</span> <span class="op">=</span> <span class="pr">page</span>.<span class="fn">locator</span>(</div>
+<div class="line"><span class="ln">23</span>      <span class="str">'[data-testid="email-input"], #email, input[type="email"]'</span></div>
+<div class="line"><span class="ln">24</span>    ).<span class="fn">first</span>();</div>
+<div class="line"><span class="ln">25</span></div>
+<div class="line"><span class="ln">26</span>    <span class="kw">this</span>.<span class="pr">passwordInput</span> <span class="op">=</span> <span class="pr">page</span>.<span class="fn">locator</span>(</div>
+<div class="line"><span class="ln">27</span>      <span class="str">'[data-testid="password-input"], #password, input[type="password"]'</span></div>
+<div class="line"><span class="ln">28</span>    ).<span class="fn">first</span>();</div>
+<div class="line"><span class="ln">29</span></div>
+<div class="line"><span class="ln">30</span>    <span class="kw">this</span>.<span class="pr">signInButton</span> <span class="op">=</span> <span class="pr">page</span>.<span class="fn">locator</span>(</div>
+<div class="line"><span class="ln">31</span>      <span class="str">'[data-testid="signin-btn"], button[role="button"]:has-text("Sign In")'</span></div>
+<div class="line"><span class="ln">32</span>    ).<span class="fn">first</span>();</div>
+<div class="line"><span class="ln">33</span></div>
+<div class="line"><span class="ln">34</span>    <span class="kw">this</span>.<span class="pr">errorMessage</span> <span class="op">=</span> <span class="pr">page</span>.<span class="fn">locator</span>(</div>
+<div class="line"><span class="ln">35</span>      <span class="str">'[role="alert"], [data-testid="error-msg"], .error-message'</span></div>
+<div class="line"><span class="ln">36</span>    ).<span class="fn">first</span>();</div>
+<div class="line"><span class="ln">37</span></div>
+<div class="line"><span class="ln">38</span>    <span class="kw">this</span>.<span class="pr">forgotPassword</span> <span class="op">=</span> <span class="pr">page</span>.<span class="fn">locator</span>(</div>
+<div class="line"><span class="ln">39</span>      <span class="str">'a:has-text("Forgot password"), #forgot-password'</span></div>
+<div class="line"><span class="ln">40</span>    ).<span class="fn">first</span>();</div>
+<div class="line"><span class="ln">41</span>  }</div>
+<div class="line"><span class="ln">42</span></div>
+<div class="line"><span class="ln">43</span>  <span class="kw">async</span> <span class="fn">goto</span>() {</div>
+<div class="line"><span class="ln">44</span>    <span class="kw">await</span> <span class="kw">this</span>.<span class="pr">page</span>.<span class="fn">goto</span>(<span class="str">'/login'</span>);</div>
+<div class="line"><span class="ln">45</span>  }</div>
+<div class="line"><span class="ln">46</span></div>
+<div class="line"><span class="ln">47</span>  <span class="kw">async</span> <span class="fn">login</span>(<span class="pr">email</span><span class="op">:</span> <span class="tp">string</span>, <span class="pr">password</span><span class="op">:</span> <span class="tp">string</span>) {</div>
+<div class="line"><span class="ln">48</span>    <span class="kw">await</span> <span class="kw">this</span>.<span class="pr">emailInput</span>.<span class="fn">fill</span>(<span class="pr">email</span>);</div>
+<div class="line"><span class="ln">49</span>    <span class="kw">await</span> <span class="kw">this</span>.<span class="pr">passwordInput</span>.<span class="fn">fill</span>(<span class="pr">password</span>);</div>
+<div class="line"><span class="ln">50</span>    <span class="kw">await</span> <span class="kw">this</span>.<span class="pr">signInButton</span>.<span class="fn">click</span>();</div>
+<div class="line"><span class="ln">51</span>  }</div>
+<div class="line"><span class="ln">52</span></div>
+<div class="line"><span class="ln">53</span>  <span class="kw">async</span> <span class="fn">getErrorMessage</span>()<span class="op">:</span> <span class="tp">Promise</span><span class="op">&lt;</span><span class="tp">string</span><span class="op">&gt;</span> {</div>
+<div class="line"><span class="ln">54</span>    <span class="kw">return</span> <span class="kw">await</span> <span class="kw">this</span>.<span class="pr">errorMessage</span>.<span class="fn">textContent</span>() <span class="op">??</span> <span class="str">''</span>;</div>
+<div class="line"><span class="ln">55</span>  }</div>
+<div class="line"><span class="ln">56</span>}</div>
+        </div>
+
+        <!-- Selector Health for this file -->
+        <div class="selector-health">
+          <div class="sh-title">Selector Health &mdash; LoginPage.ts</div>
+          <div class="selector-health-row">
+            <span class="sh-grade a-plus">A+</span>
+            <span style="flex:1">emailInput</span>
+            <span class="font-mono text-xs" style="color:#64605F">[data-testid="email-input"]</span>
+          </div>
+          <div class="selector-health-row">
+            <span class="sh-grade a-plus">A+</span>
+            <span style="flex:1">passwordInput</span>
+            <span class="font-mono text-xs" style="color:#64605F">[data-testid="password-input"]</span>
+          </div>
+          <div class="selector-health-row">
+            <span class="sh-grade a">A</span>
+            <span style="flex:1">signInButton</span>
+            <span class="font-mono text-xs" style="color:#64605F">[data-testid] + role fallback</span>
+          </div>
+          <div class="selector-health-row">
+            <span class="sh-grade a">A</span>
+            <span style="flex:1">errorMessage</span>
+            <span class="font-mono text-xs" style="color:#64605F">[role="alert"] primary</span>
+          </div>
+          <div class="selector-health-row">
+            <span class="sh-grade b">B</span>
+            <span style="flex:1">forgotPassword</span>
+            <span class="font-mono text-xs" style="color:#64605F">text selector + id fallback</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

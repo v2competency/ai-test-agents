@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUALINT — Test Cases & Review</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-md);
+      padding: var(--sp-md) var(--sp-lg);
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--sp-lg);
+      flex-wrap: wrap;
+    }
+
+    .filter-bar .filter-group {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-xs);
+    }
+
+    .filter-bar .filter-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--ink-tertiary);
+    }
+
+    .filter-bar .filter-chip {
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      font-size: 11px;
+      font-weight: 500;
+      border: 1px solid var(--border-color);
+      background: white;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .filter-bar .filter-chip:hover {
+      border-color: var(--brand-orange);
+    }
+
+    .filter-bar .filter-chip.active {
+      background: var(--brand-orange);
+      color: white;
+      border-color: var(--brand-orange);
+    }
+
+    .test-card {
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--sp-md);
+      overflow: hidden;
+      transition: all 0.15s;
+    }
+
+    .test-card:hover {
+      box-shadow: var(--shadow-panel);
+    }
+
+    .test-card.expanded {
+      border-color: var(--brand-orange);
+    }
+
+    .test-card-header {
+      display: flex;
+      align-items: center;
+      padding: var(--sp-md) var(--sp-lg);
+      gap: var(--sp-md);
+      cursor: pointer;
+    }
+
+    .test-card-header .tc-checkbox {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--brand-orange);
+    }
+
+    .test-card-header .tc-priority {
+      width: 4px;
+      height: 28px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    .test-card-header .tc-priority.critical { background: var(--critical-red); }
+    .test-card-header .tc-priority.high { background: var(--brand-orange); }
+    .test-card-header .tc-priority.medium { background: var(--warm-amber); }
+    .test-card-header .tc-priority.low { background: var(--ink-tertiary); }
+
+    .test-card-header .tc-title {
+      flex: 1;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .test-card-header .tc-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+    }
+
+    .test-card-header .tc-confidence {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: var(--radius-xs);
+      background: var(--border-light);
+    }
+
+    .test-card-body {
+      padding: 0 var(--sp-lg) var(--sp-lg) 52px;
+      display: none;
+    }
+
+    .test-card.expanded .test-card-body {
+      display: block;
+    }
+
+    .tc-section {
+      margin-bottom: var(--sp-md);
+    }
+
+    .tc-section-label {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-secondary);
+      margin-bottom: var(--sp-xs);
+    }
+
+    .tc-steps {
+      list-style: none;
+      counter-reset: step;
+    }
+
+    .tc-steps li {
+      counter-increment: step;
+      padding: var(--sp-xs) 0;
+      font-size: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: var(--sp-sm);
+    }
+
+    .tc-steps li::before {
+      content: counter(step);
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--ink-secondary);
+      flex-shrink: 0;
+    }
+
+    .tc-expected {
+      padding: var(--sp-sm) var(--sp-md);
+      background: var(--success-green-light);
+      border-left: 3px solid var(--success-green);
+      border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+      font-size: 12px;
+    }
+
+    .tc-actions {
+      display: flex;
+      gap: var(--sp-sm);
+      margin-top: var(--sp-lg);
+      padding-top: var(--sp-md);
+      border-top: 1px solid var(--border-light);
+    }
+
+    .bulk-actions-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-md);
+      padding: var(--sp-md) var(--sp-lg);
+      background: var(--terminal-bg);
+      color: white;
+      border-radius: var(--radius-md);
+      margin-bottom: var(--sp-lg);
+      font-size: 12px;
+    }
+
+    .bulk-actions-bar .selected-count {
+      font-weight: 700;
+      color: var(--brand-orange);
+    }
+
+    .bulk-actions-bar .bulk-btns {
+      display: flex;
+      gap: var(--sp-sm);
+      margin-left: auto;
+    }
+
+    .suite-sidebar {
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-lg);
+    }
+
+    .suite-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--sp-sm) var(--sp-md);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.15s;
+    }
+
+    .suite-item:hover { background: var(--hover-bg); }
+    .suite-item.active { background: var(--brand-orange-light); color: var(--brand-orange); font-weight: 600; }
+
+    .suite-item .suite-count {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--ink-tertiary);
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo-mark"></div>
+      <div class="brand-text">QUALINT<small>Quality Intelligence Platform</small></div>
+    </div>
+    <div class="sidebar-nav">
+      <a href="02-projects.html"><span class="nav-icon">&#9634;</span><span class="nav-label">All Projects</span></a>
+      <div class="sidebar-section-label">SaaS Dashboard</div>
+      <a href="03-dashboard.html"><span class="nav-icon">&#9632;</span><span class="nav-label">Dashboard</span></a>
+      <a href="04-context.html"><span class="nav-icon">&#128206;</span><span class="nav-label">Context</span></a>
+      <a href="05-test-cases.html" class="active"><span class="nav-icon">&#9745;</span><span class="nav-label">Test Cases</span><span class="badge">7</span></a>
+      <a href="06-automation.html"><span class="nav-icon">&#60;/&#62;</span><span class="nav-label">Automation</span></a>
+      <a href="07-execution.html"><span class="nav-icon">&#9654;</span><span class="nav-label">Execution</span></a>
+      <a href="08-results.html"><span class="nav-icon">&#9776;</span><span class="nav-label">Results</span></a>
+      <div class="sidebar-section-label">Settings</div>
+      <a href="#"><span class="nav-icon">&#9881;</span><span class="nav-label">Environments</span></a>
+      <a href="#"><span class="nav-icon">&#128101;</span><span class="nav-label">Team</span></a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">AK</div>
+        <div class="user-info"><div class="name">Alex Kim</div><div class="role">Acme Startup &middot; Admin</div></div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="main-content">
+    <div class="breadcrumb">
+      <a href="02-projects.html">Projects</a><span class="sep">/</span>
+      <a href="03-dashboard.html">SaaS Dashboard</a><span class="sep">/</span>
+      <span>Test Cases</span>
+    </div>
+
+    <div class="page-header">
+      <div>
+        <h1>Test Cases</h1>
+        <p class="subtitle">84 test cases &middot; <span class="text-orange font-bold">7 pending review</span></p>
+      </div>
+      <div class="flex gap-sm">
+        <button class="btn btn-secondary">Organize Suites</button>
+        <button class="btn btn-primary">+ Generate Tests</button>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:200px 1fr; gap:var(--sp-xl)">
+      <!-- Left: Suites -->
+      <div class="suite-sidebar">
+        <div class="eyebrow mb-md">Test Suites</div>
+        <div class="suite-item active">
+          <span>All Tests</span>
+          <span class="suite-count">84</span>
+        </div>
+        <div class="suite-item">
+          <span>Review Queue</span>
+          <span class="suite-count" style="color:var(--brand-orange)">7</span>
+        </div>
+        <div class="suite-item">
+          <span>Smoke</span>
+          <span class="suite-count">24</span>
+        </div>
+        <div class="suite-item">
+          <span>Regression</span>
+          <span class="suite-count">84</span>
+        </div>
+        <div class="eyebrow mb-md mt-lg">By Page</div>
+        <div class="suite-item">
+          <span>Login</span>
+          <span class="suite-count">14</span>
+        </div>
+        <div class="suite-item">
+          <span>Dashboard</span>
+          <span class="suite-count">12</span>
+        </div>
+        <div class="suite-item">
+          <span>Settings</span>
+          <span class="suite-count">11</span>
+        </div>
+        <div class="suite-item">
+          <span>Reports</span>
+          <span class="suite-count">10</span>
+        </div>
+        <div class="suite-item">
+          <span>Billing</span>
+          <span class="suite-count">8</span>
+        </div>
+        <div class="suite-item">
+          <span>Team</span>
+          <span class="suite-count">6</span>
+        </div>
+      </div>
+
+      <!-- Right: Test List -->
+      <div>
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+          <div class="filter-group">
+            <span class="filter-label">Status:</span>
+            <span class="filter-chip active">All</span>
+            <span class="filter-chip">Draft (7)</span>
+            <span class="filter-chip">Approved (72)</span>
+            <span class="filter-chip">Rejected (5)</span>
+          </div>
+          <div class="filter-group" style="margin-left: var(--sp-lg)">
+            <span class="filter-label">Category:</span>
+            <span class="filter-chip active">All</span>
+            <span class="filter-chip">Positive</span>
+            <span class="filter-chip">Negative</span>
+            <span class="filter-chip">Boundary</span>
+            <span class="filter-chip">Security</span>
+          </div>
+          <div style="margin-left:auto">
+            <input class="form-input" placeholder="Search test cases..." style="width:200px;padding:5px 10px;font-size:11px">
+          </div>
+        </div>
+
+        <!-- Bulk Actions (shown when items selected) -->
+        <div class="bulk-actions-bar">
+          <input type="checkbox" style="accent-color:var(--brand-orange)">
+          <span><span class="selected-count">3</span> tests selected</span>
+          <div class="bulk-btns">
+            <button class="btn btn-success btn-sm">Approve Selected</button>
+            <button class="btn btn-danger btn-sm">Reject Selected</button>
+            <button class="btn btn-secondary btn-sm" style="color:white;border-color:rgba(255,255,255,0.2)">Add to Suite</button>
+          </div>
+        </div>
+
+        <!-- Draft Tests (Review Queue) -->
+        <div class="eyebrow mb-md flex items-center gap-sm">
+          <span style="color:var(--brand-orange)">Pending Review</span>
+          <span class="pill pill-review">7 drafts</span>
+        </div>
+
+        <!-- Test Card 1 - Expanded -->
+        <div class="test-card expanded">
+          <div class="test-card-header">
+            <input type="checkbox" class="tc-checkbox" checked>
+            <div class="tc-priority critical"></div>
+            <div class="tc-title">Verify login with valid credentials redirects to dashboard</div>
+            <div class="tc-meta">
+              <span class="pill pill-review">Draft</span>
+              <span class="pill pill-draft">Positive</span>
+              <span class="tag">login</span>
+              <span class="tc-confidence text-green">94%</span>
+            </div>
+          </div>
+          <div class="test-card-body">
+            <div class="tc-section">
+              <div class="tc-section-label">Preconditions</div>
+              <p class="text-sm">User account exists with known credentials (test@acme.com / TestPass123)</p>
+            </div>
+            <div class="tc-section">
+              <div class="tc-section-label">Steps</div>
+              <ol class="tc-steps">
+                <li>Navigate to the login page at /login</li>
+                <li>Enter valid email address in the email field</li>
+                <li>Enter valid password in the password field</li>
+                <li>Click the "Sign In" button</li>
+              </ol>
+            </div>
+            <div class="tc-section">
+              <div class="tc-section-label">Expected Result</div>
+              <div class="tc-expected">
+                User is redirected to /dashboard. Welcome message "Hello, Test User" is displayed. Navigation sidebar is visible with all menu items.
+              </div>
+            </div>
+            <div class="tc-section">
+              <div class="tc-section-label">AI Generation Info</div>
+              <div class="flex gap-lg text-xs text-tertiary">
+                <span>Generated from: <strong>Login screenshot + URL + Source</strong></span>
+                <span>CCS at generation: <strong>90%</strong></span>
+                <span>Confidence: <strong class="text-green">94%</strong></span>
+              </div>
+            </div>
+            <div class="tc-actions">
+              <button class="btn btn-success btn-sm">Approve</button>
+              <button class="btn btn-danger btn-sm">Reject</button>
+              <button class="btn btn-secondary btn-sm">Edit</button>
+              <button class="btn btn-ghost btn-sm">Add to Suite</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Test Card 2 -->
+        <div class="test-card">
+          <div class="test-card-header">
+            <input type="checkbox" class="tc-checkbox" checked>
+            <div class="tc-priority critical"></div>
+            <div class="tc-title">Verify login with invalid password shows error message</div>
+            <div class="tc-meta">
+              <span class="pill pill-review">Draft</span>
+              <span class="pill pill-draft">Negative</span>
+              <span class="tag">login</span>
+              <span class="tc-confidence text-green">91%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Test Card 3 -->
+        <div class="test-card">
+          <div class="test-card-header">
+            <input type="checkbox" class="tc-checkbox" checked>
+            <div class="tc-priority high"></div>
+            <div class="tc-title">Verify password field enforces minimum length of 8 characters</div>
+            <div class="tc-meta">
+              <span class="pill pill-review">Draft</span>
+              <span class="pill pill-draft">Boundary</span>
+              <span class="tag">login</span>
+              <span class="tc-confidence text-green">87%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Test Card 4 -->
+        <div class="test-card">
+          <div class="test-card-header">
+            <input type="checkbox" class="tc-checkbox">
+            <div class="tc-priority high"></div>
+            <div class="tc-title">Verify XSS injection in email field is sanitized</div>
+            <div class="tc-meta">
+              <span class="pill pill-review">Draft</span>
+              <span class="pill pill-draft">Security</span>
+              <span class="tag">login</span>
+              <span class="tc-confidence text-amber">72%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Test Card 5 -->
+        <div class="test-card">
+          <div class="test-card-header">
+            <input type="checkbox" class="tc-checkbox">
+            <div class="tc-priority medium"></div>
+            <div class="tc-title">Verify billing page displays current subscription plan</div>
+            <div class="tc-meta">
+              <span class="pill pill-review">Draft</span>
+              <span class="pill pill-draft">Positive</span>
+              <span class="tag">billing</span>
+              <span class="tc-confidence text-green">85%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Test Card 6 -->
+        <div class="test-card">
+          <div class="test-card-header">
+            <input type="checkbox" class="tc-checkbox">
+            <div class="tc-priority medium"></div>
+            <div class="tc-title">Verify billing page handles expired credit card gracefully</div>
+            <div class="tc-meta">
+              <span class="pill pill-review">Draft</span>
+              <span class="pill pill-draft">Negative</span>
+              <span class="tag">billing</span>
+              <span class="tc-confidence text-amber">78%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Test Card 7 -->
+        <div class="test-card">
+          <div class="test-card-header">
+            <input type="checkbox" class="tc-checkbox">
+            <div class="tc-priority low"></div>
+            <div class="tc-title">Verify keyboard navigation through billing form fields</div>
+            <div class="tc-meta">
+              <span class="pill pill-review">Draft</span>
+              <span class="pill pill-draft">A11y</span>
+              <span class="tag">billing</span>
+              <span class="tc-confidence text-amber">68%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="eyebrow mb-md mt-xl">Approved Tests (showing recent)</div>
+
+        <!-- Approved Test -->
+        <div class="test-card">
+          <div class="test-card-header">
+            <input type="checkbox" class="tc-checkbox">
+            <div class="tc-priority critical"></div>
+            <div class="tc-title">Verify dashboard loads with correct widgets after login</div>
+            <div class="tc-meta">
+              <span class="pill pill-pass">Approved</span>
+              <span class="pill pill-draft">Positive</span>
+              <span class="tag">dashboard</span>
+              <span class="tc-confidence text-green">96%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="test-card">
+          <div class="test-card-header">
+            <input type="checkbox" class="tc-checkbox">
+            <div class="tc-priority critical"></div>
+            <div class="tc-title">Verify user can update profile name and see changes reflected</div>
+            <div class="tc-meta">
+              <span class="pill pill-pass">Approved</span>
+              <span class="pill pill-draft">Positive</span>
+              <span class="tag">settings</span>
+              <span class="tc-confidence text-green">92%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="test-card">
+          <div class="test-card-header">
+            <input type="checkbox" class="tc-checkbox">
+            <div class="tc-priority high"></div>
+            <div class="tc-title">Verify reports filter by date range returns correct results</div>
+            <div class="tc-meta">
+              <span class="pill pill-pass">Approved</span>
+              <span class="pill pill-draft">Positive</span>
+              <span class="tag">reports</span>
+              <span class="tc-confidence text-green">89%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-between items-center mt-lg">
+          <span class="text-xs text-tertiary">Showing 10 of 84 test cases</span>
+          <div class="flex gap-xs">
+            <button class="btn btn-ghost btn-sm" disabled>&laquo; Previous</button>
+            <button class="btn btn-ghost btn-sm">Next &raquo;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

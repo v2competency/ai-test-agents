@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUALINT — Context Management</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .context-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: var(--sp-2xl);
+    }
+
+    .context-sidebar .source-card {
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: var(--sp-lg);
+      margin-bottom: var(--sp-md);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .context-sidebar .source-card:hover {
+      border-color: var(--brand-orange);
+    }
+
+    .context-sidebar .source-card.active {
+      border-color: var(--brand-orange);
+      box-shadow: 0 0 0 3px rgba(233,92,8,0.1);
+    }
+
+    .source-card .source-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--sp-sm);
+    }
+
+    .source-card .source-name {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .source-card .source-status {
+      font-size: 10px;
+    }
+
+    .source-card .source-contribution {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+      margin-top: var(--sp-sm);
+    }
+
+    .source-card .contrib-bar {
+      flex: 1;
+      height: 4px;
+      background: var(--border-light);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+    }
+
+    .source-card .contrib-fill {
+      height: 100%;
+      border-radius: var(--radius-pill);
+    }
+
+    .source-card .contrib-value {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      width: 30px;
+      text-align: right;
+    }
+
+    .ccs-summary {
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: var(--sp-xl);
+      text-align: center;
+      margin-bottom: var(--sp-lg);
+    }
+
+    .ccs-summary .ccs-large {
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .ccs-summary .ccs-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-secondary);
+      margin-top: var(--sp-xs);
+    }
+
+    .ccs-breakdown {
+      margin-top: var(--sp-lg);
+      text-align: left;
+      font-size: 11px;
+    }
+
+    .ccs-breakdown .breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 3px 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .screenshot-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-md);
+    }
+
+    .screenshot-card {
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .screenshot-card .screenshot-preview {
+      height: 120px;
+      background: var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink-tertiary);
+      font-size: 11px;
+      position: relative;
+    }
+
+    .screenshot-card .screenshot-preview .page-mock {
+      width: 80%;
+      height: 80%;
+      background: white;
+      border-radius: var(--radius-xs);
+      border: 1px solid var(--border-color);
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .screenshot-card .screenshot-preview .page-mock .mock-bar {
+      height: 4px;
+      border-radius: 2px;
+      background: var(--border-color);
+    }
+
+    .screenshot-card .screenshot-preview .page-mock .mock-block {
+      flex: 1;
+      border-radius: 2px;
+      background: var(--border-light);
+    }
+
+    .screenshot-card .screenshot-info {
+      padding: var(--sp-sm) var(--sp-md);
+    }
+
+    .screenshot-card .screenshot-info .name {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .screenshot-card .screenshot-info .meta {
+      font-size: 10px;
+      color: var(--ink-tertiary);
+      font-family: var(--font-mono);
+    }
+
+    .upload-zone {
+      border: 2px dashed var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-3xl);
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--card-surface);
+    }
+
+    .upload-zone:hover {
+      border-color: var(--brand-orange);
+      background: var(--brand-orange-light);
+    }
+
+    .upload-zone .upload-icon {
+      font-size: 36px;
+      color: var(--ink-tertiary);
+      margin-bottom: var(--sp-md);
+    }
+
+    .upload-zone h3 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: var(--sp-xs);
+    }
+
+    .upload-zone p {
+      font-size: 12px;
+      color: var(--ink-tertiary);
+    }
+
+    .url-row {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-md);
+      padding: var(--sp-md);
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      margin-bottom: var(--sp-sm);
+    }
+
+    .url-row .url-status {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .url-row .url-text {
+      flex: 1;
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    .url-row .url-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink-secondary);
+    }
+
+    .url-row .url-actions {
+      display: flex;
+      gap: var(--sp-xs);
+    }
+
+    .repo-connection {
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-xl);
+    }
+
+    .repo-connected {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-lg);
+    }
+
+    .repo-connected .repo-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      background: var(--terminal-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .repo-connected .repo-details {
+      flex: 1;
+    }
+
+    .repo-connected .repo-name {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .repo-connected .repo-meta {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-tertiary);
+    }
+
+    .component-list .component-item {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-md);
+      padding: var(--sp-sm) var(--sp-md);
+      border-bottom: 1px solid var(--border-light);
+      font-size: 12px;
+    }
+
+    .component-list .comp-name {
+      font-weight: 600;
+      width: 140px;
+    }
+
+    .component-list .comp-path {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--ink-tertiary);
+      flex: 1;
+    }
+
+    .component-list .comp-selectors {
+      display: flex;
+      gap: var(--sp-xs);
+    }
+
+    .selector-grade {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 18px;
+      border-radius: var(--radius-xs);
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .selector-grade.a-plus { background: var(--success-green-light); color: var(--success-green); }
+    .selector-grade.a { background: var(--success-green-light); color: var(--success-green); }
+    .selector-grade.b { background: var(--warm-amber-light); color: var(--warm-amber); }
+    .selector-grade.c { background: var(--critical-red-light); color: var(--critical-red); }
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo-mark"></div>
+      <div class="brand-text">QUALINT<small>Quality Intelligence Platform</small></div>
+    </div>
+    <div class="sidebar-nav">
+      <a href="02-projects.html"><span class="nav-icon">&#9634;</span><span class="nav-label">All Projects</span></a>
+      <div class="sidebar-section-label">SaaS Dashboard</div>
+      <a href="03-dashboard.html"><span class="nav-icon">&#9632;</span><span class="nav-label">Dashboard</span></a>
+      <a href="04-context.html" class="active"><span class="nav-icon">&#128206;</span><span class="nav-label">Context</span></a>
+      <a href="05-test-cases.html"><span class="nav-icon">&#9745;</span><span class="nav-label">Test Cases</span><span class="badge">7</span></a>
+      <a href="06-automation.html"><span class="nav-icon">&#60;/&#62;</span><span class="nav-label">Automation</span></a>
+      <a href="07-execution.html"><span class="nav-icon">&#9654;</span><span class="nav-label">Execution</span></a>
+      <a href="08-results.html"><span class="nav-icon">&#9776;</span><span class="nav-label">Results</span></a>
+      <div class="sidebar-section-label">Settings</div>
+      <a href="#"><span class="nav-icon">&#9881;</span><span class="nav-label">Environments</span></a>
+      <a href="#"><span class="nav-icon">&#128101;</span><span class="nav-label">Team</span></a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">AK</div>
+        <div class="user-info"><div class="name">Alex Kim</div><div class="role">Acme Startup &middot; Admin</div></div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="main-content">
+    <div class="breadcrumb">
+      <a href="02-projects.html">Projects</a><span class="sep">/</span>
+      <a href="03-dashboard.html">SaaS Dashboard</a><span class="sep">/</span>
+      <span>Context</span>
+    </div>
+
+    <div class="page-header">
+      <div>
+        <h1>Context Management</h1>
+        <p class="subtitle">Provide rich context about your application for better AI-generated tests</p>
+      </div>
+      <button class="btn btn-primary" onclick="window.location.href='05-test-cases.html'">Generate Tests from Context</button>
+    </div>
+
+    <div class="context-grid">
+      <!-- Left: CCS Summary + Sources -->
+      <div class="context-sidebar">
+        <div class="ccs-summary">
+          <div class="eyebrow">Context Confidence Score</div>
+          <div class="ccs-large" style="color:#1D4ED8">75%</div>
+          <div class="ccs-label">Good</div>
+          <div class="ccs-badge good mt-md" style="margin:8px auto 0">
+            <span class="ccs-dot"></span> AI can generate reliable tests
+          </div>
+
+          <div class="ccs-breakdown">
+            <div class="eyebrow mt-lg">Score Breakdown</div>
+            <div class="breakdown-row">
+              <span>Screenshots</span>
+              <span class="font-mono font-bold">15%</span>
+            </div>
+            <div class="breakdown-row">
+              <span>Application URLs</span>
+              <span class="font-mono font-bold">25%</span>
+            </div>
+            <div class="breakdown-row">
+              <span>Source Code</span>
+              <span class="font-mono font-bold">20%</span>
+            </div>
+            <div class="breakdown-row">
+              <span>Combo Bonus (all 3)</span>
+              <span class="font-mono font-bold text-green">+15%</span>
+            </div>
+            <div class="breakdown-row" style="border:none;padding-top:6px">
+              <span><strong>Total CCS</strong></span>
+              <span class="font-mono font-bold" style="color:#1D4ED8">75%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="eyebrow">Context Sources</div>
+
+        <div class="source-card active">
+          <div class="source-header">
+            <span class="source-name">Screenshots</span>
+            <span class="pill pill-pass source-status">Connected</span>
+          </div>
+          <div class="text-xs text-tertiary">6 screenshots &middot; 5 pages</div>
+          <div class="source-contribution">
+            <div class="contrib-bar"><div class="contrib-fill" style="width:100%;background:var(--success-green)"></div></div>
+            <span class="contrib-value text-green">15%</span>
+          </div>
+        </div>
+
+        <div class="source-card">
+          <div class="source-header">
+            <span class="source-name">Application URLs</span>
+            <span class="pill pill-pass source-status">Connected</span>
+          </div>
+          <div class="text-xs text-tertiary">8 URLs configured</div>
+          <div class="source-contribution">
+            <div class="contrib-bar"><div class="contrib-fill" style="width:100%;background:var(--success-green)"></div></div>
+            <span class="contrib-value text-green">25%</span>
+          </div>
+        </div>
+
+        <div class="source-card">
+          <div class="source-header">
+            <span class="source-name">Source Code</span>
+            <span class="pill pill-pass source-status">Connected</span>
+          </div>
+          <div class="text-xs text-tertiary">GitHub &middot; acme/saas-frontend</div>
+          <div class="source-contribution">
+            <div class="contrib-bar"><div class="contrib-fill" style="width:57%;background:var(--warm-amber)"></div></div>
+            <span class="contrib-value text-amber">20%</span>
+          </div>
+          <div class="text-xs text-tertiary mt-sm" style="color:var(--warm-amber)">
+            Partial: 5/8 pages have source coverage
+          </div>
+        </div>
+
+        <div class="source-card" style="opacity:0.5; border-style:dashed">
+          <div class="source-header">
+            <span class="source-name">Figma Designs</span>
+            <span class="pill pill-neutral source-status">Phase 2</span>
+          </div>
+          <div class="text-xs text-tertiary">Coming soon</div>
+        </div>
+
+        <div class="source-card" style="opacity:0.5; border-style:dashed">
+          <div class="source-header">
+            <span class="source-name">Requirements / Jira</span>
+            <span class="pill pill-neutral source-status">Phase 2</span>
+          </div>
+          <div class="text-xs text-tertiary">Coming soon</div>
+        </div>
+      </div>
+
+      <!-- Right: Detail panels -->
+      <div>
+        <!-- Tabs -->
+        <div class="tabs">
+          <span class="tab active">Screenshots</span>
+          <span class="tab">Application URLs</span>
+          <span class="tab">Source Code</span>
+        </div>
+
+        <!-- Screenshots panel -->
+        <div class="flex justify-between items-center mb-lg">
+          <div>
+            <span class="text-sm text-secondary">6 screenshots uploaded &middot; 5 pages covered</span>
+          </div>
+          <button class="btn btn-secondary btn-sm">Upload Screenshots</button>
+        </div>
+
+        <div class="screenshot-grid mb-xl">
+          <div class="screenshot-card">
+            <div class="screenshot-preview">
+              <div class="page-mock">
+                <div class="mock-bar" style="width:40%"></div>
+                <div class="mock-bar" style="width:70%"></div>
+                <div class="mock-block"></div>
+              </div>
+            </div>
+            <div class="screenshot-info">
+              <div class="name">Login Page</div>
+              <div class="meta">login.png &middot; 1.2MB</div>
+            </div>
+          </div>
+
+          <div class="screenshot-card">
+            <div class="screenshot-preview">
+              <div class="page-mock">
+                <div class="mock-bar" style="width:100%"></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;flex:1">
+                  <div class="mock-block"></div>
+                  <div class="mock-block"></div>
+                  <div class="mock-block"></div>
+                </div>
+              </div>
+            </div>
+            <div class="screenshot-info">
+              <div class="name">Dashboard</div>
+              <div class="meta">dashboard.png &middot; 2.1MB</div>
+            </div>
+          </div>
+
+          <div class="screenshot-card">
+            <div class="screenshot-preview">
+              <div class="page-mock">
+                <div class="mock-bar" style="width:60%"></div>
+                <div class="mock-block"></div>
+                <div class="mock-bar" style="width:40%"></div>
+              </div>
+            </div>
+            <div class="screenshot-info">
+              <div class="name">User Settings</div>
+              <div class="meta">settings.png &middot; 980KB</div>
+            </div>
+          </div>
+
+          <div class="screenshot-card">
+            <div class="screenshot-preview">
+              <div class="page-mock">
+                <div class="mock-bar" style="width:80%"></div>
+                <div class="mock-block"></div>
+                <div class="mock-block" style="flex:0.5"></div>
+              </div>
+            </div>
+            <div class="screenshot-info">
+              <div class="name">Reports</div>
+              <div class="meta">reports.png &middot; 1.8MB</div>
+            </div>
+          </div>
+
+          <div class="screenshot-card">
+            <div class="screenshot-preview">
+              <div class="page-mock">
+                <div class="mock-bar" style="width:50%"></div>
+                <div class="mock-block"></div>
+                <div class="mock-bar" style="width:30%"></div>
+              </div>
+            </div>
+            <div class="screenshot-info">
+              <div class="name">Billing</div>
+              <div class="meta">billing.png &middot; 1.1MB</div>
+            </div>
+          </div>
+
+          <div class="screenshot-card">
+            <div class="screenshot-preview">
+              <div class="page-mock">
+                <div class="mock-bar" style="width:90%"></div>
+                <div style="display:grid;grid-template-columns:1fr 2fr;gap:4px;flex:1">
+                  <div class="mock-block"></div>
+                  <div class="mock-block"></div>
+                </div>
+              </div>
+            </div>
+            <div class="screenshot-info">
+              <div class="name">Team Management</div>
+              <div class="meta">team.png &middot; 890KB</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="upload-zone mb-xl">
+          <div class="upload-icon">&#128247;</div>
+          <h3>Drop screenshots here</h3>
+          <p>PNG, JPG, or WEBP &middot; Max 200MB total &middot; Up to 50 images</p>
+        </div>
+
+        <!-- Per-Page CCS -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Per-Page Context Confidence</div>
+            <span class="text-xs text-tertiary">CCS breakdown per page</span>
+          </div>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Page</th>
+                <th>Screenshot</th>
+                <th>URL</th>
+                <th>Source Code</th>
+                <th>CCS</th>
+                <th>Level</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Login</strong></td>
+                <td><span class="pill pill-active-pass">Yes</span></td>
+                <td><span class="pill pill-active-pass">Yes</span></td>
+                <td><span class="pill pill-active-pass">Yes</span></td>
+                <td class="mono font-bold text-green">90%</td>
+                <td><span class="ccs-badge excellent" style="font-size:9px"><span class="ccs-dot"></span>Excellent</span></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><strong>Dashboard</strong></td>
+                <td><span class="pill pill-active-pass">Yes</span></td>
+                <td><span class="pill pill-active-pass">Yes</span></td>
+                <td><span class="pill pill-active-pass">Yes</span></td>
+                <td class="mono font-bold text-green">90%</td>
+                <td><span class="ccs-badge excellent" style="font-size:9px"><span class="ccs-dot"></span>Excellent</span></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><strong>User Settings</strong></td>
+                <td><span class="pill pill-active-pass">Yes</span></td>
+                <td><span class="pill pill-active-pass">Yes</span></td>
+                <td><span class="pill pill-active-pass">Yes</span></td>
+                <td class="mono font-bold text-green">90%</td>
+                <td><span class="ccs-badge excellent" style="font-size:9px"><span class="ccs-dot"></span>Excellent</span></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><strong>Reports</strong></td>
+                <td><span class="pill pill-active-pass">Yes</span></td>
+                <td><span class="pill pill-active-pass">Yes</span></td>
+                <td><span class="pill pill-draft">No</span></td>
+                <td class="mono font-bold text-amber">48%</td>
+                <td><span class="ccs-badge partial" style="font-size:9px"><span class="ccs-dot"></span>Partial</span></td>
+                <td><button class="btn btn-ghost btn-sm text-orange">Add source</button></td>
+              </tr>
+              <tr>
+                <td><strong>Billing</strong></td>
+                <td><span class="pill pill-active-pass">Yes</span></td>
+                <td><span class="pill pill-active-pass">Yes</span></td>
+                <td><span class="pill pill-draft">No</span></td>
+                <td class="mono font-bold text-amber">48%</td>
+                <td><span class="ccs-badge partial" style="font-size:9px"><span class="ccs-dot"></span>Partial</span></td>
+                <td><button class="btn btn-ghost btn-sm text-orange">Add source</button></td>
+              </tr>
+              <tr>
+                <td><strong>Team Mgmt</strong></td>
+                <td><span class="pill pill-active-pass">Yes</span></td>
+                <td><span class="pill pill-active-pass">Yes</span></td>
+                <td><span class="pill pill-draft">No</span></td>
+                <td class="mono font-bold text-amber">48%</td>
+                <td><span class="ccs-badge partial" style="font-size:9px"><span class="ccs-dot"></span>Partial</span></td>
+                <td><button class="btn btn-ghost btn-sm text-orange">Add source</button></td>
+              </tr>
+              <tr>
+                <td><strong>Integrations</strong></td>
+                <td><span class="pill pill-draft">No</span></td>
+                <td><span class="pill pill-active-pass">Yes</span></td>
+                <td><span class="pill pill-draft">No</span></td>
+                <td class="mono font-bold text-red">25%</td>
+                <td><span class="ccs-badge minimal" style="font-size:9px"><span class="ccs-dot"></span>Minimal</span></td>
+                <td><button class="btn btn-ghost btn-sm text-orange">Add screenshot</button></td>
+              </tr>
+              <tr>
+                <td><strong>Onboarding</strong></td>
+                <td><span class="pill pill-draft">No</span></td>
+                <td><span class="pill pill-active-pass">Yes</span></td>
+                <td><span class="pill pill-draft">No</span></td>
+                <td class="mono font-bold text-red">25%</td>
+                <td><span class="ccs-badge minimal" style="font-size:9px"><span class="ccs-dot"></span>Minimal</span></td>
+                <td><button class="btn btn-ghost btn-sm text-orange">Add screenshot</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

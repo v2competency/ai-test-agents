@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUALINT — Test Results</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .result-summary-bar {
+      display: flex;
+      align-items: stretch;
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: var(--sp-2xl);
+    }
+
+    .result-summary-main {
+      flex: 1;
+      padding: var(--sp-xl);
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2xl);
+    }
+
+    .result-donut {
+      width: 100px;
+      height: 100px;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .result-donut svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .result-donut .donut-bg {
+      fill: none;
+      stroke: var(--border-light);
+      stroke-width: 10;
+    }
+
+    .result-donut .donut-pass {
+      fill: none;
+      stroke: var(--success-green);
+      stroke-width: 10;
+      stroke-linecap: round;
+      stroke-dasharray: 283;
+    }
+
+    .result-donut .donut-fail {
+      fill: none;
+      stroke: var(--critical-red);
+      stroke-width: 10;
+      stroke-dasharray: 283;
+    }
+
+    .result-donut .donut-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .result-donut .donut-center .big {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .result-donut .donut-center .small {
+      font-size: 9px;
+      color: var(--ink-secondary);
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .result-counts {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-sm);
+    }
+
+    .result-count-row {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+      font-size: 13px;
+    }
+
+    .result-count-row .rc-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .result-count-row .rc-value {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      width: 30px;
+    }
+
+    .result-meta-panel {
+      padding: var(--sp-xl);
+      background: #FAF8F2;
+      border-left: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-md);
+      min-width: 200px;
+    }
+
+    .result-meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .result-meta-item .rm-label {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--ink-tertiary);
+    }
+
+    .result-meta-item .rm-value {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .result-meta-item .rm-value .mono {
+      font-family: var(--font-mono);
+    }
+
+    .failed-test-card {
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-left: 4px solid var(--critical-red);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      padding: var(--sp-lg);
+      margin-bottom: var(--sp-md);
+    }
+
+    .failed-test-card .ft-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--sp-md);
+    }
+
+    .failed-test-card .ft-name {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .failed-test-card .ft-error {
+      background: var(--terminal-bg);
+      color: var(--critical-red);
+      padding: var(--sp-md);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1.5;
+      margin-bottom: var(--sp-md);
+      overflow-x: auto;
+    }
+
+    .failed-test-card .ft-stack {
+      color: #9C9998;
+    }
+
+    .ft-screenshot {
+      background: var(--border-light);
+      border-radius: var(--radius-sm);
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink-tertiary);
+      font-size: 11px;
+      border: 1px solid var(--border-color);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ft-screenshot .mock-browser {
+      width: 90%;
+      height: 85%;
+      background: white;
+      border-radius: var(--radius-xs);
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .ft-screenshot .mock-browser .browser-bar {
+      height: 16px;
+      background: #F5F5F5;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      padding: 0 6px;
+    }
+
+    .ft-screenshot .mock-browser .browser-bar span {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--border-color);
+    }
+
+    .ft-screenshot .mock-browser .browser-content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .ft-screenshot .fail-marker {
+      position: absolute;
+      border: 2px solid var(--critical-red);
+      border-radius: 3px;
+      background: rgba(198,40,40,0.1);
+      animation: blink 1.5s ease infinite;
+    }
+
+    @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
+
+    .ft-screenshot .fail-label {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      background: var(--critical-red);
+      color: white;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: var(--radius-xs);
+    }
+
+    .passed-tests-summary {
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .passed-group-header {
+      display: flex;
+      align-items: center;
+      padding: var(--sp-md) var(--sp-lg);
+      background: var(--success-green-light);
+      border-bottom: 1px solid var(--border-color);
+      gap: var(--sp-md);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .passed-row {
+      display: flex;
+      align-items: center;
+      padding: var(--sp-sm) var(--sp-lg);
+      border-bottom: 1px solid var(--border-light);
+      gap: var(--sp-md);
+      font-size: 12px;
+    }
+
+    .passed-row .pr-status {
+      color: var(--success-green);
+      font-size: 12px;
+    }
+
+    .passed-row .pr-name { flex: 1; }
+
+    .passed-row .pr-duration {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--ink-tertiary);
+    }
+
+    .passed-row .pr-browser {
+      font-size: 10px;
+      color: var(--ink-tertiary);
+      width: 60px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo-mark"></div>
+      <div class="brand-text">QUALINT<small>Quality Intelligence Platform</small></div>
+    </div>
+    <div class="sidebar-nav">
+      <a href="02-projects.html"><span class="nav-icon">&#9634;</span><span class="nav-label">All Projects</span></a>
+      <div class="sidebar-section-label">SaaS Dashboard</div>
+      <a href="03-dashboard.html"><span class="nav-icon">&#9632;</span><span class="nav-label">Dashboard</span></a>
+      <a href="04-context.html"><span class="nav-icon">&#128206;</span><span class="nav-label">Context</span></a>
+      <a href="05-test-cases.html"><span class="nav-icon">&#9745;</span><span class="nav-label">Test Cases</span><span class="badge">7</span></a>
+      <a href="06-automation.html"><span class="nav-icon">&#60;/&#62;</span><span class="nav-label">Automation</span></a>
+      <a href="07-execution.html"><span class="nav-icon">&#9654;</span><span class="nav-label">Execution</span></a>
+      <a href="08-results.html" class="active"><span class="nav-icon">&#9776;</span><span class="nav-label">Results</span></a>
+      <div class="sidebar-section-label">Settings</div>
+      <a href="#"><span class="nav-icon">&#9881;</span><span class="nav-label">Environments</span></a>
+      <a href="#"><span class="nav-icon">&#128101;</span><span class="nav-label">Team</span></a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">AK</div>
+        <div class="user-info"><div class="name">Alex Kim</div><div class="role">Acme Startup &middot; Admin</div></div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="main-content">
+    <div class="breadcrumb">
+      <a href="02-projects.html">Projects</a><span class="sep">/</span>
+      <a href="03-dashboard.html">SaaS Dashboard</a><span class="sep">/</span>
+      <a href="07-execution.html">Execution</a><span class="sep">/</span>
+      <span>Run #47</span>
+    </div>
+
+    <div class="page-header">
+      <div>
+        <h1>Run #47 Results</h1>
+        <p class="subtitle">Smoke Tests &middot; Staging &middot; Completed 2 hours ago</p>
+      </div>
+      <div class="flex gap-sm">
+        <button class="btn btn-secondary">Re-run Failed (2)</button>
+        <button class="btn btn-secondary">Re-run All</button>
+        <button class="btn btn-primary">Share Report</button>
+      </div>
+    </div>
+
+    <!-- Summary Bar -->
+    <div class="result-summary-bar">
+      <div class="result-summary-main">
+        <!-- Donut -->
+        <div class="result-donut">
+          <svg viewBox="0 0 100 100">
+            <circle class="donut-bg" cx="50" cy="50" r="45"/>
+            <circle class="donut-pass" cx="50" cy="50" r="45" stroke-dashoffset="23"/>
+            <circle class="donut-fail" cx="50" cy="50" r="45" stroke-dashoffset="260" stroke-dasharray="23 260"/>
+          </svg>
+          <div class="donut-center">
+            <div class="big text-green">92%</div>
+            <div class="small">Pass Rate</div>
+          </div>
+        </div>
+
+        <!-- Counts -->
+        <div class="result-counts">
+          <div class="result-count-row">
+            <span class="rc-dot" style="background:var(--success-green)"></span>
+            <span class="rc-value text-green">22</span>
+            <span>Passed</span>
+          </div>
+          <div class="result-count-row">
+            <span class="rc-dot" style="background:var(--critical-red)"></span>
+            <span class="rc-value text-red">2</span>
+            <span>Failed</span>
+          </div>
+          <div class="result-count-row">
+            <span class="rc-dot" style="background:var(--ink-tertiary)"></span>
+            <span class="rc-value">0</span>
+            <span>Skipped</span>
+          </div>
+        </div>
+
+        <!-- Full bar -->
+        <div style="flex:1">
+          <div style="height:12px;display:flex;border-radius:6px;overflow:hidden;">
+            <div style="width:92%;background:var(--success-green)"></div>
+            <div style="width:8%;background:var(--critical-red)"></div>
+          </div>
+          <div class="flex justify-between mt-sm text-xs text-tertiary font-mono">
+            <span>24 total tests</span>
+            <span>Chrome + Firefox</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-meta-panel">
+        <div class="result-meta-item">
+          <span class="rm-label">Duration</span>
+          <span class="rm-value"><span class="mono">1m 38s</span></span>
+        </div>
+        <div class="result-meta-item">
+          <span class="rm-label">Environment</span>
+          <span class="rm-value">Staging</span>
+        </div>
+        <div class="result-meta-item">
+          <span class="rm-label">Browsers</span>
+          <span class="rm-value">Chrome, Firefox</span>
+        </div>
+        <div class="result-meta-item">
+          <span class="rm-label">Workers</span>
+          <span class="rm-value"><span class="mono">2</span> parallel</span>
+        </div>
+        <div class="result-meta-item">
+          <span class="rm-label">Triggered By</span>
+          <span class="rm-value">Alex Kim (manual)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Failed Tests Detail -->
+    <div class="eyebrow mb-md" style="color:var(--critical-red)">Failed Tests (2)</div>
+
+    <!-- Failed Test 1 -->
+    <div class="failed-test-card">
+      <div class="ft-header">
+        <div>
+          <div class="ft-name">Verify billing page shows current plan</div>
+          <div class="flex gap-sm mt-sm">
+            <span class="pill pill-active-fail">Failed</span>
+            <span class="pill pill-draft">Positive</span>
+            <span class="tag">billing</span>
+            <span class="font-mono text-xs text-tertiary">4.2s &middot; Chrome</span>
+          </div>
+        </div>
+        <div class="flex gap-xs">
+          <button class="btn btn-secondary btn-sm">Re-run</button>
+          <button class="btn btn-ghost btn-sm">View Trace</button>
+          <button class="btn btn-ghost btn-sm">View Code</button>
+        </div>
+      </div>
+
+      <div class="ft-error">
+        <div>Error: expect(locator).toBeVisible()</div>
+        <div class="ft-stack">
+          <br>
+          Locator: [data-testid="current-plan-card"]<br>
+          Expected: visible<br>
+          Received: &lt;element not found&gt;<br>
+          <br>
+          Call log:<br>
+          &nbsp;&nbsp;- waiting for locator('[data-testid="current-plan-card"]')<br>
+          &nbsp;&nbsp;- timeout 30000ms exceeded<br>
+          <br>
+          &nbsp;&nbsp;at BillingPage.getCurrentPlan (page-objects/BillingPage.ts:24:5)<br>
+          &nbsp;&nbsp;at billing.spec.ts:18:3
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="ft-screenshot">
+          <div class="mock-browser">
+            <div class="browser-bar"><span></span><span></span><span></span></div>
+            <div class="browser-content">
+              <div style="width:80%;height:60%;background:var(--border-light);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--ink-tertiary);font-size:10px">
+                Billing page - missing plan card
+              </div>
+              <div class="fail-marker" style="width:60%;height:40%;top:30%;left:20%"></div>
+            </div>
+          </div>
+          <div class="fail-label">Screenshot at failure</div>
+        </div>
+        <div style="font-size:12px">
+          <div class="eyebrow mb-sm">Possible Root Cause</div>
+          <p class="text-sm mb-md">The <code>data-testid="current-plan-card"</code> element was not found on the billing page. This could indicate:</p>
+          <ul style="font-size:12px;padding-left:16px;display:flex;flex-direction:column;gap:4px">
+            <li>The billing UI was recently redesigned and the <code>data-testid</code> was removed or renamed</li>
+            <li>The plan data API returned empty/error, causing the component not to render</li>
+            <li>A feature flag may be hiding this component in staging</li>
+          </ul>
+          <div class="mt-md flex gap-sm">
+            <button class="btn btn-secondary btn-sm text-orange">Update Selector</button>
+            <button class="btn btn-ghost btn-sm">View Source</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Failed Test 2 -->
+    <div class="failed-test-card">
+      <div class="ft-header">
+        <div>
+          <div class="ft-name">Verify billing upgrade flow completes</div>
+          <div class="flex gap-sm mt-sm">
+            <span class="pill pill-active-fail">Failed</span>
+            <span class="pill pill-draft">Positive</span>
+            <span class="tag">billing</span>
+            <span class="font-mono text-xs text-tertiary">6.8s &middot; Chrome</span>
+          </div>
+        </div>
+        <div class="flex gap-xs">
+          <button class="btn btn-secondary btn-sm">Re-run</button>
+          <button class="btn btn-ghost btn-sm">View Trace</button>
+        </div>
+      </div>
+
+      <div class="ft-error">
+        <div>Error: expect(locator).toContainText()</div>
+        <div class="ft-stack">
+          <br>
+          Locator: [data-testid="plan-upgrade-success"]<br>
+          Expected: "Plan upgraded successfully"<br>
+          Received: &lt;element not found&gt;<br>
+          <br>
+          Note: depends on "current plan card" which also failed
+        </div>
+      </div>
+    </div>
+
+    <!-- Passed Tests -->
+    <div class="mt-2xl">
+      <div class="eyebrow mb-md" style="color:var(--success-green)">Passed Tests (22)</div>
+
+      <div class="passed-tests-summary">
+        <div class="passed-group-header">
+          <span style="color:var(--success-green)">&#10003;</span>
+          <span>Login Tests</span>
+          <span class="font-mono text-xs text-tertiary" style="margin-left:auto">8/8 passed &middot; avg 2.1s</span>
+        </div>
+        <div class="passed-row">
+          <span class="pr-status">&#10003;</span>
+          <span class="pr-name">Verify login with valid credentials</span>
+          <span class="pr-browser">Chrome</span>
+          <span class="pr-duration">2.4s</span>
+        </div>
+        <div class="passed-row">
+          <span class="pr-status">&#10003;</span>
+          <span class="pr-name">Verify login with valid credentials</span>
+          <span class="pr-browser">Firefox</span>
+          <span class="pr-duration">3.0s</span>
+        </div>
+        <div class="passed-row">
+          <span class="pr-status">&#10003;</span>
+          <span class="pr-name">Verify login with invalid password shows error</span>
+          <span class="pr-browser">Chrome</span>
+          <span class="pr-duration">1.8s</span>
+        </div>
+        <div class="passed-row">
+          <span class="pr-status">&#10003;</span>
+          <span class="pr-name">Verify empty form submission shows validation</span>
+          <span class="pr-browser">Chrome</span>
+          <span class="pr-duration">1.5s</span>
+        </div>
+
+        <div class="passed-group-header">
+          <span style="color:var(--success-green)">&#10003;</span>
+          <span>Dashboard Tests</span>
+          <span class="font-mono text-xs text-tertiary" style="margin-left:auto">6/6 passed &middot; avg 3.8s</span>
+        </div>
+        <div class="passed-row">
+          <span class="pr-status">&#10003;</span>
+          <span class="pr-name">Verify dashboard loads with correct widgets</span>
+          <span class="pr-browser">Chrome</span>
+          <span class="pr-duration">4.5s</span>
+        </div>
+        <div class="passed-row">
+          <span class="pr-status">&#10003;</span>
+          <span class="pr-name">Verify dashboard widget data refreshes</span>
+          <span class="pr-browser">Chrome</span>
+          <span class="pr-duration">3.2s</span>
+        </div>
+        <div class="passed-row">
+          <span class="pr-status">&#10003;</span>
+          <span class="pr-name">Verify navigation between dashboard sections</span>
+          <span class="pr-browser">Firefox</span>
+          <span class="pr-duration">2.8s</span>
+        </div>
+
+        <div class="passed-group-header">
+          <span style="color:var(--success-green)">&#10003;</span>
+          <span>Settings Tests</span>
+          <span class="font-mono text-xs text-tertiary" style="margin-left:auto">4/4 passed &middot; avg 2.9s</span>
+        </div>
+
+        <div class="passed-group-header">
+          <span style="color:var(--success-green)">&#10003;</span>
+          <span>Reports Tests</span>
+          <span class="font-mono text-xs text-tertiary" style="margin-left:auto">4/4 passed &middot; avg 3.4s</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Compare Runs -->
+    <div class="panel mt-2xl">
+      <div class="panel-header">
+        <div class="panel-title">Compare with Previous Run</div>
+        <select class="form-select" style="width:auto;padding:4px 8px;font-size:11px">
+          <option>Run #46 (Regression, 1d ago)</option>
+          <option>Run #45 (Smoke, 2d ago)</option>
+        </select>
+      </div>
+      <div class="grid-3">
+        <div>
+          <div class="text-xs text-tertiary mb-sm">Pass Rate Change</div>
+          <div class="flex items-center gap-sm">
+            <span class="font-mono" style="font-size:20px;font-weight:700;color:var(--success-green)">+2%</span>
+            <span class="text-xs text-tertiary">92% vs 90%</span>
+          </div>
+        </div>
+        <div>
+          <div class="text-xs text-tertiary mb-sm">Duration Change</div>
+          <div class="flex items-center gap-sm">
+            <span class="font-mono" style="font-size:20px;font-weight:700;color:var(--success-green)">-14s</span>
+            <span class="text-xs text-tertiary">1m38s vs 1m52s</span>
+          </div>
+        </div>
+        <div>
+          <div class="text-xs text-tertiary mb-sm">New Failures</div>
+          <div class="flex items-center gap-sm">
+            <span class="font-mono" style="font-size:20px;font-weight:700;color:var(--critical-red)">1</span>
+            <span class="text-xs text-tertiary">"billing upgrade" is new failure</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

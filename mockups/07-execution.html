@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUALINT — Test Execution</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .run-config-panel {
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-xl);
+      margin-bottom: var(--sp-2xl);
+    }
+
+    .run-config-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-xl);
+    }
+
+    .config-field {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-xs);
+    }
+
+    .config-field .config-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--ink-secondary);
+    }
+
+    .browser-options {
+      display: flex;
+      gap: var(--sp-sm);
+    }
+
+    .browser-option {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-xs);
+      padding: 6px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .browser-option:hover { border-color: var(--brand-orange); }
+
+    .browser-option.selected {
+      border-color: var(--brand-orange);
+      background: var(--brand-orange-light);
+      color: var(--brand-orange);
+      font-weight: 600;
+    }
+
+    .browser-option input { accent-color: var(--brand-orange); }
+
+    /* Live run progress */
+    .run-progress-panel {
+      background: var(--terminal-bg);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: var(--sp-2xl);
+    }
+
+    .run-progress-header {
+      display: flex;
+      align-items: center;
+      padding: var(--sp-lg) var(--sp-xl);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      color: white;
+      gap: var(--sp-lg);
+    }
+
+    .run-progress-header .run-status {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+    }
+
+    .run-spinner {
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255,255,255,0.2);
+      border-top-color: var(--brand-orange);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .run-progress-header .run-title {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .run-progress-header .run-meta {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-tertiary);
+      margin-left: auto;
+    }
+
+    .progress-bar-container {
+      padding: 0 var(--sp-xl);
+      padding-top: var(--sp-lg);
+    }
+
+    .progress-bar-outer {
+      height: 8px;
+      background: rgba(255,255,255,0.08);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+      display: flex;
+    }
+
+    .progress-bar-outer .prog-pass {
+      background: var(--success-green);
+      height: 100%;
+      transition: width 0.3s;
+    }
+
+    .progress-bar-outer .prog-fail {
+      background: var(--critical-red);
+      height: 100%;
+      transition: width 0.3s;
+    }
+
+    .progress-bar-outer .prog-running {
+      background: var(--brand-orange);
+      height: 100%;
+      animation: pulse 1s ease-in-out infinite;
+    }
+
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
+
+    .progress-stats {
+      display: flex;
+      gap: var(--sp-2xl);
+      padding: var(--sp-md) var(--sp-xl) var(--sp-lg);
+    }
+
+    .progress-stats .ps-item {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .progress-stats .ps-item strong {
+      color: white;
+      font-family: var(--font-mono);
+    }
+
+    .live-results {
+      padding: 0 var(--sp-xl) var(--sp-lg);
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .live-result-row {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-md);
+      padding: var(--sp-xs) 0;
+      font-size: 12px;
+      color: rgba(255,255,255,0.7);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .live-result-row .lr-status {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      flex-shrink: 0;
+    }
+
+    .lr-status.pass { background: rgba(22,163,68,0.15); color: var(--success-green); }
+    .lr-status.fail { background: rgba(198,40,40,0.15); color: var(--critical-red); }
+    .lr-status.running { background: rgba(233,92,8,0.15); color: var(--brand-orange); }
+    .lr-status.queued { background: rgba(255,255,255,0.05); color: var(--ink-tertiary); }
+
+    .live-result-row .lr-name { flex: 1; }
+    .live-result-row .lr-duration {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--ink-tertiary);
+    }
+    .live-result-row .lr-browser {
+      font-size: 10px;
+      color: var(--ink-tertiary);
+      width: 60px;
+    }
+
+    .history-row {
+      display: flex;
+      align-items: center;
+      padding: var(--sp-md) var(--sp-lg);
+      border-bottom: 1px solid var(--border-light);
+      gap: var(--sp-lg);
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+
+    .history-row:hover { background: var(--hover-bg); }
+
+    .history-row .hr-id {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-secondary);
+      width: 70px;
+    }
+
+    .history-row .hr-suite {
+      font-weight: 600;
+      width: 140px;
+    }
+
+    .history-row .hr-env {
+      width: 80px;
+      color: var(--ink-secondary);
+    }
+
+    .history-row .hr-results {
+      display: flex;
+      gap: var(--sp-sm);
+      width: 200px;
+    }
+
+    .history-row .hr-bar {
+      flex: 1;
+      height: 6px;
+      border-radius: var(--radius-pill);
+      display: flex;
+      overflow: hidden;
+    }
+
+    .history-row .hr-duration {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--ink-tertiary);
+      width: 60px;
+      text-align: right;
+    }
+
+    .history-row .hr-time {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--ink-tertiary);
+      width: 100px;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo-mark"></div>
+      <div class="brand-text">QUALINT<small>Quality Intelligence Platform</small></div>
+    </div>
+    <div class="sidebar-nav">
+      <a href="02-projects.html"><span class="nav-icon">&#9634;</span><span class="nav-label">All Projects</span></a>
+      <div class="sidebar-section-label">SaaS Dashboard</div>
+      <a href="03-dashboard.html"><span class="nav-icon">&#9632;</span><span class="nav-label">Dashboard</span></a>
+      <a href="04-context.html"><span class="nav-icon">&#128206;</span><span class="nav-label">Context</span></a>
+      <a href="05-test-cases.html"><span class="nav-icon">&#9745;</span><span class="nav-label">Test Cases</span><span class="badge">7</span></a>
+      <a href="06-automation.html"><span class="nav-icon">&#60;/&#62;</span><span class="nav-label">Automation</span></a>
+      <a href="07-execution.html" class="active"><span class="nav-icon">&#9654;</span><span class="nav-label">Execution</span></a>
+      <a href="08-results.html"><span class="nav-icon">&#9776;</span><span class="nav-label">Results</span></a>
+      <div class="sidebar-section-label">Settings</div>
+      <a href="#"><span class="nav-icon">&#9881;</span><span class="nav-label">Environments</span></a>
+      <a href="#"><span class="nav-icon">&#128101;</span><span class="nav-label">Team</span></a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">AK</div>
+        <div class="user-info"><div class="name">Alex Kim</div><div class="role">Acme Startup &middot; Admin</div></div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="main-content">
+    <div class="breadcrumb">
+      <a href="02-projects.html">Projects</a><span class="sep">/</span>
+      <a href="03-dashboard.html">SaaS Dashboard</a><span class="sep">/</span>
+      <span>Execution</span>
+    </div>
+
+    <div class="page-header">
+      <div>
+        <h1>Test Execution</h1>
+        <p class="subtitle">Run tests on cloud infrastructure &middot; No setup required</p>
+      </div>
+      <button class="btn btn-primary btn-lg">Run Tests</button>
+    </div>
+
+    <!-- Run Configuration -->
+    <div class="run-config-panel">
+      <div class="eyebrow mb-lg">Run Configuration</div>
+      <div class="run-config-grid">
+        <div class="config-field">
+          <span class="config-label">Test Suite</span>
+          <select class="form-select">
+            <option>Smoke Tests (24 tests)</option>
+            <option>Regression (84 tests)</option>
+            <option>Login Tests (14 tests)</option>
+            <option>Dashboard Tests (12 tests)</option>
+          </select>
+        </div>
+
+        <div class="config-field">
+          <span class="config-label">Environment</span>
+          <select class="form-select">
+            <option>Staging (staging.acmedash.com)</option>
+            <option>Production (app.acmedash.com)</option>
+            <option>Development (dev.acmedash.com)</option>
+          </select>
+        </div>
+
+        <div class="config-field">
+          <span class="config-label">Workers</span>
+          <select class="form-select">
+            <option>2 parallel workers</option>
+            <option>1 worker (sequential)</option>
+            <option>4 parallel workers</option>
+          </select>
+        </div>
+
+        <div class="config-field">
+          <span class="config-label">Browsers</span>
+          <div class="browser-options">
+            <label class="browser-option selected">
+              <input type="checkbox" checked> Chrome
+            </label>
+            <label class="browser-option selected">
+              <input type="checkbox" checked> Firefox
+            </label>
+            <label class="browser-option">
+              <input type="checkbox"> WebKit
+            </label>
+          </div>
+        </div>
+
+        <div class="config-field">
+          <span class="config-label">Retries</span>
+          <select class="form-select">
+            <option>1 retry on failure</option>
+            <option>No retries</option>
+            <option>2 retries</option>
+          </select>
+        </div>
+
+        <div class="config-field">
+          <span class="config-label">Timeout</span>
+          <select class="form-select">
+            <option>30 seconds per test</option>
+            <option>15 seconds</option>
+            <option>60 seconds</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Run Progress -->
+    <div class="run-progress-panel">
+      <div class="run-progress-header">
+        <div class="run-status">
+          <div class="run-spinner"></div>
+          <span class="run-title">Running...</span>
+        </div>
+        <span class="pill pill-active-warn" style="font-size:10px">Run #48</span>
+        <span style="font-size:12px;color:rgba(255,255,255,0.6)">Smoke Tests &middot; Staging &middot; Chrome, Firefox</span>
+        <span class="run-meta">Elapsed: 1m 12s</span>
+      </div>
+
+      <div class="progress-bar-container">
+        <div class="progress-bar-outer">
+          <div class="prog-pass" style="width:62%"></div>
+          <div class="prog-fail" style="width:6%"></div>
+          <div class="prog-running" style="width:4%"></div>
+        </div>
+      </div>
+
+      <div class="progress-stats">
+        <div class="ps-item"><strong style="color:var(--success-green)">15</strong> Passed</div>
+        <div class="ps-item"><strong style="color:var(--critical-red)">2</strong> Failed</div>
+        <div class="ps-item"><strong style="color:var(--brand-orange)">1</strong> Running</div>
+        <div class="ps-item"><strong>6</strong> Queued</div>
+        <div class="ps-item" style="margin-left:auto"><strong>18</strong> / 24 complete</div>
+      </div>
+
+      <div class="live-results">
+        <div class="live-result-row">
+          <div class="lr-status running"><div class="run-spinner" style="width:10px;height:10px;border-width:1.5px"></div></div>
+          <span class="lr-name">Verify dashboard widget data loads correctly</span>
+          <span class="lr-browser">Chrome</span>
+          <span class="lr-duration">...</span>
+        </div>
+        <div class="live-result-row">
+          <div class="lr-status fail">&#10007;</div>
+          <span class="lr-name" style="color:var(--critical-red)">Verify billing page shows current plan</span>
+          <span class="lr-browser">Firefox</span>
+          <span class="lr-duration">4.2s</span>
+        </div>
+        <div class="live-result-row">
+          <div class="lr-status fail">&#10007;</div>
+          <span class="lr-name" style="color:var(--critical-red)">Verify billing upgrade flow completes</span>
+          <span class="lr-browser">Chrome</span>
+          <span class="lr-duration">6.8s</span>
+        </div>
+        <div class="live-result-row">
+          <div class="lr-status pass">&#10003;</div>
+          <span class="lr-name">Verify user can update profile name</span>
+          <span class="lr-browser">Chrome</span>
+          <span class="lr-duration">3.1s</span>
+        </div>
+        <div class="live-result-row">
+          <div class="lr-status pass">&#10003;</div>
+          <span class="lr-name">Verify login with valid credentials</span>
+          <span class="lr-browser">Chrome</span>
+          <span class="lr-duration">2.4s</span>
+        </div>
+        <div class="live-result-row">
+          <div class="lr-status pass">&#10003;</div>
+          <span class="lr-name">Verify login with valid credentials</span>
+          <span class="lr-browser">Firefox</span>
+          <span class="lr-duration">3.0s</span>
+        </div>
+        <div class="live-result-row">
+          <div class="lr-status pass">&#10003;</div>
+          <span class="lr-name">Verify login with invalid password shows error</span>
+          <span class="lr-browser">Chrome</span>
+          <span class="lr-duration">1.8s</span>
+        </div>
+        <div class="live-result-row">
+          <div class="lr-status pass">&#10003;</div>
+          <span class="lr-name">Verify empty form submission shows validation</span>
+          <span class="lr-browser">Chrome</span>
+          <span class="lr-duration">1.5s</span>
+        </div>
+        <div class="live-result-row">
+          <div class="lr-status pass">&#10003;</div>
+          <span class="lr-name">Verify dashboard loads after login</span>
+          <span class="lr-browser">Chrome</span>
+          <span class="lr-duration">4.5s</span>
+        </div>
+        <div class="live-result-row">
+          <div class="lr-status pass">&#10003;</div>
+          <span class="lr-name">Verify reports filter by date range</span>
+          <span class="lr-browser">Firefox</span>
+          <span class="lr-duration">3.8s</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Execution History -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">Execution History</div>
+        <div class="flex gap-sm">
+          <select class="form-select" style="width:auto;padding:4px 8px;font-size:11px">
+            <option>All suites</option>
+            <option>Smoke</option>
+            <option>Regression</option>
+          </select>
+          <select class="form-select" style="width:auto;padding:4px 8px;font-size:11px">
+            <option>Last 7 days</option>
+            <option>Last 30 days</option>
+            <option>Last 90 days</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="history-row" onclick="window.location.href='08-results.html'" style="background:var(--success-green-light)">
+        <span class="hr-id">#47</span>
+        <span class="hr-suite">Smoke Tests</span>
+        <span class="hr-env">Staging</span>
+        <div class="hr-results">
+          <span class="pill pill-active-pass" style="font-size:10px">22 pass</span>
+          <span class="pill pill-active-fail" style="font-size:10px">2 fail</span>
+        </div>
+        <div class="hr-bar">
+          <div style="width:92%;background:var(--success-green);height:6px;border-radius:3px 0 0 3px"></div>
+          <div style="width:8%;background:var(--critical-red);height:6px;border-radius:0 3px 3px 0"></div>
+        </div>
+        <span class="hr-duration">1m 38s</span>
+        <span class="hr-time">2h ago</span>
+      </div>
+
+      <div class="history-row">
+        <span class="hr-id">#46</span>
+        <span class="hr-suite">Regression</span>
+        <span class="hr-env">Staging</span>
+        <div class="hr-results">
+          <span class="pill pill-active-pass" style="font-size:10px">79 pass</span>
+          <span class="pill pill-active-fail" style="font-size:10px">3 fail</span>
+          <span class="pill pill-draft" style="font-size:10px">2 skip</span>
+        </div>
+        <div class="hr-bar">
+          <div style="width:94%;background:var(--success-green);height:6px;border-radius:3px 0 0 3px"></div>
+          <div style="width:4%;background:var(--critical-red);height:6px"></div>
+          <div style="width:2%;background:var(--ink-tertiary);height:6px;border-radius:0 3px 3px 0"></div>
+        </div>
+        <span class="hr-duration">4m 12s</span>
+        <span class="hr-time">1d ago</span>
+      </div>
+
+      <div class="history-row">
+        <span class="hr-id">#45</span>
+        <span class="hr-suite">Smoke Tests</span>
+        <span class="hr-env">Production</span>
+        <div class="hr-results">
+          <span class="pill pill-active-pass" style="font-size:10px">24 pass</span>
+        </div>
+        <div class="hr-bar">
+          <div style="width:100%;background:var(--success-green);height:6px;border-radius:3px"></div>
+        </div>
+        <span class="hr-duration">1m 22s</span>
+        <span class="hr-time">2d ago</span>
+      </div>
+
+      <div class="history-row">
+        <span class="hr-id">#44</span>
+        <span class="hr-suite">Login Tests</span>
+        <span class="hr-env">Staging</span>
+        <div class="hr-results">
+          <span class="pill pill-active-pass" style="font-size:10px">14 pass</span>
+        </div>
+        <div class="hr-bar">
+          <div style="width:100%;background:var(--success-green);height:6px;border-radius:3px"></div>
+        </div>
+        <span class="hr-duration">42s</span>
+        <span class="hr-time">3d ago</span>
+      </div>
+
+      <div class="history-row">
+        <span class="hr-id">#43</span>
+        <span class="hr-suite">Regression</span>
+        <span class="hr-env">Staging</span>
+        <div class="hr-results">
+          <span class="pill pill-active-pass" style="font-size:10px">76 pass</span>
+          <span class="pill pill-active-fail" style="font-size:10px">5 fail</span>
+          <span class="pill pill-draft" style="font-size:10px">3 skip</span>
+        </div>
+        <div class="hr-bar">
+          <div style="width:90%;background:var(--success-green);height:6px;border-radius:3px 0 0 3px"></div>
+          <div style="width:6%;background:var(--critical-red);height:6px"></div>
+          <div style="width:4%;background:var(--ink-tertiary);height:6px;border-radius:0 3px 3px 0"></div>
+        </div>
+        <span class="hr-duration">4m 55s</span>
+        <span class="hr-time">5d ago</span>
+      </div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>
