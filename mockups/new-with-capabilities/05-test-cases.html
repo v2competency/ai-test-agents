@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUALINT — CCM Mortgage Test Cases</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="capabilities.css">
+  <style>
+    /* Filter bar */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-md);
+      flex-wrap: wrap;
+    }
+
+    .filter-chips {
+      display: flex;
+      gap: var(--sp-xs);
+    }
+
+    .filter-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: var(--radius-pill);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border-color);
+      background: var(--card-surface);
+      color: var(--ink-secondary);
+      transition: all 0.15s;
+    }
+
+    .filter-chip:hover {
+      border-color: var(--brand-orange);
+      color: var(--ink);
+    }
+
+    .filter-chip.active {
+      background: var(--brand-orange);
+      color: white;
+      border-color: var(--brand-orange);
+    }
+
+    .filter-chip .chip-count {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .filter-chip.active .chip-count {
+      background: rgba(255,255,255,0.25);
+      padding: 1px 5px;
+      border-radius: var(--radius-pill);
+    }
+
+    .filter-select {
+      padding: 5px 10px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-ui);
+      font-size: 11px;
+      background: var(--card-surface);
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .filter-search {
+      padding: 5px 10px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-ui);
+      font-size: 11px;
+      background: var(--card-surface);
+      color: var(--ink);
+      min-width: 180px;
+    }
+
+    .filter-search::placeholder {
+      color: var(--ink-tertiary);
+    }
+
+    /* Table action links */
+    .action-link {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--brand-orange);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .action-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Table pagination */
+    .table-pagination {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--sp-md);
+      font-size: 11px;
+      color: var(--ink-secondary);
+    }
+
+    /* Coverage gap row */
+    .gap-row {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-md);
+      padding: var(--sp-sm) 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .gap-row:last-child {
+      border-bottom: none;
+    }
+
+    .gap-name {
+      width: 160px;
+      font-size: 12px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .gap-bar {
+      flex: 1;
+      height: 8px;
+      background: var(--border-light);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+    }
+
+    .gap-bar-fill {
+      height: 100%;
+      border-radius: var(--radius-pill);
+    }
+
+    .gap-value {
+      width: 48px;
+      text-align: right;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo-mark"><div class="logo-mark-inner"><span></span><span></span><span></span><span></span></div></div>
+      <div class="brand-text">QUALINT<small>Quality Intelligence</small></div>
+    </div>
+    <div class="sidebar-nav">
+      <span class="sidebar-section-label">Project</span>
+      <a href="01-dashboard.html"><span class="nav-icon">&#9707;</span><span class="nav-label">Dashboard</span></a>
+      <a href="02-capabilities.html"><span class="nav-icon">&#11041;</span><span class="nav-label">Capabilities</span></a>
+      <a href="03-context.html"><span class="nav-icon">&#9673;</span><span class="nav-label">Context</span></a>
+      <a href="05-test-cases.html" class="active"><span class="nav-icon">&#9745;</span><span class="nav-label">Test Cases</span></a>
+      <a href="06-automation.html"><span class="nav-icon">&#9881;</span><span class="nav-label">Automation</span></a>
+      <a href="09-accessibility.html"><span class="nav-icon">&#9855;</span><span class="nav-label">Accessibility</span></a>
+      <a href="07-execution.html"><span class="nav-icon">&#9654;</span><span class="nav-label">Execution</span></a>
+      <a href="08-results.html"><span class="nav-icon">&#9638;</span><span class="nav-label">Results</span></a>
+      <span class="sidebar-section-label">Settings</span>
+      <a href="10-settings.html"><span class="nav-icon">&#9881;</span><span class="nav-label">Settings</span></a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">MK</div>
+        <div class="user-info"><div class="name">Mehul K.</div><div class="role">QA Manager</div></div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="main-content">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <div class="eyebrow">CCM MORTGAGE</div>
+        <h1>Test Cases</h1>
+        <p class="subtitle">AI-generated and human-curated test scenarios</p>
+      </div>
+      <div class="flex gap-sm items-center">
+        <a href="#" class="review-queue-btn">
+          <span class="rq-icon">&#9998;</span>
+          <span class="rq-text">
+            <span class="rq-label">Review Queue</span>
+            <span class="rq-sub">AI drafts pending approval</span>
+          </span>
+          <span class="rq-count critical">14</span>
+        </a>
+        <button class="btn btn-primary">Generate Tests</button>
+      </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="panel mb-xl">
+      <div class="filter-bar">
+        <div class="filter-chips">
+          <span class="filter-chip active">All <span class="chip-count">114</span></span>
+          <span class="filter-chip">Approved <span class="chip-count">94</span></span>
+          <span class="filter-chip">Draft <span class="chip-count">14</span></span>
+          <span class="filter-chip">Failed <span class="chip-count">6</span></span>
+        </div>
+        <select class="filter-select">
+          <option>All Capabilities</option>
+        </select>
+        <select class="filter-select">
+          <option>All Types</option>
+        </select>
+        <input type="text" class="filter-search" placeholder="Search test cases...">
+      </div>
+    </div>
+
+    <!-- Test Cases Table -->
+    <div class="panel mb-xl">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Status</th>
+            <th>Scenario</th>
+            <th>Capability</th>
+            <th>Type</th>
+            <th>Condition</th>
+            <th>Source</th>
+            <th>Last Run</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="pill pill-pass">Pass</span></td>
+            <td>Upload valid PDF document</td>
+            <td>Document Upload</td>
+            <td><span class="int-badge web">Web</span></td>
+            <td><span class="condition-tag positive">Valid</span></td>
+            <td class="mono">JIRA AC1</td>
+            <td class="text-tertiary text-sm">2h ago</td>
+            <td><a href="#" class="action-link">Edit</a></td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-pass">Pass</span></td>
+            <td>Reject .exe file upload</td>
+            <td>Document Upload</td>
+            <td><span class="int-badge web">Web</span></td>
+            <td><span class="condition-tag negative">Invalid</span></td>
+            <td class="mono">JIRA AC2</td>
+            <td class="text-tertiary text-sm">2h ago</td>
+            <td><a href="#" class="action-link">Edit</a></td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-pass">Pass</span></td>
+            <td>POST /documents/upload</td>
+            <td>Document Upload</td>
+            <td><span class="int-badge api">API</span></td>
+            <td><span class="condition-tag positive">Valid</span></td>
+            <td class="mono">Swagger</td>
+            <td class="text-tertiary text-sm">2h ago</td>
+            <td><a href="#" class="action-link">Edit</a></td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-pass">Pass</span></td>
+            <td>Login with valid MFA code</td>
+            <td>User Auth</td>
+            <td><span class="int-badge web">Web</span></td>
+            <td><span class="condition-tag positive">Valid</span></td>
+            <td class="mono">JIRA AC</td>
+            <td class="text-tertiary text-sm">3h ago</td>
+            <td><a href="#" class="action-link">Edit</a></td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-pass">Pass</span></td>
+            <td>GET /auth/session</td>
+            <td>User Auth</td>
+            <td><span class="int-badge api">API</span></td>
+            <td><span class="condition-tag positive">Valid</span></td>
+            <td class="mono">Swagger</td>
+            <td class="text-tertiary text-sm">3h ago</td>
+            <td><a href="#" class="action-link">Edit</a></td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-fail">Fail</span></td>
+            <td>Credit score below 580 rejection</td>
+            <td>Credit Check</td>
+            <td><span class="int-badge web">Web</span></td>
+            <td><span class="condition-tag negative">Invalid</span></td>
+            <td class="mono">JIRA</td>
+            <td class="text-tertiary text-sm">5h ago</td>
+            <td><a href="#" class="action-link">Edit</a></td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-fail">Fail</span></td>
+            <td>POST /credit/pull timeout</td>
+            <td>Credit Check</td>
+            <td><span class="int-badge api">API</span></td>
+            <td><span class="condition-tag edge">Edge</span></td>
+            <td class="mono">AI</td>
+            <td class="text-tertiary text-sm">5h ago</td>
+            <td><a href="#" class="action-link">Edit</a></td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-draft">Draft</span></td>
+            <td>Upload during network interruption</td>
+            <td>Document Upload</td>
+            <td><span class="int-badge web">Web</span></td>
+            <td><span class="condition-tag edge">Edge</span></td>
+            <td class="mono">AI</td>
+            <td class="text-tertiary text-sm">&mdash;</td>
+            <td><a href="#" class="action-link">Review</a></td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-draft">Draft</span></td>
+            <td>Concurrent rate lock requests</td>
+            <td>Rate Calculator</td>
+            <td><span class="int-badge api">API</span></td>
+            <td><span class="condition-tag edge">Edge</span></td>
+            <td class="mono">AI</td>
+            <td class="text-tertiary text-sm">&mdash;</td>
+            <td><a href="#" class="action-link">Review</a></td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-pass">Pass</span></td>
+            <td>E-sign closing documents</td>
+            <td>E-Signature</td>
+            <td><span class="int-badge web">Web</span></td>
+            <td><span class="condition-tag positive">Valid</span></td>
+            <td class="mono">JIRA</td>
+            <td class="text-tertiary text-sm">1d ago</td>
+            <td><a href="#" class="action-link">Edit</a></td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-pass">Pass</span></td>
+            <td>Auto underwriting decision</td>
+            <td>Underwriting</td>
+            <td><span class="int-badge event">Event</span></td>
+            <td><span class="condition-tag positive">Valid</span></td>
+            <td class="mono">JIRA</td>
+            <td class="text-tertiary text-sm">1d ago</td>
+            <td><a href="#" class="action-link">Edit</a></td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-draft">Draft</span></td>
+            <td>ECOA compliance data export</td>
+            <td>Compliance Audit</td>
+            <td><span class="int-badge api">API</span></td>
+            <td><span class="condition-tag positive">Valid</span></td>
+            <td class="mono">AI</td>
+            <td class="text-tertiary text-sm">&mdash;</td>
+            <td><a href="#" class="action-link">Review</a></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="table-pagination">
+        <span>Showing 12 of 114 test cases</span>
+      </div>
+    </div>
+
+    <!-- Coverage Gaps -->
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Coverage Gaps</div>
+          <div class="panel-subtitle">Capabilities with lowest test coverage</div>
+        </div>
+      </div>
+      <div class="gap-row">
+        <span class="gap-name">Underwriting</span>
+        <div class="gap-bar"><div class="gap-bar-fill" style="width:48%;background:var(--critical-red);"></div></div>
+        <span class="gap-value text-red">48%</span>
+      </div>
+      <div class="gap-row">
+        <span class="gap-name">Compliance Audit</span>
+        <div class="gap-bar"><div class="gap-bar-fill" style="width:52%;background:var(--critical-red);"></div></div>
+        <span class="gap-value text-red">52%</span>
+      </div>
+      <div class="gap-row">
+        <span class="gap-name">Credit Check</span>
+        <div class="gap-bar"><div class="gap-bar-fill" style="width:68%;background:var(--warm-amber);"></div></div>
+        <span class="gap-value text-amber">68%</span>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>

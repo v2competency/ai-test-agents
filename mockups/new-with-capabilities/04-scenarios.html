@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUALINT — Document Upload · Capability Detail</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="capabilities.css">
+  <style>
+    .header-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--sp-lg);
+    }
+    .header-left { flex: 1; }
+    .header-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: var(--sp-sm);
+    }
+    .header-badges { display: flex; gap: var(--sp-xs); }
+    .header-actions { display: flex; gap: var(--sp-sm); }
+
+    /* Trace chain bar */
+    .trace-bar {
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-md) var(--sp-lg);
+      box-shadow: var(--shadow-card);
+      margin-bottom: var(--sp-2xl);
+    }
+
+    /* Unified scenario table */
+    .scenario-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .scenario-table th {
+      text-align: left;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-secondary);
+      padding: var(--sp-sm) var(--sp-md);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      background: var(--card-surface);
+    }
+    .scenario-table td {
+      padding: var(--sp-sm) var(--sp-md);
+      font-size: 12px;
+      border-bottom: 1px solid var(--border-light);
+      vertical-align: middle;
+    }
+    .scenario-table tr:hover td { background: var(--hover-bg); }
+
+    /* Filter bar */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+      padding: var(--sp-sm) 0;
+      margin-bottom: var(--sp-md);
+      flex-wrap: wrap;
+    }
+    .filter-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      font-size: 10px;
+      font-weight: 600;
+      border: 1px solid var(--border-color);
+      background: var(--card-surface);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .filter-chip:hover { border-color: var(--brand-orange); }
+    .filter-chip.active {
+      background: var(--brand-orange);
+      color: white;
+      border-color: var(--brand-orange);
+    }
+    .filter-chip .chip-count {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      opacity: 0.7;
+    }
+
+    .source-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 6px;
+      border-radius: var(--radius-xs);
+      font-size: 10px;
+      font-weight: 600;
+      background: #DBEAFE;
+      color: #1D4ED8;
+    }
+    .source-tag.ai { background: var(--brand-orange-light); color: var(--brand-orange); }
+
+    .asset-link {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--ink-secondary);
+      text-decoration: none;
+    }
+    .asset-link:hover { color: var(--brand-orange); }
+    .time-meta {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--ink-tertiary);
+    }
+
+    /* Coverage insight strip */
+    .insight-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--card-gap);
+      margin-bottom: var(--sp-2xl);
+    }
+    .insight-card {
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: var(--sp-md);
+      box-shadow: var(--shadow-card);
+      text-align: center;
+    }
+    .insight-value {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .insight-label {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-secondary);
+      margin-bottom: var(--sp-xs);
+    }
+    .insight-detail {
+      font-size: 10px;
+      color: var(--ink-tertiary);
+      margin-top: 2px;
+    }
+
+    /* Coverage analysis side-by-side */
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--card-gap);
+    }
+
+    /* AI rec cards */
+    .ai-rec-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--card-gap);
+    }
+    .ai-rec-card {
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-left: 3px solid var(--brand-orange);
+      border-radius: var(--radius-md);
+      padding: var(--panel-padding);
+      box-shadow: var(--shadow-card);
+    }
+    .ai-rec-card .rec-title {
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: var(--sp-xs);
+    }
+    .ai-rec-card .rec-reason {
+      font-size: 11px;
+      color: var(--ink-secondary);
+      margin-bottom: var(--sp-md);
+    }
+
+    .check-yes { color: var(--success-green); font-weight: 700; }
+    .check-no { color: var(--critical-red); font-weight: 700; }
+    .check-draft { color: var(--warm-amber); font-weight: 700; }
+    .count-badge { font-family: var(--font-mono); font-size: 11px; font-weight: 600; }
+    .count-badge.zero { color: var(--ink-tertiary); }
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ============ SIDEBAR ============ -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo-mark">
+        <div class="logo-mark-inner">
+          <span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="brand-text">
+        QUALINT
+        <small>Quality Intelligence</small>
+      </div>
+    </div>
+
+    <div class="sidebar-nav">
+      <span class="sidebar-section-label">Project</span>
+      <a href="01-dashboard.html">
+        <span class="nav-icon">&#9707;</span>
+        <span class="nav-label">Dashboard</span>
+      </a>
+      <a href="02-capabilities.html" class="active">
+        <span class="nav-icon">&#11041;</span>
+        <span class="nav-label">Capabilities</span>
+      </a>
+      <a href="03-context.html">
+        <span class="nav-icon">&#9673;</span>
+        <span class="nav-label">Context</span>
+      </a>
+      <a href="05-test-cases.html">
+        <span class="nav-icon">&#9745;</span>
+        <span class="nav-label">Test Cases</span>
+      </a>
+      <a href="06-automation.html">
+        <span class="nav-icon">&#9881;</span>
+        <span class="nav-label">Automation</span>
+      </a>
+      <a href="09-accessibility.html">
+        <span class="nav-icon">&#9855;</span>
+        <span class="nav-label">Accessibility</span>
+      </a>
+      <a href="07-execution.html">
+        <span class="nav-icon">&#9654;</span>
+        <span class="nav-label">Execution</span>
+      </a>
+      <a href="08-results.html">
+        <span class="nav-icon">&#9638;</span>
+        <span class="nav-label">Results</span>
+      </a>
+
+      <span class="sidebar-section-label">Settings</span>
+      <a href="10-settings.html">
+        <span class="nav-icon">&#9881;</span>
+        <span class="nav-label">Settings</span>
+      </a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">MK</div>
+        <div class="user-info">
+          <div class="name">Mehul K.</div>
+          <div class="role">QA Manager</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============ MAIN CONTENT ============ -->
+  <main class="main-content">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+      <a href="01-dashboard.html">CCM Mortgage</a>
+      <span class="sep">/</span>
+      <a href="02-capabilities.html">Capabilities</a>
+      <span class="sep">/</span>
+      <span>Document Upload</span>
+    </div>
+
+    <!-- Page Header -->
+    <div class="header-row mb-xl">
+      <div class="header-left">
+        <div class="eyebrow">CAPABILITY</div>
+        <h1 style="font-size:28px; font-weight:700; letter-spacing:-0.02em; line-height:1.2;">Document Upload</h1>
+        <div class="subtitle" style="color:var(--ink-secondary); font-size:13px; margin-top:var(--sp-xs);">
+          Borrower document management &mdash; upload, validate, store
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="header-badges">
+          <span class="int-badge web">Web UI</span>
+          <span class="int-badge api">API</span>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-primary">Generate Scenarios</button>
+          <button class="btn btn-secondary">Edit Capability</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Traceability Chain -->
+    <div class="trace-bar">
+      <div class="trace-chain">
+        <span class="trace-chip requirement">JIRA: CCM-142</span>
+        <span class="trace-sep">&rarr;</span>
+        <span class="trace-chip capability">Document Upload</span>
+        <span class="trace-sep">&rarr;</span>
+        <span class="trace-chip scenario">13 Scenarios</span>
+        <span class="trace-sep">&rarr;</span>
+        <span class="trace-chip test">8 Test Assets</span>
+      </div>
+    </div>
+
+    <!-- Insight Cards -->
+    <div class="insight-strip">
+      <div class="insight-card" style="border-top:3px solid var(--brand-orange);">
+        <div class="insight-label">Scenarios</div>
+        <div class="insight-value" style="color:var(--brand-orange);">13</div>
+        <div class="insight-detail">7 Web UI &middot; 6 API</div>
+      </div>
+      <div class="insight-card" style="border-top:3px solid var(--success-green);">
+        <div class="insight-label">Coverage</div>
+        <div class="insight-value" style="color:var(--success-green);">83%</div>
+        <div class="insight-detail">Web 88% &middot; API 78%</div>
+      </div>
+      <div class="insight-card" style="border-top:3px solid var(--risk-slate);">
+        <div class="insight-label">Conditions Tested</div>
+        <div class="insight-value" style="color:var(--risk-slate);">8 / 12</div>
+        <div class="insight-detail">4 untested conditions</div>
+      </div>
+      <div class="insight-card" style="border-top:3px solid #1D4ED8;">
+        <div class="insight-label">JIRA ACs</div>
+        <div class="insight-value" style="color:#1D4ED8;">4 / 4</div>
+        <div class="insight-detail">All mapped to scenarios</div>
+      </div>
+    </div>
+
+    <!-- ============ UNIFIED SCENARIOS TABLE ============ -->
+    <div class="panel mb-xl">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">All Scenarios</div>
+          <div class="panel-subtitle">Unified view &mdash; filter by interaction type, condition, or status</div>
+        </div>
+      </div>
+
+      <!-- Filter Chips -->
+      <div class="filter-bar">
+        <span style="font-size:10px;font-weight:600;color:var(--ink-secondary);margin-right:var(--sp-xs);">FILTER:</span>
+        <span class="filter-chip active">All <span class="chip-count">13</span></span>
+        <span class="filter-chip" style="border-color:#7C3AED;color:#7C3AED;">Web UI <span class="chip-count">7</span></span>
+        <span class="filter-chip" style="border-color:#1D4ED8;color:#1D4ED8;">API <span class="chip-count">6</span></span>
+        <span style="width:1px;height:16px;background:var(--border-color);margin:0 var(--sp-xs);"></span>
+        <span class="filter-chip">Positive <span class="chip-count">6</span></span>
+        <span class="filter-chip">Negative <span class="chip-count">4</span></span>
+        <span class="filter-chip">Edge <span class="chip-count">2</span></span>
+        <span class="filter-chip">Boundary <span class="chip-count">1</span></span>
+        <span style="width:1px;height:16px;background:var(--border-color);margin:0 var(--sp-xs);"></span>
+        <span class="filter-chip">Pass <span class="chip-count">10</span></span>
+        <span class="filter-chip">Fail <span class="chip-count">1</span></span>
+        <span class="filter-chip">Draft <span class="chip-count">2</span></span>
+      </div>
+
+      <!-- The Single Table -->
+      <table class="scenario-table">
+        <thead>
+          <tr>
+            <th style="width:60px;">Type</th>
+            <th style="width:80px;">Condition</th>
+            <th>Scenario</th>
+            <th style="width:100px;">Source</th>
+            <th style="width:70px;">Status</th>
+            <th style="width:70px;">Last Run</th>
+            <th style="width:140px;">Test Asset</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Web UI scenarios -->
+          <tr>
+            <td><span class="int-badge web" style="font-size:9px;padding:2px 5px;">Web</span></td>
+            <td><span class="condition-tag positive">VALID</span></td>
+            <td>Upload valid PDF document (&lt; 10MB)</td>
+            <td><span class="source-tag">JIRA AC1</span></td>
+            <td><span class="pill pill-pass">Pass</span></td>
+            <td><span class="time-meta">2h ago</span></td>
+            <td><a href="#" class="asset-link">DocUpload.spec.ts</a></td>
+          </tr>
+          <tr>
+            <td><span class="int-badge web" style="font-size:9px;padding:2px 5px;">Web</span></td>
+            <td><span class="condition-tag positive">VALID</span></td>
+            <td>Upload valid JPG income proof</td>
+            <td><span class="source-tag">JIRA AC1</span></td>
+            <td><span class="pill pill-pass">Pass</span></td>
+            <td><span class="time-meta">2h ago</span></td>
+            <td><a href="#" class="asset-link">DocUpload.spec.ts</a></td>
+          </tr>
+          <tr>
+            <td><span class="int-badge web" style="font-size:9px;padding:2px 5px;">Web</span></td>
+            <td><span class="condition-tag positive">VALID</span></td>
+            <td>Verify upload progress indicator</td>
+            <td><span class="source-tag">JIRA AC3</span></td>
+            <td><span class="pill pill-pass">Pass</span></td>
+            <td><span class="time-meta">2h ago</span></td>
+            <td><a href="#" class="asset-link">DocUpload.spec.ts</a></td>
+          </tr>
+          <tr>
+            <td><span class="int-badge web" style="font-size:9px;padding:2px 5px;">Web</span></td>
+            <td><span class="condition-tag positive">VALID</span></td>
+            <td>Document appears in borrower list after upload</td>
+            <td><span class="source-tag">JIRA AC4</span></td>
+            <td><span class="pill pill-pass">Pass</span></td>
+            <td><span class="time-meta">2h ago</span></td>
+            <td><a href="#" class="asset-link">DocUpload.spec.ts</a></td>
+          </tr>
+          <tr>
+            <td><span class="int-badge web" style="font-size:9px;padding:2px 5px;">Web</span></td>
+            <td><span class="condition-tag negative">INVALID</span></td>
+            <td>Reject .exe file upload with error message</td>
+            <td><span class="source-tag">JIRA AC2</span></td>
+            <td><span class="pill pill-pass">Pass</span></td>
+            <td><span class="time-meta">2h ago</span></td>
+            <td><a href="#" class="asset-link">DocUpload.spec.ts</a></td>
+          </tr>
+          <tr>
+            <td><span class="int-badge web" style="font-size:9px;padding:2px 5px;">Web</span></td>
+            <td><span class="condition-tag boundary">BOUNDARY</span></td>
+            <td>Reject oversized 15MB file</td>
+            <td><span class="source-tag">JIRA AC1</span></td>
+            <td><span class="pill pill-pass">Pass</span></td>
+            <td><span class="time-meta">2h ago</span></td>
+            <td><a href="#" class="asset-link">DocUpload.spec.ts</a></td>
+          </tr>
+          <tr>
+            <td><span class="int-badge web" style="font-size:9px;padding:2px 5px;">Web</span></td>
+            <td><span class="condition-tag edge">EDGE</span></td>
+            <td>Upload during network interruption</td>
+            <td><span class="source-tag ai">AI Suggested</span></td>
+            <td><span class="pill pill-draft">Draft</span></td>
+            <td><span class="time-meta">&mdash;</span></td>
+            <td><span class="time-meta">&mdash;</span></td>
+          </tr>
+
+          <!-- API scenarios -->
+          <tr>
+            <td><span class="int-badge api" style="font-size:9px;padding:2px 5px;">API</span></td>
+            <td><span class="condition-tag positive">VALID</span></td>
+            <td><span class="method-badge post" style="margin-right:4px;">POST</span> Upload valid document via /documents/upload</td>
+            <td><span class="source-tag">Swagger</span></td>
+            <td><span class="pill pill-pass">Pass</span></td>
+            <td><span class="time-meta">2h ago</span></td>
+            <td><a href="#" class="asset-link">api-documents.spec.ts</a></td>
+          </tr>
+          <tr>
+            <td><span class="int-badge api" style="font-size:9px;padding:2px 5px;">API</span></td>
+            <td><span class="condition-tag negative">INVALID</span></td>
+            <td><span class="method-badge post" style="margin-right:4px;">POST</span> Reject invalid MIME type</td>
+            <td><span class="source-tag">Swagger</span></td>
+            <td><span class="pill pill-pass">Pass</span></td>
+            <td><span class="time-meta">2h ago</span></td>
+            <td><a href="#" class="asset-link">api-documents.spec.ts</a></td>
+          </tr>
+          <tr>
+            <td><span class="int-badge api" style="font-size:9px;padding:2px 5px;">API</span></td>
+            <td><span class="condition-tag positive">VALID</span></td>
+            <td><span class="method-badge get" style="margin-right:4px;">GET</span> Retrieve uploaded document metadata</td>
+            <td><span class="source-tag">Swagger</span></td>
+            <td><span class="pill pill-pass">Pass</span></td>
+            <td><span class="time-meta">2h ago</span></td>
+            <td><a href="#" class="asset-link">api-documents.spec.ts</a></td>
+          </tr>
+          <tr>
+            <td><span class="int-badge api" style="font-size:9px;padding:2px 5px;">API</span></td>
+            <td><span class="condition-tag positive">VALID</span></td>
+            <td><span class="method-badge get" style="margin-right:4px;">GET</span> List all borrower documents</td>
+            <td><span class="source-tag">Swagger</span></td>
+            <td><span class="pill pill-pass">Pass</span></td>
+            <td><span class="time-meta">2h ago</span></td>
+            <td><a href="#" class="asset-link">api-documents.spec.ts</a></td>
+          </tr>
+          <tr>
+            <td><span class="int-badge api" style="font-size:9px;padding:2px 5px;">API</span></td>
+            <td><span class="condition-tag negative">INVALID</span></td>
+            <td><span class="method-badge delete" style="margin-right:4px;">DELETE</span> Delete document (unauthorized, expect 403)</td>
+            <td><span class="source-tag ai">AI Suggested</span></td>
+            <td><span class="pill pill-fail">Missing</span></td>
+            <td><span class="time-meta">&mdash;</span></td>
+            <td><span class="time-meta">&mdash;</span></td>
+          </tr>
+          <tr>
+            <td><span class="int-badge api" style="font-size:9px;padding:2px 5px;">API</span></td>
+            <td><span class="condition-tag negative">INVALID</span></td>
+            <td><span class="method-badge post" style="margin-right:4px;">POST</span> Upload duplicate document</td>
+            <td><span class="source-tag ai">AI Suggested</span></td>
+            <td><span class="pill pill-draft">Draft</span></td>
+            <td><span class="time-meta">&mdash;</span></td>
+            <td><span class="time-meta">&mdash;</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ============ ANALYSIS PANELS ============ -->
+    <div class="analysis-grid mb-xl">
+
+      <!-- Condition Coverage (LEFT) -->
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Condition Coverage</div>
+            <div class="panel-subtitle">AI-identified conditions &mdash; tested vs untested</div>
+          </div>
+        </div>
+
+        <table class="scenario-table">
+          <thead>
+            <tr>
+              <th>Condition</th>
+              <th style="width:80px;">Type</th>
+              <th style="width:70px;">Tested?</th>
+              <th style="width:50px;">Count</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Valid PDF format</td>
+              <td><span class="condition-tag positive">Positive</span></td>
+              <td><span class="check-yes">&#10003;</span></td>
+              <td><span class="count-badge">2</span></td>
+            </tr>
+            <tr>
+              <td>Valid JPG format</td>
+              <td><span class="condition-tag positive">Positive</span></td>
+              <td><span class="check-yes">&#10003;</span></td>
+              <td><span class="count-badge">1</span></td>
+            </tr>
+            <tr>
+              <td>Valid PNG format</td>
+              <td><span class="condition-tag positive">Positive</span></td>
+              <td><span class="check-no">&#10007;</span></td>
+              <td><span class="count-badge zero">0</span></td>
+            </tr>
+            <tr>
+              <td>Oversized file (&gt;10MB)</td>
+              <td><span class="condition-tag boundary">Boundary</span></td>
+              <td><span class="check-yes">&#10003;</span></td>
+              <td><span class="count-badge">1</span></td>
+            </tr>
+            <tr>
+              <td>Exactly 10MB file</td>
+              <td><span class="condition-tag boundary">Boundary</span></td>
+              <td><span class="check-no">&#10007;</span></td>
+              <td><span class="count-badge zero">0</span></td>
+            </tr>
+            <tr>
+              <td>Invalid file type (.exe)</td>
+              <td><span class="condition-tag negative">Negative</span></td>
+              <td><span class="check-yes">&#10003;</span></td>
+              <td><span class="count-badge">2</span></td>
+            </tr>
+            <tr>
+              <td>Empty file (0 bytes)</td>
+              <td><span class="condition-tag edge">Edge</span></td>
+              <td><span class="check-no">&#10007;</span></td>
+              <td><span class="count-badge zero">0</span></td>
+            </tr>
+            <tr>
+              <td>Network interruption</td>
+              <td><span class="condition-tag edge">Edge</span></td>
+              <td><span class="check-draft">&#9671;</span></td>
+              <td><span class="count-badge">1</span></td>
+            </tr>
+            <tr>
+              <td>Concurrent uploads</td>
+              <td><span class="condition-tag edge">Edge</span></td>
+              <td><span class="check-no">&#10007;</span></td>
+              <td><span class="count-badge zero">0</span></td>
+            </tr>
+            <tr>
+              <td>Special chars in filename</td>
+              <td><span class="condition-tag edge">Edge</span></td>
+              <td><span class="check-no">&#10007;</span></td>
+              <td><span class="count-badge zero">0</span></td>
+            </tr>
+            <tr>
+              <td>Duplicate document</td>
+              <td><span class="condition-tag negative">Negative</span></td>
+              <td><span class="check-draft">&#9671;</span></td>
+              <td><span class="count-badge">1</span></td>
+            </tr>
+            <tr>
+              <td>Max filename length</td>
+              <td><span class="condition-tag boundary">Boundary</span></td>
+              <td><span class="check-no">&#10007;</span></td>
+              <td><span class="count-badge zero">0</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- JIRA AC Mapping (RIGHT) -->
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">JIRA Acceptance Criteria</div>
+            <div class="panel-subtitle">CCM-142: Borrower uploads income documents</div>
+          </div>
+          <span class="jira-badge" style="font-size:11px;">CCM-142</span>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:var(--sp-md);">
+          <!-- AC1 -->
+          <div style="border-left:3px solid var(--success-green);padding-left:var(--sp-md);">
+            <div style="font-size:11px;font-weight:700;color:var(--success-green);margin-bottom:2px;">AC1 &mdash; Fully Covered</div>
+            <div style="font-size:12px;margin-bottom:var(--sp-xs);">System accepts PDF, JPG, PNG formats up to 10MB</div>
+            <div style="font-size:10px;color:var(--ink-tertiary);">
+              &#8594; 4 scenarios: Upload PDF, Upload JPG, Reject oversized, Reject invalid type
+            </div>
+          </div>
+          <!-- AC2 -->
+          <div style="border-left:3px solid var(--success-green);padding-left:var(--sp-md);">
+            <div style="font-size:11px;font-weight:700;color:var(--success-green);margin-bottom:2px;">AC2 &mdash; Fully Covered</div>
+            <div style="font-size:12px;margin-bottom:var(--sp-xs);">System rejects unsupported file types with error message</div>
+            <div style="font-size:10px;color:var(--ink-tertiary);">
+              &#8594; 2 scenarios: Reject .exe (Web), Reject invalid MIME (API)
+            </div>
+          </div>
+          <!-- AC3 -->
+          <div style="border-left:3px solid var(--success-green);padding-left:var(--sp-md);">
+            <div style="font-size:11px;font-weight:700;color:var(--success-green);margin-bottom:2px;">AC3 &mdash; Fully Covered</div>
+            <div style="font-size:12px;margin-bottom:var(--sp-xs);">Upload progress indicator shown during upload</div>
+            <div style="font-size:10px;color:var(--ink-tertiary);">
+              &#8594; 1 scenario: Verify progress indicator (Web)
+            </div>
+          </div>
+          <!-- AC4 -->
+          <div style="border-left:3px solid var(--success-green);padding-left:var(--sp-md);">
+            <div style="font-size:11px;font-weight:700;color:var(--success-green);margin-bottom:2px;">AC4 &mdash; Fully Covered</div>
+            <div style="font-size:12px;margin-bottom:var(--sp-xs);">Uploaded document appears in borrower document list</div>
+            <div style="font-size:10px;color:var(--ink-tertiary);">
+              &#8594; 2 scenarios: Doc in list (Web), List documents (API)
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:var(--sp-lg);padding-top:var(--sp-md);border-top:1px solid var(--border-light);font-size:11px;color:var(--ink-secondary);">
+          <strong style="color:var(--brand-orange);">+5 AI-suggested scenarios</strong> beyond acceptance criteria (negative &amp; edge cases the JIRA story didn't specify)
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ AI RECOMMENDATIONS ============ -->
+    <div class="panel mb-xl">
+      <div class="panel-header">
+        <div class="panel-title">AI Suggestions</div>
+      </div>
+      <div class="ai-rec-grid">
+        <div class="ai-rec-card">
+          <div class="rec-title">Add PNG format validation</div>
+          <div class="rec-reason">JIRA AC1 mentions PNG but no test exists &mdash; gap in positive conditions</div>
+          <button class="btn btn-sm btn-primary">Generate</button>
+        </div>
+        <div class="ai-rec-card">
+          <div class="rec-title">Boundary test: exactly 10MB</div>
+          <div class="rec-reason">Critical boundary at the file size limit &mdash; common off-by-one defect area</div>
+          <button class="btn btn-sm btn-primary">Generate</button>
+        </div>
+        <div class="ai-rec-card">
+          <div class="rec-title">Test concurrent uploads</div>
+          <div class="rec-reason">Document systems commonly fail under concurrent access &mdash; edge case untested</div>
+          <button class="btn btn-sm btn-primary">Generate</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feedback Loop -->
+    <div class="feedback-loop">
+      <span class="loop-icon">&#8635;</span>
+      <span>Last execution fed 3 insights back: 1 selector healed on upload button, 1 new condition suggested (empty file), 1 flaky test flagged (network interruption)</span>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>

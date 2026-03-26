@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUALINT — Room Booking · Capability Detail</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="capabilities.css">
+  <style>
+    .header-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--sp-lg);
+    }
+    .header-left { flex: 1; }
+    .header-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: var(--sp-sm);
+    }
+    .header-badges { display: flex; gap: var(--sp-xs); }
+    .header-actions { display: flex; gap: var(--sp-sm); }
+
+    /* Trace chain bar */
+    .trace-bar {
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-md) var(--sp-lg);
+      box-shadow: var(--shadow-card);
+      margin-bottom: var(--sp-2xl);
+    }
+
+    /* Unified scenario table */
+    .scenario-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .scenario-table th {
+      text-align: left;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-secondary);
+      padding: var(--sp-sm) var(--sp-md);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      background: var(--card-surface);
+    }
+    .scenario-table td {
+      padding: var(--sp-sm) var(--sp-md);
+      font-size: 12px;
+      border-bottom: 1px solid var(--border-light);
+      vertical-align: middle;
+    }
+    .scenario-table tr:hover td { background: var(--hover-bg); }
+
+    /* Error note row */
+    .scenario-table tr.error-row td {
+      padding: 0 var(--sp-md) var(--sp-sm) var(--sp-md);
+      border-bottom: 1px solid var(--border-light);
+      background: transparent;
+    }
+    .scenario-table tr.error-row:hover td { background: transparent; }
+    .error-note {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-xs);
+      padding: 4px 8px;
+      background: #FEF2F2;
+      border: 1px solid #FECACA;
+      border-radius: var(--radius-xs);
+      font-size: 10px;
+      color: var(--critical-red);
+      margin-left: 60px;
+    }
+
+    /* Filter bar */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+      padding: var(--sp-sm) 0;
+      margin-bottom: var(--sp-md);
+      flex-wrap: wrap;
+    }
+    .filter-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      font-size: 10px;
+      font-weight: 600;
+      border: 1px solid var(--border-color);
+      background: var(--card-surface);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .filter-chip:hover { border-color: var(--brand-orange); }
+    .filter-chip.active {
+      background: var(--brand-orange);
+      color: white;
+      border-color: var(--brand-orange);
+    }
+    .filter-chip .chip-count {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      opacity: 0.7;
+    }
+    .filter-sep {
+      width: 1px;
+      height: 16px;
+      background: var(--border-color);
+      margin: 0 var(--sp-xs);
+    }
+
+    .source-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 6px;
+      border-radius: var(--radius-xs);
+      font-size: 10px;
+      font-weight: 600;
+      background: #DBEAFE;
+      color: #1D4ED8;
+    }
+    .source-tag.ai { background: var(--brand-orange-light); color: var(--brand-orange); }
+    .source-tag.swagger { background: #ECFDF5; color: #16A344; }
+
+    .asset-link {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--ink-secondary);
+      text-decoration: none;
+    }
+    .asset-link:hover { color: var(--brand-orange); }
+    .time-meta {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--ink-tertiary);
+    }
+
+    /* Coverage insight strip */
+    .insight-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--card-gap);
+      margin-bottom: var(--sp-2xl);
+    }
+    .insight-card {
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: var(--sp-md);
+      box-shadow: var(--shadow-card);
+      text-align: center;
+    }
+    .insight-value {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .insight-label {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-secondary);
+      margin-bottom: var(--sp-xs);
+    }
+    .insight-detail {
+      font-size: 10px;
+      color: var(--ink-tertiary);
+      margin-top: 2px;
+    }
+
+    /* Coverage analysis side-by-side */
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--card-gap);
+    }
+
+    /* AI rec cards */
+    .ai-rec-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--card-gap);
+    }
+    .ai-rec-card {
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-left: 3px solid var(--brand-orange);
+      border-radius: var(--radius-md);
+      padding: var(--panel-padding);
+      box-shadow: var(--shadow-card);
+    }
+    .ai-rec-card .rec-title {
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: var(--sp-xs);
+    }
+    .ai-rec-card .rec-reason {
+      font-size: 11px;
+      color: var(--ink-secondary);
+      margin-bottom: var(--sp-md);
+    }
+
+    .check-yes { color: var(--success-green); font-weight: 700; }
+    .check-no { color: var(--critical-red); font-weight: 700; }
+    .check-draft { color: var(--warm-amber); font-weight: 700; }
+    .count-badge { font-family: var(--font-mono); font-size: 11px; font-weight: 600; }
+    .count-badge.zero { color: var(--ink-tertiary); }
+
+    /* AC items */
+    .ac-item {
+      padding-left: var(--sp-md);
+      margin-bottom: var(--sp-md);
+    }
+    .ac-item.covered { border-left: 3px solid var(--success-green); }
+    .ac-item.partial { border-left: 3px solid var(--warm-amber); }
+    .ac-item.uncovered { border-left: 3px solid var(--critical-red); }
+    .ac-status {
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    .ac-status.green { color: var(--success-green); }
+    .ac-status.amber { color: var(--warm-amber); }
+    .ac-status.red { color: var(--critical-red); }
+    .ac-desc {
+      font-size: 12px;
+      margin-bottom: var(--sp-xs);
+    }
+    .ac-trace {
+      font-size: 10px;
+      color: var(--ink-tertiary);
+    }
+
+    .jira-section-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink-secondary);
+      margin-top: var(--sp-lg);
+      margin-bottom: var(--sp-sm);
+      padding-top: var(--sp-sm);
+      border-top: 1px solid var(--border-light);
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ============ SIDEBAR ============ -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo-mark">
+        <div class="logo-mark-inner">
+          <span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="brand-text">
+        QUALINT
+        <small>Quality Intelligence</small>
+      </div>
+    </div>
+
+    <div class="sidebar-nav">
+      <span class="sidebar-section-label">Project</span>
+      <a href="h-01-dashboard.html">
+        <span class="nav-icon">&#9707;</span>
+        <span class="nav-label">Dashboard</span>
+      </a>
+      <a href="h-02-capabilities.html" class="active">
+        <span class="nav-icon">&#11041;</span>
+        <span class="nav-label">Capabilities</span>
+      </a>
+      <a href="#">
+        <span class="nav-icon">&#9673;</span>
+        <span class="nav-label">Context</span>
+      </a>
+      <a href="#">
+        <span class="nav-icon">&#9745;</span>
+        <span class="nav-label">Test Cases</span>
+      </a>
+      <a href="#">
+        <span class="nav-icon">&#9881;</span>
+        <span class="nav-label">Automation</span>
+      </a>
+      <a href="#">
+        <span class="nav-icon">&#9855;</span>
+        <span class="nav-label">Accessibility</span>
+      </a>
+      <a href="#">
+        <span class="nav-icon">&#9654;</span>
+        <span class="nav-label">Execution</span>
+      </a>
+      <a href="#">
+        <span class="nav-icon">&#9638;</span>
+        <span class="nav-label">Results</span>
+      </a>
+
+      <span class="sidebar-section-label">Settings</span>
+      <a href="#">
+        <span class="nav-icon">&#9881;</span>
+        <span class="nav-label">Settings</span>
+      </a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">MK</div>
+        <div class="user-info">
+          <div class="name">Mehul K.</div>
+          <div class="role">QA Manager</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============ MAIN CONTENT ============ -->
+  <main class="main-content">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+      <a href="h-01-dashboard.html">Grand Horizon Hotels</a>
+      <span class="sep">/</span>
+      <a href="h-02-capabilities.html">Capabilities</a>
+      <span class="sep">/</span>
+      <span>Room Booking</span>
+    </div>
+
+    <!-- Page Header -->
+    <div class="header-row mb-xl">
+      <div class="header-left">
+        <div class="eyebrow">CAPABILITY &middot; CRITICAL PATH</div>
+        <h1 style="font-size:28px; font-weight:700; letter-spacing:-0.02em; line-height:1.2;">Room Booking</h1>
+        <div class="subtitle" style="color:var(--ink-secondary); font-size:13px; margin-top:var(--sp-xs);">
+          Search results &rarr; Room selection &rarr; Guest details &rarr; Payment &rarr; Confirmation
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="header-badges">
+          <span class="int-badge web">Web UI</span>
+          <span class="int-badge api">API</span>
+          <span class="int-badge mobile">Mobile</span>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-primary">Generate Scenarios</button>
+          <button class="btn btn-secondary">Edit Capability</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Traceability Chain -->
+    <div class="trace-bar">
+      <div class="trace-chain">
+        <span class="trace-chip requirement">JIRA: HTL-145</span>
+        <span class="trace-chip requirement" style="margin-left:2px;">HTL-160</span>
+        <span class="trace-sep">&rarr;</span>
+        <span class="trace-chip capability">Room Booking</span>
+        <span class="trace-sep">&rarr;</span>
+        <span class="trace-chip scenario">14 Scenarios</span>
+        <span class="trace-sep">&rarr;</span>
+        <span class="trace-chip test">12 Test Assets</span>
+      </div>
+    </div>
+
+    <!-- Insight Cards -->
+    <div class="insight-strip">
+      <div class="insight-card" style="border-top:3px solid var(--brand-orange);">
+        <div class="insight-label">Scenarios</div>
+        <div class="insight-value" style="color:var(--brand-orange);">14</div>
+        <div class="insight-detail">8 Web &middot; 6 API</div>
+      </div>
+      <div class="insight-card" style="border-top:3px solid var(--success-green);">
+        <div class="insight-label">Coverage</div>
+        <div class="insight-value" style="color:var(--success-green);">82%</div>
+        <div class="insight-detail">Web 88%, API 85%, Mobile 72%</div>
+      </div>
+      <div class="insight-card" style="border-top:3px solid var(--warm-amber);">
+        <div class="insight-label">Conditions Tested</div>
+        <div class="insight-value" style="color:var(--warm-amber);">11 / 16</div>
+        <div class="insight-detail">5 untested conditions</div>
+      </div>
+      <div class="insight-card" style="border-top:3px solid #1D4ED8;">
+        <div class="insight-label">JIRA ACs</div>
+        <div class="insight-value" style="color:#1D4ED8;">6 / 8</div>
+        <div class="insight-detail">2 ACs partially covered</div>
+      </div>
+    </div>
+
+    <!-- ============ UNIFIED SCENARIOS TABLE ============ -->
+    <div class="panel mb-xl">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">All Scenarios</div>
+          <div class="panel-subtitle">Unified view &mdash; filter by interaction type, condition, or status</div>
+        </div>
+      </div>
+
+      <!-- Filter Chips -->
+      <div class="filter-bar">
+        <span style="font-size:10px;font-weight:600;color:var(--ink-secondary);margin-right:var(--sp-xs);">FILTER:</span>
+        <span class="filter-chip active">All <span class="chip-count">14</span></span>
+        <span class="filter-chip" style="border-color:#7C3AED;color:#7C3AED;">Web UI <span class="chip-count">8</span></span>
+        <span class="filter-chip" style="border-color:#1D4ED8;color:#1D4ED8;">API <span class="chip-count">6</span></span>
+        <span class="filter-sep"></span>
+        <span class="filter-chip">Positive <span class="chip-count">5</span></span>
+        <span class="filter-chip">Negative <span class="chip-count">4</span></span>
+        <span class="filter-chip">Edge <span class="chip-count">3</span></span>
+        <span class="filter-chip">Boundary <span class="chip-count">2</span></span>
+        <span class="filter-sep"></span>
+        <span class="filter-chip">Pass <span class="chip-count">10</span></span>
+        <span class="filter-chip">Fail <span class="chip-count">2</span></span>
+        <span class="filter-chip">Draft <span class="chip-count">2</span></span>
+      </div>
+
+      <!-- The Single Table -->
+      <table class="scenario-table">
+        <thead>
+          <tr>
+            <th style="width:60px;">Type</th>
+            <th style="width:80px;">Condition</th>
+            <th>Scenario</th>
+            <th style="width:100px;">Source</th>
+            <th style="width:70px;">Status</th>
+            <th style="width:70px;">Last Run</th>
+            <th style="width:160px;">Test Asset</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- ===== Web UI Scenarios ===== -->
+
+          <!-- 1 -->
+          <tr>
+            <td><span class="int-badge web" style="font-size:9px;padding:2px 5px;">Web</span></td>
+            <td><span class="condition-tag positive">VALID</span></td>
+            <td>Search &rarr; Select standard room &rarr; Complete booking</td>
+            <td><span class="source-tag">JIRA AC1</span></td>
+            <td><span class="pill pill-pass">Pass</span></td>
+            <td><span class="time-meta">1h ago</span></td>
+            <td><a href="#" class="asset-link">booking-flow.spec.ts</a></td>
+          </tr>
+
+          <!-- 2 -->
+          <tr>
+            <td><span class="int-badge web" style="font-size:9px;padding:2px 5px;">Web</span></td>
+            <td><span class="condition-tag positive">VALID</span></td>
+            <td>Book suite with special requests (late checkout, extra bed)</td>
+            <td><span class="source-tag">JIRA AC2</span></td>
+            <td><span class="pill pill-pass">Pass</span></td>
+            <td><span class="time-meta">1h ago</span></td>
+            <td><a href="#" class="asset-link">booking-flow.spec.ts</a></td>
+          </tr>
+
+          <!-- 3 -->
+          <tr>
+            <td><span class="int-badge web" style="font-size:9px;padding:2px 5px;">Web</span></td>
+            <td><span class="condition-tag positive">VALID</span></td>
+            <td>Apply promo code at checkout</td>
+            <td><span class="source-tag">JIRA AC3</span></td>
+            <td><span class="pill pill-pass">Pass</span></td>
+            <td><span class="time-meta">1h ago</span></td>
+            <td><a href="#" class="asset-link">booking-flow.spec.ts</a></td>
+          </tr>
+
+          <!-- 4 -->
+          <tr>
+            <td><span class="int-badge web" style="font-size:9px;padding:2px 5px;">Web</span></td>
+            <td><span class="condition-tag negative">NEGATIVE</span></td>
+            <td>Book room for past dates</td>
+            <td><span class="source-tag ai">AI Suggested</span></td>
+            <td><span class="pill pill-pass">Pass</span></td>
+            <td><span class="time-meta">1h ago</span></td>
+            <td><a href="#" class="asset-link">booking-validation.spec.ts</a></td>
+          </tr>
+
+          <!-- 5 -->
+          <tr>
+            <td><span class="int-badge web" style="font-size:9px;padding:2px 5px;">Web</span></td>
+            <td><span class="condition-tag negative">NEGATIVE</span></td>
+            <td>Submit booking with expired credit card</td>
+            <td><span class="source-tag">JIRA AC5</span></td>
+            <td><span class="pill pill-fail">Fail</span></td>
+            <td><span class="time-meta">1h ago</span></td>
+            <td><a href="#" class="asset-link">booking-payment.spec.ts</a></td>
+          </tr>
+          <tr class="error-row">
+            <td colspan="7">
+              <div class="error-note">
+                <strong>Expected:</strong>&nbsp;&lsquo;Card Expired&rsquo; error &nbsp;|&nbsp; <strong>Got:</strong>&nbsp;Payment processing timeout
+              </div>
+            </td>
+          </tr>
+
+          <!-- 6 -->
+          <tr>
+            <td><span class="int-badge web" style="font-size:9px;padding:2px 5px;">Web</span></td>
+            <td><span class="condition-tag edge">EDGE</span></td>
+            <td>Concurrent booking &mdash; last room race condition</td>
+            <td><span class="source-tag ai">AI Suggested</span></td>
+            <td><span class="pill pill-draft">Draft</span></td>
+            <td><span class="time-meta">&mdash;</span></td>
+            <td><span class="time-meta">&mdash;</span></td>
+          </tr>
+
+          <!-- 7 -->
+          <tr>
+            <td><span class="int-badge web" style="font-size:9px;padding:2px 5px;">Web</span></td>
+            <td><span class="condition-tag boundary">BOUNDARY</span></td>
+            <td>Book room for maximum stay (30 nights)</td>
+            <td><span class="source-tag ai">AI Suggested</span></td>
+            <td><span class="pill pill-pass">Pass</span></td>
+            <td><span class="time-meta">1h ago</span></td>
+            <td><a href="#" class="asset-link">booking-validation.spec.ts</a></td>
+          </tr>
+
+          <!-- 8 -->
+          <tr>
+            <td><span class="int-badge web" style="font-size:9px;padding:2px 5px;">Web</span></td>
+            <td><span class="condition-tag edge">EDGE</span></td>
+            <td>Rate changes during booking flow (price went up mid-checkout)</td>
+            <td><span class="source-tag ai">AI Suggested</span></td>
+            <td><span class="pill pill-fail">Fail</span></td>
+            <td><span class="time-meta">1h ago</span></td>
+            <td><a href="#" class="asset-link">booking-flow.spec.ts</a></td>
+          </tr>
+          <tr class="error-row">
+            <td colspan="7">
+              <div class="error-note">
+                <strong>Expected:</strong>&nbsp;Price lock guarantee &nbsp;|&nbsp; <strong>Got:</strong>&nbsp;Updated price shown without warning
+              </div>
+            </td>
+          </tr>
+
+          <!-- ===== API Scenarios ===== -->
+
+          <!-- 9 -->
+          <tr>
+            <td><span class="int-badge api" style="font-size:9px;padding:2px 5px;">API</span></td>
+            <td><span class="condition-tag positive">VALID</span></td>
+            <td><span class="method-badge post" style="margin-right:4px;">POST</span> /reservations &mdash; Create standard reservation</td>
+            <td><span class="source-tag swagger">Swagger</span></td>
+            <td><span class="pill pill-pass">Pass</span></td>
+            <td><span class="time-meta">1h ago</span></td>
+            <td><a href="#" class="asset-link">api-reservations.spec.ts</a></td>
+          </tr>
+
+          <!-- 10 -->
+          <tr>
+            <td><span class="int-badge api" style="font-size:9px;padding:2px 5px;">API</span></td>
+            <td><span class="condition-tag positive">VALID</span></td>
+            <td><span class="method-badge post" style="margin-right:4px;">POST</span> /reservations &mdash; Book with loyalty points</td>
+            <td><span class="source-tag swagger">Swagger</span></td>
+            <td><span class="pill pill-pass">Pass</span></td>
+            <td><span class="time-meta">1h ago</span></td>
+            <td><a href="#" class="asset-link">api-reservations.spec.ts</a></td>
+          </tr>
+
+          <!-- 11 -->
+          <tr>
+            <td><span class="int-badge api" style="font-size:9px;padding:2px 5px;">API</span></td>
+            <td><span class="condition-tag negative">NEGATIVE</span></td>
+            <td><span class="method-badge post" style="margin-right:4px;">POST</span> /reservations &mdash; Unavailable dates (expect 409)</td>
+            <td><span class="source-tag swagger">Swagger</span></td>
+            <td><span class="pill pill-pass">Pass</span></td>
+            <td><span class="time-meta">1h ago</span></td>
+            <td><a href="#" class="asset-link">api-reservations.spec.ts</a></td>
+          </tr>
+
+          <!-- 12 -->
+          <tr>
+            <td><span class="int-badge api" style="font-size:9px;padding:2px 5px;">API</span></td>
+            <td><span class="condition-tag negative">NEGATIVE</span></td>
+            <td><span class="method-badge delete" style="margin-right:4px;">DELETE</span> /reservations/{id} &mdash; Cancel within free window</td>
+            <td><span class="source-tag">JIRA AC6</span></td>
+            <td><span class="pill pill-pass">Pass</span></td>
+            <td><span class="time-meta">1h ago</span></td>
+            <td><a href="#" class="asset-link">api-reservations.spec.ts</a></td>
+          </tr>
+
+          <!-- 13 -->
+          <tr>
+            <td><span class="int-badge api" style="font-size:9px;padding:2px 5px;">API</span></td>
+            <td><span class="condition-tag edge">EDGE</span></td>
+            <td><span class="method-badge post" style="margin-right:4px;">POST</span> /reservations &mdash; Double booking same room (race condition)</td>
+            <td><span class="source-tag ai">AI Suggested</span></td>
+            <td><span class="pill pill-draft">Draft</span></td>
+            <td><span class="time-meta">&mdash;</span></td>
+            <td><span class="time-meta">&mdash;</span></td>
+          </tr>
+
+          <!-- 14 -->
+          <tr>
+            <td><span class="int-badge api" style="font-size:9px;padding:2px 5px;">API</span></td>
+            <td><span class="condition-tag boundary">BOUNDARY</span></td>
+            <td><span class="method-badge post" style="margin-right:4px;">POST</span> /reservations &mdash; Book 1 year in advance (max window)</td>
+            <td><span class="source-tag ai">AI Suggested</span></td>
+            <td><span class="pill pill-pass">Pass</span></td>
+            <td><span class="time-meta">1h ago</span></td>
+            <td><a href="#" class="asset-link">api-reservations.spec.ts</a></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ============ ANALYSIS PANELS ============ -->
+    <div class="analysis-grid mb-xl">
+
+      <!-- Condition Coverage (LEFT) -->
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Condition Coverage</div>
+            <div class="panel-subtitle">AI-identified conditions &mdash; tested vs untested</div>
+          </div>
+        </div>
+
+        <table class="scenario-table">
+          <thead>
+            <tr>
+              <th>Condition</th>
+              <th style="width:80px;">Type</th>
+              <th style="width:70px;">Tested?</th>
+              <th style="width:50px;">Count</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Standard room booking</td>
+              <td><span class="condition-tag positive">Positive</span></td>
+              <td><span class="check-yes">&#10003;</span></td>
+              <td><span class="count-badge">2</span></td>
+            </tr>
+            <tr>
+              <td>Suite with special requests</td>
+              <td><span class="condition-tag positive">Positive</span></td>
+              <td><span class="check-yes">&#10003;</span></td>
+              <td><span class="count-badge">1</span></td>
+            </tr>
+            <tr>
+              <td>Promo code applied</td>
+              <td><span class="condition-tag positive">Positive</span></td>
+              <td><span class="check-yes">&#10003;</span></td>
+              <td><span class="count-badge">1</span></td>
+            </tr>
+            <tr>
+              <td>Loyalty points booking</td>
+              <td><span class="condition-tag positive">Positive</span></td>
+              <td><span class="check-yes">&#10003;</span></td>
+              <td><span class="count-badge">1</span></td>
+            </tr>
+            <tr>
+              <td>Past date rejection</td>
+              <td><span class="condition-tag negative">Negative</span></td>
+              <td><span class="check-yes">&#10003;</span></td>
+              <td><span class="count-badge">1</span></td>
+            </tr>
+            <tr>
+              <td>Expired credit card</td>
+              <td><span class="condition-tag negative">Negative</span></td>
+              <td><span class="check-yes">&#10003;</span></td>
+              <td><span class="count-badge">1</span></td>
+            </tr>
+            <tr>
+              <td>Unavailable dates (409)</td>
+              <td><span class="condition-tag negative">Negative</span></td>
+              <td><span class="check-yes">&#10003;</span></td>
+              <td><span class="count-badge">1</span></td>
+            </tr>
+            <tr>
+              <td>Cancellation within window</td>
+              <td><span class="condition-tag negative">Negative</span></td>
+              <td><span class="check-yes">&#10003;</span></td>
+              <td><span class="count-badge">1</span></td>
+            </tr>
+            <tr>
+              <td>Concurrent last-room race</td>
+              <td><span class="condition-tag edge">Edge</span></td>
+              <td><span class="check-draft">&#9671; Draft</span></td>
+              <td><span class="count-badge">2</span></td>
+            </tr>
+            <tr>
+              <td>Rate change mid-checkout</td>
+              <td><span class="condition-tag edge">Edge</span></td>
+              <td><span class="check-yes">&#10003;</span></td>
+              <td><span class="count-badge">1</span></td>
+            </tr>
+            <tr>
+              <td>Maximum stay (30 nights)</td>
+              <td><span class="condition-tag boundary">Boundary</span></td>
+              <td><span class="check-yes">&#10003;</span></td>
+              <td><span class="count-badge">1</span></td>
+            </tr>
+            <tr>
+              <td>Max advance booking (1 year)</td>
+              <td><span class="condition-tag boundary">Boundary</span></td>
+              <td><span class="check-yes">&#10003;</span></td>
+              <td><span class="count-badge">1</span></td>
+            </tr>
+            <tr style="background:#FEF2F2;">
+              <td>Minimum stay (1 night)</td>
+              <td><span class="condition-tag boundary">Boundary</span></td>
+              <td><span class="check-no">&#10007; No</span></td>
+              <td><span class="count-badge zero">0</span></td>
+            </tr>
+            <tr style="background:#FEF2F2;">
+              <td>Overbooking (&gt;100% capacity)</td>
+              <td><span class="condition-tag edge">Edge</span></td>
+              <td><span class="check-no">&#10007; No</span></td>
+              <td><span class="count-badge zero">0</span></td>
+            </tr>
+            <tr style="background:#FEF2F2;">
+              <td>Multi-room booking</td>
+              <td><span class="condition-tag positive">Positive</span></td>
+              <td><span class="check-no">&#10007; No</span></td>
+              <td><span class="count-badge zero">0</span></td>
+            </tr>
+            <tr style="background:#FEF2F2;">
+              <td>International guest (foreign card + currency)</td>
+              <td><span class="condition-tag edge">Edge</span></td>
+              <td><span class="check-no">&#10007; No</span></td>
+              <td><span class="count-badge zero">0</span></td>
+            </tr>
+            <tr style="background:#FEF2F2;">
+              <td>Group booking (10+ rooms)</td>
+              <td><span class="condition-tag positive">Positive</span></td>
+              <td><span class="check-no">&#10007; No</span></td>
+              <td><span class="count-badge zero">0</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- JIRA AC Mapping (RIGHT) -->
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">JIRA Acceptance Criteria</div>
+            <div class="panel-subtitle">Mapping requirements to scenario coverage</div>
+          </div>
+        </div>
+
+        <!-- HTL-145 -->
+        <div style="display:flex;align-items:center;gap:var(--sp-sm);margin-bottom:var(--sp-md);">
+          <span class="jira-badge" style="font-size:11px;">HTL-145</span>
+          <span style="font-size:12px;font-weight:600;">Complete room booking flow</span>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:var(--sp-md);">
+          <!-- AC1 -->
+          <div class="ac-item covered">
+            <div class="ac-status green">AC1 &mdash; Fully Covered</div>
+            <div class="ac-desc">Guest can search, select room, enter details, and complete booking</div>
+            <div class="ac-trace">&rarr; 2 scenarios: Standard booking (Web), Create reservation (API)</div>
+          </div>
+
+          <!-- AC2 -->
+          <div class="ac-item covered">
+            <div class="ac-status green">AC2 &mdash; Fully Covered</div>
+            <div class="ac-desc">Special requests (late checkout, extra bed) included in booking</div>
+            <div class="ac-trace">&rarr; 1 scenario: Suite with special requests</div>
+          </div>
+
+          <!-- AC3 -->
+          <div class="ac-item covered">
+            <div class="ac-status green">AC3 &mdash; Fully Covered</div>
+            <div class="ac-desc">Promo codes applied at checkout with real-time price update</div>
+            <div class="ac-trace">&rarr; 1 scenario: Apply promo code</div>
+          </div>
+
+          <!-- AC4 -->
+          <div class="ac-item uncovered">
+            <div class="ac-status red">AC4 &mdash; Not Covered</div>
+            <div class="ac-desc">Booking confirmation email sent within 30 seconds</div>
+            <div class="ac-trace">&rarr; 0 scenarios &mdash; Event-driven test needed</div>
+          </div>
+
+          <!-- AC5 -->
+          <div class="ac-item partial">
+            <div class="ac-status amber">AC5 &mdash; Partially Covered</div>
+            <div class="ac-desc">Expired/declined cards show clear error message</div>
+            <div class="ac-trace">&rarr; 1 scenario: Expired card &mdash; but test failing</div>
+          </div>
+        </div>
+
+        <!-- HTL-160 -->
+        <div class="jira-section-label">
+          <span class="jira-badge" style="font-size:11px;margin-right:var(--sp-sm);">HTL-160</span>
+          Cancel booking within 24 hours
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:var(--sp-md);">
+          <!-- AC6 -->
+          <div class="ac-item covered">
+            <div class="ac-status green">AC6 &mdash; Fully Covered</div>
+            <div class="ac-desc">Free cancellation within 24-hour window</div>
+            <div class="ac-trace">&rarr; 1 scenario: Cancel within free window (API)</div>
+          </div>
+
+          <!-- AC7 -->
+          <div class="ac-item uncovered">
+            <div class="ac-status red">AC7 &mdash; Not Covered</div>
+            <div class="ac-desc">Cancellation after 24 hours incurs penalty fee</div>
+            <div class="ac-trace">&rarr; 0 scenarios &mdash; Penalty logic untested</div>
+          </div>
+
+          <!-- AC8 -->
+          <div class="ac-item uncovered">
+            <div class="ac-status red">AC8 &mdash; Not Covered</div>
+            <div class="ac-desc">Refund processed within 5&ndash;7 business days</div>
+            <div class="ac-trace">&rarr; 0 scenarios &mdash; Async refund flow untested</div>
+          </div>
+        </div>
+
+        <div style="margin-top:var(--sp-lg);padding-top:var(--sp-md);border-top:1px solid var(--border-light);font-size:11px;color:var(--ink-secondary);">
+          <strong style="color:var(--brand-orange);">+6 AI-suggested scenarios</strong> beyond acceptance criteria (edge, boundary &amp; negative cases the JIRA stories didn't specify)
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ AI RECOMMENDATIONS ============ -->
+    <div class="panel mb-xl">
+      <div class="panel-header">
+        <div class="panel-title">AI Suggestions</div>
+      </div>
+      <div class="ai-rec-grid">
+        <div class="ai-rec-card">
+          <div class="rec-title">Test concurrent last-room booking</div>
+          <div class="rec-reason">High-revenue edge case: two users booking the last room simultaneously. Race condition risk.</div>
+          <button class="btn btn-sm btn-primary">Generate</button>
+        </div>
+        <div class="ai-rec-card">
+          <div class="rec-title">Add international guest booking</div>
+          <div class="rec-reason">Foreign credit cards, currency conversion, and tax calculation vary by country.</div>
+          <button class="btn btn-sm btn-primary">Generate</button>
+        </div>
+        <div class="ai-rec-card">
+          <div class="rec-title">Test booking confirmation email</div>
+          <div class="rec-reason">JIRA AC4 requires email within 30s &mdash; needs event-driven test with mail trap.</div>
+          <button class="btn btn-sm btn-primary">Generate</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feedback Loop -->
+    <div class="feedback-loop">
+      <span class="loop-icon">&#8635;</span>
+      <span>Last execution fed 4 insights: expired card test needs assertion update, rate-change scenario revealed missing price-lock feature, 2 new conditions suggested (multi-room, group booking)</span>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>

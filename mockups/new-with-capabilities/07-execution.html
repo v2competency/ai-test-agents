@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUALINT — Test Execution</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="capabilities.css">
+  <style>
+    /* Run Configuration */
+    .run-config-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: var(--sp-2xl);
+    }
+
+    .config-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-secondary);
+      margin-bottom: var(--sp-md);
+    }
+
+    /* Browser checkboxes */
+    .browser-option {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+      padding: 6px 0;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .browser-option input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--brand-orange);
+    }
+
+    /* Radio scope options */
+    .scope-option {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+      padding: 8px var(--sp-md);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      margin-bottom: var(--sp-sm);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .scope-option:hover {
+      border-color: var(--brand-orange);
+      background: var(--brand-orange-light);
+    }
+
+    .scope-option.recommended {
+      border-color: var(--brand-orange);
+      background: var(--brand-orange-light);
+    }
+
+    .scope-option .scope-count {
+      margin-left: auto;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--ink-tertiary);
+    }
+
+    .scope-option .rec-tag {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--brand-orange);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .scope-option input[type="radio"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--brand-orange);
+    }
+
+    /* Capability selection grid */
+    .cap-select-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-sm);
+    }
+
+    .cap-select-item {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+      padding: 8px var(--sp-md);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .cap-select-item input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--brand-orange);
+    }
+
+    .cap-select-item .cap-count {
+      margin-left: auto;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--ink-tertiary);
+    }
+
+    .cap-select-summary {
+      font-size: 11px;
+      color: var(--ink-secondary);
+      font-weight: 600;
+      margin-top: var(--sp-md);
+      padding-top: var(--sp-sm);
+      border-top: 1px solid var(--border-light);
+    }
+
+    /* Progress bar */
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      background: var(--border-light);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+      margin: var(--sp-md) 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--brand-orange);
+      border-radius: var(--radius-pill);
+      transition: width 0.5s ease;
+    }
+
+    /* Run stats row */
+    .run-stats {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2xl);
+      font-size: 12px;
+      margin-bottom: var(--sp-lg);
+    }
+
+    .run-stat-item {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-xs);
+    }
+
+    .run-stat-item .stat-value {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .run-stat-item .stat-label {
+      color: var(--ink-secondary);
+      font-size: 11px;
+    }
+
+    /* Live log terminal */
+    .terminal .log-pass { color: var(--success-green); }
+    .terminal .log-fail { color: var(--critical-red); }
+    .terminal .log-running { color: var(--brand-orange); }
+    .terminal .log-time { color: var(--ink-tertiary); }
+    .terminal .log-error { color: var(--critical-red); font-size: 10px; padding-left: 90px; }
+
+    .terminal .log-line {
+      padding: 2px 0;
+    }
+
+    /* Run title row */
+    .run-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .run-title-row h3 {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .run-percent {
+      font-family: var(--font-mono);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--brand-orange);
+    }
+
+    /* Header actions */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-md);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+
+    <!-- ============ SIDEBAR ============ -->
+    <nav class="sidebar">
+      <div class="sidebar-brand">
+        <div class="logo-mark">
+          <div class="logo-mark-inner">
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+        <div class="brand-text">
+          QUALINT
+          <small>Quality Intelligence</small>
+        </div>
+      </div>
+
+      <div class="sidebar-nav">
+        <span class="sidebar-section-label">Project</span>
+        <a href="01-dashboard.html">
+          <span class="nav-icon">&#9707;</span>
+          <span class="nav-label">Dashboard</span>
+        </a>
+        <a href="02-capabilities.html">
+          <span class="nav-icon">&#11041;</span>
+          <span class="nav-label">Capabilities</span>
+        </a>
+        <a href="03-context.html">
+          <span class="nav-icon">&#9673;</span>
+          <span class="nav-label">Context</span>
+        </a>
+        <a href="05-test-cases.html">
+          <span class="nav-icon">&#9745;</span>
+          <span class="nav-label">Test Cases</span>
+        </a>
+        <a href="06-automation.html">
+          <span class="nav-icon">&#9881;</span>
+          <span class="nav-label">Automation</span>
+        </a>
+        <a href="09-accessibility.html">
+          <span class="nav-icon">&#9855;</span>
+          <span class="nav-label">Accessibility</span>
+        </a>
+        <a href="07-execution.html" class="active">
+          <span class="nav-icon">&#9654;</span>
+          <span class="nav-label">Execution</span>
+        </a>
+        <a href="08-results.html">
+          <span class="nav-icon">&#9638;</span>
+          <span class="nav-label">Results</span>
+        </a>
+        <span class="sidebar-section-label">Settings</span>
+        <a href="10-settings.html">
+          <span class="nav-icon">&#9881;</span>
+          <span class="nav-label">Settings</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="avatar">MK</div>
+          <div class="user-info">
+            <div class="name">Mehul K.</div>
+            <div class="role">QA Manager</div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ============ MAIN CONTENT ============ -->
+    <main class="main-content">
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <div class="eyebrow">CCM MORTGAGE</div>
+          <h1>Test Execution</h1>
+          <div class="subtitle">Configure and run tests across environments</div>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-primary btn-lg">Run All Tests</button>
+        </div>
+      </div>
+
+      <!-- Run Configuration Panel -->
+      <div class="panel mb-xl">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Run Configuration</div>
+            <div class="panel-subtitle">Select environment, browsers, and test scope</div>
+          </div>
+        </div>
+
+        <div class="run-config-grid">
+          <!-- Column 1: Environment -->
+          <div>
+            <div class="config-section-title">Environment</div>
+            <select class="form-select">
+              <option value="production">Production</option>
+              <option value="staging" selected>Staging</option>
+              <option value="qa">QA</option>
+              <option value="dev">Dev</option>
+            </select>
+          </div>
+
+          <!-- Column 2: Browsers -->
+          <div>
+            <div class="config-section-title">Browsers</div>
+            <div class="browser-option">
+              <input type="checkbox" id="chromium" checked>
+              <label for="chromium">Chromium</label>
+            </div>
+            <div class="browser-option">
+              <input type="checkbox" id="firefox" checked>
+              <label for="firefox">Firefox</label>
+            </div>
+            <div class="browser-option">
+              <input type="checkbox" id="webkit">
+              <label for="webkit">WebKit</label>
+            </div>
+          </div>
+
+          <!-- Column 3: Scope -->
+          <div>
+            <div class="config-section-title">Scope</div>
+            <label class="scope-option">
+              <input type="radio" name="scope" value="all">
+              <span>All Tests</span>
+              <span class="scope-count">114</span>
+            </label>
+            <label class="scope-option">
+              <input type="radio" name="scope" value="capability">
+              <span>By Capability</span>
+            </label>
+            <label class="scope-option recommended">
+              <input type="radio" name="scope" value="changed" checked>
+              <span>Changed Only</span>
+              <span class="rec-tag">Recommended</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Capability Selection Panel -->
+      <div class="panel mb-xl">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Capability Selection</div>
+            <div class="panel-subtitle">Choose capabilities to include in the run</div>
+          </div>
+        </div>
+
+        <div class="cap-select-grid">
+          <label class="cap-select-item">
+            <input type="checkbox" checked>
+            <span>Loan Application</span>
+            <span class="cap-count">9 scenarios</span>
+          </label>
+          <label class="cap-select-item">
+            <input type="checkbox" checked>
+            <span>Document Upload</span>
+            <span class="cap-count">7 scenarios</span>
+          </label>
+          <label class="cap-select-item">
+            <input type="checkbox">
+            <span>Credit Check</span>
+            <span class="cap-count">6 scenarios</span>
+          </label>
+          <label class="cap-select-item">
+            <input type="checkbox" checked>
+            <span>Rate Calculator</span>
+            <span class="cap-count">6 scenarios</span>
+          </label>
+          <label class="cap-select-item">
+            <input type="checkbox" checked>
+            <span>E-Signature</span>
+            <span class="cap-count">6 scenarios</span>
+          </label>
+          <label class="cap-select-item">
+            <input type="checkbox">
+            <span>Underwriting</span>
+            <span class="cap-count">6 scenarios</span>
+          </label>
+          <label class="cap-select-item">
+            <input type="checkbox">
+            <span>Compliance Audit</span>
+            <span class="cap-count">4 scenarios</span>
+          </label>
+          <label class="cap-select-item">
+            <input type="checkbox" checked>
+            <span>User Auth</span>
+            <span class="cap-count">3 scenarios</span>
+          </label>
+        </div>
+
+        <div class="cap-select-summary">5 capabilities selected &middot; 31 scenarios</div>
+      </div>
+
+      <!-- Current Run Panel -->
+      <div class="panel mb-xl">
+        <div class="panel-header">
+          <div class="run-title-row" style="width:100%;">
+            <h3>Run #47 &mdash; Staging &middot; Chromium, Firefox</h3>
+            <span class="run-percent">78%</span>
+          </div>
+        </div>
+
+        <div class="progress-track">
+          <div class="progress-fill" style="width: 78%;"></div>
+        </div>
+
+        <div class="run-stats">
+          <div class="run-stat-item">
+            <span class="stat-value">89</span>
+            <span class="stat-label">/ 114 executed</span>
+          </div>
+          <div class="run-stat-item">
+            <span class="stat-value text-green">82</span>
+            <span class="stat-label">pass</span>
+          </div>
+          <div class="run-stat-item">
+            <span class="stat-value text-red">5</span>
+            <span class="stat-label">fail</span>
+          </div>
+          <div class="run-stat-item">
+            <span class="stat-value text-tertiary">2</span>
+            <span class="stat-label">skip</span>
+          </div>
+        </div>
+
+        <div class="terminal">
+          <div class="log-line"><span class="log-time">[14:23:01]</span> <span class="log-pass">&#10003;</span> Document Upload &gt; Upload valid PDF <span class="log-time">(1.2s)</span></div>
+          <div class="log-line"><span class="log-time">[14:23:03]</span> <span class="log-pass">&#10003;</span> Document Upload &gt; Reject .exe file <span class="log-time">(0.8s)</span></div>
+          <div class="log-line"><span class="log-time">[14:23:05]</span> <span class="log-fail">&#10007;</span> Credit Check &gt; Score below 580 rejection <span class="log-time">(2.1s)</span></div>
+          <div class="log-error">&rarr; Expected: &quot;Application Denied&quot; | Got: &quot;Review Required&quot;</div>
+          <div class="log-line"><span class="log-time">[14:23:08]</span> <span class="log-pass">&#10003;</span> Rate Calculator &gt; Display current rates <span class="log-time">(1.5s)</span></div>
+          <div class="log-line"><span class="log-time">[14:23:10]</span> <span class="log-running">&#10227;</span> E-Signature &gt; Sign closing documents <span class="log-running">(running...)</span></div>
+        </div>
+      </div>
+
+      <!-- Recent Runs Table -->
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Recent Runs</div>
+            <div class="panel-subtitle">Execution history</div>
+          </div>
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Run</th>
+              <th>Environment</th>
+              <th>Scope</th>
+              <th>Tests</th>
+              <th>Pass Rate</th>
+              <th>Duration</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mono font-bold">#47</td>
+              <td>Staging</td>
+              <td>All</td>
+              <td class="mono">114</td>
+              <td class="mono">78%</td>
+              <td class="mono">Running...</td>
+              <td><span class="pill pill-warn">Running</span></td>
+            </tr>
+            <tr>
+              <td class="mono font-bold">#46</td>
+              <td>Staging</td>
+              <td>Changed</td>
+              <td class="mono">23</td>
+              <td class="mono">91%</td>
+              <td class="mono">3m 42s</td>
+              <td><span class="pill pill-pass">Complete</span></td>
+            </tr>
+            <tr>
+              <td class="mono font-bold">#45</td>
+              <td>QA</td>
+              <td>All</td>
+              <td class="mono">114</td>
+              <td class="mono">82%</td>
+              <td class="mono">8m 15s</td>
+              <td><span class="pill pill-pass">Complete</span></td>
+            </tr>
+            <tr>
+              <td class="mono font-bold">#44</td>
+              <td>Staging</td>
+              <td>By Capability</td>
+              <td class="mono">28</td>
+              <td class="mono">71%</td>
+              <td class="mono">4m 01s</td>
+              <td><span class="pill pill-warn">Partial</span></td>
+            </tr>
+            <tr>
+              <td class="mono font-bold">#43</td>
+              <td>Production</td>
+              <td>Smoke</td>
+              <td class="mono">12</td>
+              <td class="mono">100%</td>
+              <td class="mono">1m 08s</td>
+              <td><span class="pill pill-pass">Complete</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </main>
+  </div>
+</body>
+</html>

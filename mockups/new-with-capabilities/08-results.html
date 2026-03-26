@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUALINT — Test Results</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="capabilities.css">
+  <style>
+    /* Header actions */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+    }
+
+    /* Result Summary Bar */
+    .result-summary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+
+    .result-summary-left {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2xl);
+      padding: var(--sp-2xl);
+      border-right: 1px solid var(--border-light);
+    }
+
+    .result-summary-right {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-md);
+      padding: var(--sp-2xl);
+    }
+
+    /* SVG donut */
+    .donut-container {
+      flex-shrink: 0;
+    }
+
+    .ring-bg {
+      fill: none;
+      stroke: var(--border-light);
+      stroke-width: 8;
+    }
+
+    .ring-fill {
+      fill: none;
+      stroke-width: 8;
+      stroke-linecap: round;
+    }
+
+    .ring-fill.green { stroke: var(--success-green); }
+
+    .ring-text {
+      font-family: var(--font-ui);
+      font-weight: 700;
+      fill: var(--ink);
+    }
+
+    /* Summary stats beside donut */
+    .summary-stats {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-sm);
+    }
+
+    .summary-stat-row {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+      font-size: 12px;
+    }
+
+    .summary-stat-row .stat-value {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .summary-stat-row .stat-label {
+      color: var(--ink-secondary);
+    }
+
+    .summary-detail {
+      font-size: 11px;
+      color: var(--ink-secondary);
+      display: flex;
+      align-items: center;
+      gap: var(--sp-xs);
+    }
+
+    .summary-detail .mono {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    /* Mini stat boxes */
+    .mini-stat-box {
+      background: var(--hover-bg);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: var(--sp-md);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-xs);
+    }
+
+    .mini-stat-box .mini-stat-label {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-secondary);
+    }
+
+    .mini-stat-box .mini-stat-value {
+      font-family: var(--font-ui);
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    /* Collapsible capability sections */
+    .cap-result-section {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--sp-md);
+      overflow: hidden;
+    }
+
+    .cap-result-header {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-md);
+      padding: var(--sp-md) var(--sp-lg);
+      background: var(--hover-bg);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .cap-result-header:hover {
+      background: #F0EDE4;
+    }
+
+    .cap-result-header .toggle-icon {
+      width: 16px;
+      text-align: center;
+      color: var(--ink-tertiary);
+      font-size: 10px;
+      flex-shrink: 0;
+    }
+
+    .cap-result-header .cap-result-name {
+      flex: 1;
+    }
+
+    .cap-result-header .cap-result-count {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink-secondary);
+    }
+
+    .cap-result-bar {
+      width: 80px;
+      height: 6px;
+      background: var(--border-light);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .cap-result-bar .bar-inner {
+      height: 100%;
+      border-radius: var(--radius-pill);
+    }
+
+    .cap-result-bar .bar-inner.green { background: var(--success-green); }
+    .cap-result-bar .bar-inner.amber { background: var(--warm-amber); }
+
+    .cap-result-body {
+      padding: 0;
+    }
+
+    /* Result rows */
+    .result-row {
+      display: grid;
+      grid-template-columns: 1fr 60px 70px 60px 80px;
+      align-items: center;
+      gap: var(--sp-sm);
+      padding: var(--sp-sm) var(--sp-lg) var(--sp-sm) 44px;
+      border-top: 1px solid var(--border-light);
+      font-size: 12px;
+    }
+
+    .result-row:hover {
+      background: var(--hover-bg);
+    }
+
+    .result-row.fail-row {
+      background: var(--critical-red-light);
+    }
+
+    .result-row.fail-row:hover {
+      background: #FDE2E2;
+    }
+
+    .result-row .scenario-name {
+      font-weight: 500;
+    }
+
+    .result-row .type-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .result-row .condition-badge {
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .result-row .duration {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-tertiary);
+    }
+
+    .result-row .result-status {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .result-row .result-status.pass { color: var(--success-green); }
+    .result-row .result-status.fail { color: var(--critical-red); }
+
+    .fail-detail {
+      padding: 4px var(--sp-lg) var(--sp-sm) 44px;
+      font-size: 11px;
+      color: var(--critical-red);
+      background: var(--critical-red-light);
+      border-top: none;
+    }
+
+    /* Failure Analysis panel */
+    .failure-card {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: var(--sp-lg);
+      margin-bottom: var(--sp-md);
+    }
+
+    .failure-card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--sp-lg);
+      margin-bottom: var(--sp-md);
+    }
+
+    .failure-card-header .fail-info {
+      flex: 1;
+    }
+
+    .failure-card-header .fail-test-name {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .failure-card-header .fail-error {
+      font-size: 11px;
+      color: var(--critical-red);
+      font-family: var(--font-mono);
+    }
+
+    .screenshot-placeholder {
+      width: 120px;
+      height: 80px;
+      background: var(--border-light);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: var(--ink-tertiary);
+      flex-shrink: 0;
+    }
+
+    .ai-recommendation {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--sp-sm);
+      padding: var(--sp-md);
+      background: var(--brand-orange-light);
+      border: 1px solid #FDDCC0;
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    .ai-recommendation .ai-icon {
+      font-size: 14px;
+      flex-shrink: 0;
+      color: var(--brand-orange);
+    }
+
+    /* Feedback loop bar */
+    .feedback-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+      padding: var(--sp-md) var(--sp-lg);
+      background: var(--warm-amber-light);
+      border: 1px solid #FDE68A;
+      border-radius: var(--radius-md);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--warm-amber);
+    }
+
+    .feedback-bar .feedback-icon {
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+
+    <!-- ============ SIDEBAR ============ -->
+    <nav class="sidebar">
+      <div class="sidebar-brand">
+        <div class="logo-mark">
+          <div class="logo-mark-inner">
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+        <div class="brand-text">
+          QUALINT
+          <small>Quality Intelligence</small>
+        </div>
+      </div>
+
+      <div class="sidebar-nav">
+        <span class="sidebar-section-label">Project</span>
+        <a href="01-dashboard.html">
+          <span class="nav-icon">&#9707;</span>
+          <span class="nav-label">Dashboard</span>
+        </a>
+        <a href="02-capabilities.html">
+          <span class="nav-icon">&#11041;</span>
+          <span class="nav-label">Capabilities</span>
+        </a>
+        <a href="03-context.html">
+          <span class="nav-icon">&#9673;</span>
+          <span class="nav-label">Context</span>
+        </a>
+        <a href="05-test-cases.html">
+          <span class="nav-icon">&#9745;</span>
+          <span class="nav-label">Test Cases</span>
+        </a>
+        <a href="06-automation.html">
+          <span class="nav-icon">&#9881;</span>
+          <span class="nav-label">Automation</span>
+        </a>
+        <a href="09-accessibility.html">
+          <span class="nav-icon">&#9855;</span>
+          <span class="nav-label">Accessibility</span>
+        </a>
+        <a href="07-execution.html">
+          <span class="nav-icon">&#9654;</span>
+          <span class="nav-label">Execution</span>
+        </a>
+        <a href="08-results.html" class="active">
+          <span class="nav-icon">&#9638;</span>
+          <span class="nav-label">Results</span>
+        </a>
+        <span class="sidebar-section-label">Settings</span>
+        <a href="10-settings.html">
+          <span class="nav-icon">&#9881;</span>
+          <span class="nav-label">Settings</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="avatar">MK</div>
+          <div class="user-info">
+            <div class="name">Mehul K.</div>
+            <div class="role">QA Manager</div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ============ MAIN CONTENT ============ -->
+    <main class="main-content">
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <div class="eyebrow">CCM MORTGAGE</div>
+          <h1>Test Results</h1>
+          <div class="subtitle">Run #46 &mdash; Staging &middot; 23 tests &middot; Changed scope</div>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-secondary">Re-run Failed</button>
+          <button class="btn btn-primary">Download Report</button>
+        </div>
+      </div>
+
+      <!-- Result Summary Bar -->
+      <div class="panel mb-xl">
+        <div class="result-summary">
+          <!-- LEFT: Donut + stats -->
+          <div class="result-summary-left">
+            <div class="donut-container">
+              <!-- SVG ring: r=40, circumference = 2*pi*40 = 251.327, offset for 91% = 251.327 * 0.09 = 22.619 -->
+              <svg width="100" height="100" viewBox="0 0 100 100">
+                <circle class="ring-bg" cx="50" cy="50" r="40" />
+                <circle class="ring-fill green" cx="50" cy="50" r="40"
+                  stroke-dasharray="251.327"
+                  stroke-dashoffset="22.619"
+                  style="transform: rotate(-90deg); transform-origin: center;" />
+                <text class="ring-text" x="50" y="50" text-anchor="middle" dominant-baseline="central" font-size="22">91%</text>
+              </svg>
+            </div>
+            <div class="summary-stats">
+              <div class="summary-stat-row">
+                <span class="stat-value text-green">21</span>
+                <span class="stat-label">Pass</span>
+                <span style="margin: 0 4px; color: var(--ink-tertiary);">&middot;</span>
+                <span class="stat-value text-red">2</span>
+                <span class="stat-label">Fail</span>
+                <span style="margin: 0 4px; color: var(--ink-tertiary);">&middot;</span>
+                <span class="stat-value text-tertiary">0</span>
+                <span class="stat-label">Skip</span>
+              </div>
+              <div class="summary-detail">
+                Duration: <span class="mono">3m 42s</span>
+              </div>
+              <div class="summary-detail">
+                Environment: <span class="mono">Staging &middot; Chromium</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: 4 mini stat boxes -->
+          <div class="result-summary-right">
+            <div class="mini-stat-box">
+              <div class="mini-stat-label">Capabilities Tested</div>
+              <div class="mini-stat-value">5 <span style="font-size:12px;font-weight:400;color:var(--ink-tertiary);">/ 8</span></div>
+            </div>
+            <div class="mini-stat-box">
+              <div class="mini-stat-label">Scenarios Run</div>
+              <div class="mini-stat-value">23 <span style="font-size:12px;font-weight:400;color:var(--ink-tertiary);">/ 47</span></div>
+            </div>
+            <div class="mini-stat-box">
+              <div class="mini-stat-label">Self-Healed</div>
+              <div class="mini-stat-value" style="color:var(--brand-orange);">2 <span style="font-size:12px;font-weight:400;color:var(--ink-tertiary);">selectors</span></div>
+            </div>
+            <div class="mini-stat-box">
+              <div class="mini-stat-label">Flaky Detected</div>
+              <div class="mini-stat-value" style="color:var(--warm-amber);">1</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results by Capability -->
+      <div class="panel mb-xl">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Results by Capability</div>
+            <div class="panel-subtitle">Expand to view individual scenario results</div>
+          </div>
+        </div>
+
+        <!-- Document Upload (expanded) -->
+        <div class="cap-result-section">
+          <div class="cap-result-header">
+            <span class="toggle-icon">&#9660;</span>
+            <span class="cap-result-name">Document Upload</span>
+            <span class="cap-result-count">7/7 pass</span>
+            <div class="cap-result-bar"><div class="bar-inner green" style="width:100%"></div></div>
+          </div>
+          <div class="cap-result-body">
+            <div class="result-row">
+              <span class="scenario-name">Upload valid PDF</span>
+              <span class="type-badge" style="color:#7C3AED;">Web</span>
+              <span class="condition-badge" style="color:var(--success-green);">Valid</span>
+              <span class="duration">1.2s</span>
+              <span class="result-status pass">Pass</span>
+            </div>
+            <div class="result-row">
+              <span class="scenario-name">Upload valid JPG</span>
+              <span class="type-badge" style="color:#7C3AED;">Web</span>
+              <span class="condition-badge" style="color:var(--success-green);">Valid</span>
+              <span class="duration">1.1s</span>
+              <span class="result-status pass">Pass</span>
+            </div>
+            <div class="result-row">
+              <span class="scenario-name">Reject .exe file</span>
+              <span class="type-badge" style="color:#7C3AED;">Web</span>
+              <span class="condition-badge" style="color:var(--critical-red);">Invalid</span>
+              <span class="duration">0.8s</span>
+              <span class="result-status pass">Pass</span>
+            </div>
+            <div class="result-row">
+              <span class="scenario-name">Reject oversized file</span>
+              <span class="type-badge" style="color:#7C3AED;">Web</span>
+              <span class="condition-badge" style="color:#7C3AED;">Boundary</span>
+              <span class="duration">0.9s</span>
+              <span class="result-status pass">Pass</span>
+            </div>
+            <div class="result-row">
+              <span class="scenario-name">POST /documents/upload</span>
+              <span class="type-badge" style="color:#1D4ED8;">API</span>
+              <span class="condition-badge" style="color:var(--success-green);">Valid</span>
+              <span class="duration">0.3s</span>
+              <span class="result-status pass">Pass</span>
+            </div>
+            <div class="result-row">
+              <span class="scenario-name">Reject invalid MIME</span>
+              <span class="type-badge" style="color:#1D4ED8;">API</span>
+              <span class="condition-badge" style="color:var(--critical-red);">Invalid</span>
+              <span class="duration">0.2s</span>
+              <span class="result-status pass">Pass</span>
+            </div>
+            <div class="result-row">
+              <span class="scenario-name">GET /documents list</span>
+              <span class="type-badge" style="color:#1D4ED8;">API</span>
+              <span class="condition-badge" style="color:var(--success-green);">Valid</span>
+              <span class="duration">0.4s</span>
+              <span class="result-status pass">Pass</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Credit Check (expanded, has failures) -->
+        <div class="cap-result-section">
+          <div class="cap-result-header">
+            <span class="toggle-icon">&#9660;</span>
+            <span class="cap-result-name">Credit Check</span>
+            <span class="cap-result-count">4/6 pass</span>
+            <div class="cap-result-bar"><div class="bar-inner amber" style="width:67%"></div></div>
+          </div>
+          <div class="cap-result-body">
+            <div class="result-row fail-row">
+              <span class="scenario-name">Score below 580 rejection</span>
+              <span class="type-badge" style="color:#7C3AED;">Web</span>
+              <span class="condition-badge" style="color:var(--critical-red);">Negative</span>
+              <span class="duration">2.1s</span>
+              <span class="result-status fail">FAIL</span>
+            </div>
+            <div class="fail-detail">&rarr; Expected &quot;Denied&quot;, got &quot;Review Required&quot;</div>
+            <div class="result-row fail-row">
+              <span class="scenario-name">POST /credit/pull timeout</span>
+              <span class="type-badge" style="color:#1D4ED8;">API</span>
+              <span class="condition-badge" style="color:var(--warm-amber);">Edge</span>
+              <span class="duration">5.0s</span>
+              <span class="result-status fail">FAIL</span>
+            </div>
+            <div class="fail-detail">&rarr; Timeout after 5000ms</div>
+            <div class="result-row">
+              <span class="scenario-name">Score above 720 approval</span>
+              <span class="type-badge" style="color:#7C3AED;">Web</span>
+              <span class="condition-badge" style="color:var(--success-green);">Valid</span>
+              <span class="duration">1.8s</span>
+              <span class="result-status pass">Pass</span>
+            </div>
+            <div class="result-row">
+              <span class="scenario-name">Score 580-720 conditional</span>
+              <span class="type-badge" style="color:#7C3AED;">Web</span>
+              <span class="condition-badge" style="color:#7C3AED;">Boundary</span>
+              <span class="duration">1.6s</span>
+              <span class="result-status pass">Pass</span>
+            </div>
+            <div class="result-row">
+              <span class="scenario-name">GET /credit/score</span>
+              <span class="type-badge" style="color:#1D4ED8;">API</span>
+              <span class="condition-badge" style="color:var(--success-green);">Valid</span>
+              <span class="duration">0.4s</span>
+              <span class="result-status pass">Pass</span>
+            </div>
+            <div class="result-row">
+              <span class="scenario-name">POST /credit/pull success</span>
+              <span class="type-badge" style="color:#1D4ED8;">API</span>
+              <span class="condition-badge" style="color:var(--success-green);">Valid</span>
+              <span class="duration">0.6s</span>
+              <span class="result-status pass">Pass</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Auth (collapsed) -->
+        <div class="cap-result-section">
+          <div class="cap-result-header">
+            <span class="toggle-icon">&#9654;</span>
+            <span class="cap-result-name">User Auth</span>
+            <span class="cap-result-count">3/3 pass</span>
+            <div class="cap-result-bar"><div class="bar-inner green" style="width:100%"></div></div>
+          </div>
+        </div>
+
+        <!-- Rate Calculator (collapsed) -->
+        <div class="cap-result-section">
+          <div class="cap-result-header">
+            <span class="toggle-icon">&#9654;</span>
+            <span class="cap-result-name">Rate Calculator</span>
+            <span class="cap-result-count">5/5 pass</span>
+            <div class="cap-result-bar"><div class="bar-inner green" style="width:100%"></div></div>
+          </div>
+        </div>
+
+        <!-- E-Signature (collapsed) -->
+        <div class="cap-result-section">
+          <div class="cap-result-header">
+            <span class="toggle-icon">&#9654;</span>
+            <span class="cap-result-name">E-Signature</span>
+            <span class="cap-result-count">2/2 pass</span>
+            <div class="cap-result-bar"><div class="bar-inner green" style="width:100%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Failure Analysis -->
+      <div class="panel mb-xl">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Failure Analysis</div>
+            <div class="panel-subtitle">AI-powered failure diagnosis and recommendations</div>
+          </div>
+        </div>
+
+        <!-- Failure 1 -->
+        <div class="failure-card">
+          <div class="failure-card-header">
+            <div class="fail-info">
+              <div class="fail-test-name">Credit Check &gt; Score below 580 rejection</div>
+              <div class="fail-error">Expected &quot;Denied&quot;, got &quot;Review Required&quot;</div>
+            </div>
+            <div class="screenshot-placeholder">Screenshot</div>
+          </div>
+          <div class="ai-recommendation">
+            <span class="ai-icon">&#9672;</span>
+            <span>The application now returns &quot;Review Required&quot; for scores 550&ndash;580. Update assertion or add new condition for borderline scores.</span>
+          </div>
+        </div>
+
+        <!-- Failure 2 -->
+        <div class="failure-card">
+          <div class="failure-card-header">
+            <div class="fail-info">
+              <div class="fail-test-name">Credit Check &gt; POST /credit/pull timeout</div>
+              <div class="fail-error">Timeout after 5000ms</div>
+            </div>
+            <div class="screenshot-placeholder">Screenshot</div>
+          </div>
+          <div class="ai-recommendation">
+            <span class="ai-icon">&#9672;</span>
+            <span>The /credit/pull endpoint response time has increased. Consider raising the timeout threshold to 8000ms or investigating backend latency on the credit bureau integration.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feedback Loop Bar -->
+      <div class="feedback-bar">
+        <span class="feedback-icon">&#8635;</span>
+        <span>This run generated <strong>2 insights</strong>: 1 new condition suggested for Credit Check, 1 assertion update recommended</span>
+      </div>
+
+    </main>
+  </div>
+</body>
+</html>

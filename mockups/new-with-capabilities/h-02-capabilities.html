@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUALINT — Grand Horizon Hotels Capabilities</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="capabilities.css">
+  <style>
+    /* Unmapped requirements panel */
+    .unmapped-panel {
+      background: var(--card-surface);
+      border: 2px solid var(--warm-amber);
+      border-radius: var(--radius-lg);
+      padding: var(--panel-padding);
+      box-shadow: var(--shadow-card);
+    }
+
+    .unmapped-header {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+      margin-bottom: var(--sp-lg);
+    }
+
+    .unmapped-header .warn-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: var(--radius-pill);
+      background: var(--warm-amber-light);
+      color: var(--warm-amber);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    .unmapped-header .unmapped-title {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .unmapped-header .unmapped-count {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--warm-amber);
+      font-weight: 600;
+    }
+
+    .unmapped-row {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-md);
+      padding: var(--sp-sm) var(--sp-md);
+      border-bottom: 1px solid var(--border-light);
+      font-size: 12px;
+    }
+
+    .unmapped-row:last-child {
+      border-bottom: none;
+    }
+
+    .unmapped-row:hover {
+      background: var(--hover-bg);
+    }
+
+    .unmapped-row .story-title {
+      flex: 1;
+      font-weight: 500;
+    }
+
+    .unmapped-row .unmapped-label {
+      font-size: 10px;
+      color: var(--ink-tertiary);
+      font-style: italic;
+    }
+
+    /* Health grade styling */
+    .health-grade {
+      font-family: var(--font-mono);
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .health-grade.grade-a { color: var(--success-green); }
+    .health-grade.grade-b { color: #1D4ED8; }
+    .health-grade.grade-c { color: var(--warm-amber); }
+    .health-grade.grade-d { color: var(--critical-red); }
+
+    /* Critical path callout */
+    .critical-path-panel {
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-left: 4px solid var(--brand-orange);
+      border-radius: var(--radius-lg);
+      padding: var(--panel-padding);
+      box-shadow: var(--shadow-card);
+    }
+
+    .critical-path-panel .cp-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .critical-path-panel .cp-subtitle {
+      font-size: 11px;
+      color: var(--ink-secondary);
+      margin-bottom: var(--sp-lg);
+    }
+
+    .critical-path-chain {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      flex-wrap: wrap;
+      margin-bottom: var(--sp-lg);
+    }
+
+    .cp-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--sp-xs);
+      padding: var(--sp-md) var(--sp-lg);
+      border-radius: var(--radius-md);
+      background: var(--hover-bg);
+      border: 1px solid var(--border-color);
+      min-width: 140px;
+      text-align: center;
+    }
+
+    .cp-node-name {
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .cp-node-coverage {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .cp-node-coverage.ok { color: var(--success-green); }
+    .cp-node-coverage.warn { color: var(--warm-amber); }
+
+    .cp-arrow {
+      padding: 0 var(--sp-sm);
+      color: var(--ink-tertiary);
+      font-size: 18px;
+    }
+
+    .cp-note {
+      font-size: 12px;
+      color: var(--ink-secondary);
+      text-align: center;
+      margin-bottom: var(--sp-md);
+    }
+
+    .cp-note strong {
+      font-family: var(--font-mono);
+      color: var(--warm-amber);
+    }
+
+    /* Critical badge on cap-card */
+    .cap-card-critical-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--critical-red);
+      background: var(--critical-red-light);
+      padding: 2px 6px;
+      border-radius: var(--radius-xs);
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo-mark">
+        <div class="logo-mark-inner">
+          <span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="brand-text">QUALINT<small>Quality Intelligence</small></div>
+    </div>
+    <div class="sidebar-nav">
+      <span class="sidebar-section-label">Project</span>
+      <a href="h-01-dashboard.html"><span class="nav-icon">&#9707;</span><span class="nav-label">Dashboard</span></a>
+      <a href="h-02-capabilities.html" class="active"><span class="nav-icon">&#11041;</span><span class="nav-label">Capabilities</span></a>
+      <a href="h-03-scenarios.html"><span class="nav-icon">&#9673;</span><span class="nav-label">Context</span></a>
+      <a href="#"><span class="nav-icon">&#9745;</span><span class="nav-label">Test Cases</span></a>
+      <a href="#"><span class="nav-icon">&#9881;</span><span class="nav-label">Automation</span></a>
+      <a href="#"><span class="nav-icon">&#9855;</span><span class="nav-label">Accessibility</span></a>
+      <a href="#"><span class="nav-icon">&#9654;</span><span class="nav-label">Execution</span></a>
+      <a href="#"><span class="nav-icon">&#9638;</span><span class="nav-label">Results</span></a>
+      <span class="sidebar-section-label">Settings</span>
+      <a href="#"><span class="nav-icon">&#9881;</span><span class="nav-label">Settings</span></a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">MK</div>
+        <div class="user-info">
+          <div class="name">Mehul K.</div>
+          <div class="role">QA Manager</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="main-content">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <div class="eyebrow">GRAND HORIZON HOTELS</div>
+        <h1>Capabilities</h1>
+        <p class="subtitle">Business functions mapped to test scenarios &mdash; Hospitality Platform</p>
+      </div>
+      <div class="flex gap-sm items-center">
+        <button class="btn btn-secondary">All Interaction Types &#9662;</button>
+        <button class="btn btn-primary">+ Add Capability</button>
+      </div>
+    </div>
+
+    <!-- Architecture Model Banner -->
+    <div class="panel mb-xl">
+      <div class="arch-flow">
+        <div class="arch-node active">
+          <span class="arch-node-icon">&#11044;</span>
+          <span class="arch-node-label">Capability</span>
+          <span class="arch-node-sub">Business function</span>
+        </div>
+        <span class="arch-arrow">&#8594;</span>
+        <div class="arch-node">
+          <span class="arch-node-icon">&#9998;</span>
+          <span class="arch-node-label">Scenarios</span>
+          <span class="arch-node-sub">What to validate</span>
+        </div>
+        <span class="arch-arrow">&#8594;</span>
+        <div class="arch-node">
+          <span class="arch-node-icon">&#9989;</span>
+          <span class="arch-node-label">Evidence</span>
+          <span class="arch-node-sub">Execution results</span>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:var(--sp-sm);font-size:10px;color:var(--ink-tertiary);">
+        Powered by: Requirements &middot; Interaction Types &middot; Conditions &middot; Test Assets &mdash; <a href="#" style="color:var(--brand-orange);text-decoration:none;font-weight:600;">Learn more</a>
+      </div>
+    </div>
+
+    <!-- Capability Cards Grid -->
+    <div class="cap-grid mb-xl">
+
+      <!-- 1. Property Search — CRITICAL -->
+      <a href="h-03-scenarios.html" class="cap-card">
+        <div class="cap-card-header">
+          <div>
+            <div class="cap-card-title">Property Search</div>
+            <div class="cap-card-sub"><span class="cap-card-critical-badge">&#9733; CRITICAL</span></div>
+          </div>
+          <div class="cap-card-icon green">&#128269;</div>
+        </div>
+        <div class="cap-card-body">
+          <div class="interaction-badges">
+            <span class="int-badge web">Web UI</span>
+            <span class="int-badge api">API</span>
+            <span class="int-badge mobile">Mobile</span>
+          </div>
+          <div class="req-trace">
+            <span class="jira-key">HTL-130</span>
+            <span class="jira-key">HTL-131</span>
+          </div>
+          <div class="cap-scenario-bar mt-md">
+            <span class="bar-label">Scenarios</span>
+            <div class="bar-track">
+              <div class="bar-pass" style="width:92.3%"></div>
+              <div class="bar-fail" style="width:7.7%"></div>
+            </div>
+            <span class="bar-count">13</span>
+          </div>
+        </div>
+        <div class="cap-card-footer">
+          <div class="cap-stat">
+            <div class="cap-stat-value">13</div>
+            <div class="cap-stat-label">Scenarios</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value">89%</div>
+            <div class="cap-stat-label">Coverage</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value health-grade grade-a">A</div>
+            <div class="cap-stat-label">Health</div>
+          </div>
+        </div>
+      </a>
+
+      <!-- 2. Room Booking — CRITICAL (orange left border) -->
+      <a href="h-03-scenarios.html" class="cap-card" style="border-left:4px solid var(--brand-orange);">
+        <div class="cap-card-header">
+          <div>
+            <div class="cap-card-title">Room Booking</div>
+            <div class="cap-card-sub"><span class="cap-card-critical-badge">&#9733; CRITICAL</span></div>
+          </div>
+          <div class="cap-card-icon orange">&#128719;&#65039;</div>
+        </div>
+        <div class="cap-card-body">
+          <div class="interaction-badges">
+            <span class="int-badge web">Web UI</span>
+            <span class="int-badge api">API</span>
+            <span class="int-badge mobile">Mobile</span>
+          </div>
+          <div class="req-trace">
+            <span class="jira-key">HTL-145</span>
+            <span class="jira-key">HTL-160</span>
+          </div>
+          <div class="cap-scenario-bar mt-md">
+            <span class="bar-label">Scenarios</span>
+            <div class="bar-track">
+              <div class="bar-pass" style="width:71.4%"></div>
+              <div class="bar-fail" style="width:14.3%"></div>
+              <div class="bar-draft" style="width:14.3%"></div>
+            </div>
+            <span class="bar-count">14</span>
+          </div>
+        </div>
+        <div class="cap-card-footer">
+          <div class="cap-stat">
+            <div class="cap-stat-value">14</div>
+            <div class="cap-stat-label">Scenarios</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value">82%</div>
+            <div class="cap-stat-label">Coverage</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value health-grade grade-b">B</div>
+            <div class="cap-stat-label">Health</div>
+          </div>
+        </div>
+      </a>
+
+      <!-- 3. Guest Profile -->
+      <a href="h-03-scenarios.html" class="cap-card">
+        <div class="cap-card-header">
+          <div>
+            <div class="cap-card-title">Guest Profile</div>
+          </div>
+          <div class="cap-card-icon blue">&#128100;</div>
+        </div>
+        <div class="cap-card-body">
+          <div class="interaction-badges">
+            <span class="int-badge web">Web UI</span>
+            <span class="int-badge api">API</span>
+            <span class="int-badge mobile">Mobile</span>
+          </div>
+          <div class="req-trace">
+            <span class="jira-key">HTL-110</span>
+          </div>
+          <div class="cap-scenario-bar mt-md">
+            <span class="bar-label">Scenarios</span>
+            <div class="bar-track">
+              <div class="bar-pass" style="width:87.5%"></div>
+              <div class="bar-fail" style="width:12.5%"></div>
+            </div>
+            <span class="bar-count">8</span>
+          </div>
+        </div>
+        <div class="cap-card-footer">
+          <div class="cap-stat">
+            <div class="cap-stat-value">8</div>
+            <div class="cap-stat-label">Scenarios</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value">75%</div>
+            <div class="cap-stat-label">Coverage</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value health-grade grade-b">B</div>
+            <div class="cap-stat-label">Health</div>
+          </div>
+        </div>
+      </a>
+
+      <!-- 4. Loyalty Program -->
+      <a href="h-03-scenarios.html" class="cap-card">
+        <div class="cap-card-header">
+          <div>
+            <div class="cap-card-title">Loyalty Program</div>
+          </div>
+          <div class="cap-card-icon amber">&#11088;</div>
+        </div>
+        <div class="cap-card-body">
+          <div class="interaction-badges">
+            <span class="int-badge web">Web UI</span>
+            <span class="int-badge api">API</span>
+          </div>
+          <div class="req-trace">
+            <span class="jira-key">HTL-178</span>
+          </div>
+          <div class="cap-scenario-bar mt-md">
+            <span class="bar-label">Scenarios</span>
+            <div class="bar-track">
+              <div class="bar-pass" style="width:71.4%"></div>
+              <div class="bar-fail" style="width:14.3%"></div>
+              <div class="bar-draft" style="width:14.3%"></div>
+            </div>
+            <span class="bar-count">7</span>
+          </div>
+        </div>
+        <div class="cap-card-footer">
+          <div class="cap-stat">
+            <div class="cap-stat-value">7</div>
+            <div class="cap-stat-label">Scenarios</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value">63%</div>
+            <div class="cap-stat-label">Coverage</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value health-grade grade-c">C+</div>
+            <div class="cap-stat-label">Health</div>
+          </div>
+        </div>
+      </a>
+
+      <!-- 5. Check-in / Check-out -->
+      <a href="h-03-scenarios.html" class="cap-card">
+        <div class="cap-card-header">
+          <div>
+            <div class="cap-card-title">Check-in / Check-out</div>
+          </div>
+          <div class="cap-card-icon blue">&#128273;</div>
+        </div>
+        <div class="cap-card-body">
+          <div class="interaction-badges">
+            <span class="int-badge web">Web UI</span>
+            <span class="int-badge mobile">Mobile</span>
+            <span class="int-badge event">Event</span>
+          </div>
+          <div class="req-trace">
+            <span class="jira-key">HTL-203</span>
+          </div>
+          <div class="cap-scenario-bar mt-md">
+            <span class="bar-label">Scenarios</span>
+            <div class="bar-track">
+              <div class="bar-pass" style="width:71.4%"></div>
+              <div class="bar-fail" style="width:14.3%"></div>
+              <div class="bar-draft" style="width:14.3%"></div>
+            </div>
+            <span class="bar-count">7</span>
+          </div>
+        </div>
+        <div class="cap-card-footer">
+          <div class="cap-stat">
+            <div class="cap-stat-value">7</div>
+            <div class="cap-stat-label">Scenarios</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value">62%</div>
+            <div class="cap-stat-label">Coverage</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value health-grade grade-c">C</div>
+            <div class="cap-stat-label">Health</div>
+          </div>
+        </div>
+      </a>
+
+      <!-- 6. Rate & Availability -->
+      <a href="h-03-scenarios.html" class="cap-card">
+        <div class="cap-card-header">
+          <div>
+            <div class="cap-card-title">Rate &amp; Availability</div>
+          </div>
+          <div class="cap-card-icon green">&#128178;</div>
+        </div>
+        <div class="cap-card-body">
+          <div class="interaction-badges">
+            <span class="int-badge api">API</span>
+            <span class="int-badge event">Event</span>
+          </div>
+          <div class="req-trace">
+            <span class="jira-key">HTL-215</span>
+          </div>
+          <div class="cap-scenario-bar mt-md">
+            <span class="bar-label">Scenarios</span>
+            <div class="bar-track">
+              <div class="bar-pass" style="width:100%"></div>
+            </div>
+            <span class="bar-count">6</span>
+          </div>
+        </div>
+        <div class="cap-card-footer">
+          <div class="cap-stat">
+            <div class="cap-stat-value">6</div>
+            <div class="cap-stat-label">Scenarios</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value">90%</div>
+            <div class="cap-stat-label">Coverage</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value health-grade grade-a">A</div>
+            <div class="cap-stat-label">Health</div>
+          </div>
+        </div>
+      </a>
+
+      <!-- 7. Payment Processing -->
+      <a href="h-03-scenarios.html" class="cap-card">
+        <div class="cap-card-header">
+          <div>
+            <div class="cap-card-title">Payment Processing</div>
+          </div>
+          <div class="cap-card-icon amber">&#128179;</div>
+        </div>
+        <div class="cap-card-body">
+          <div class="interaction-badges">
+            <span class="int-badge web">Web UI</span>
+            <span class="int-badge api">API</span>
+            <span class="int-badge mobile">Mobile</span>
+          </div>
+          <div class="req-trace">
+            <span class="jira-key">HTL-150</span>
+          </div>
+          <div class="cap-scenario-bar mt-md">
+            <span class="bar-label">Scenarios</span>
+            <div class="bar-track">
+              <div class="bar-pass" style="width:85.7%"></div>
+              <div class="bar-fail" style="width:14.3%"></div>
+            </div>
+            <span class="bar-count">7</span>
+          </div>
+        </div>
+        <div class="cap-card-footer">
+          <div class="cap-stat">
+            <div class="cap-stat-value">7</div>
+            <div class="cap-stat-label">Scenarios</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value">77%</div>
+            <div class="cap-stat-label">Coverage</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value health-grade grade-b">B-</div>
+            <div class="cap-stat-label">Health</div>
+          </div>
+        </div>
+      </a>
+
+      <!-- 8. Reviews & Ratings -->
+      <a href="h-03-scenarios.html" class="cap-card">
+        <div class="cap-card-header">
+          <div>
+            <div class="cap-card-title">Reviews &amp; Ratings</div>
+          </div>
+          <div class="cap-card-icon slate">&#11088;</div>
+        </div>
+        <div class="cap-card-body">
+          <div class="interaction-badges">
+            <span class="int-badge web">Web UI</span>
+            <span class="int-badge api">API</span>
+            <span class="int-badge mobile">Mobile</span>
+          </div>
+          <div class="req-trace">
+            <span class="jira-key">HTL-220</span>
+          </div>
+          <div class="cap-scenario-bar mt-md">
+            <span class="bar-label">Scenarios</span>
+            <div class="bar-track">
+              <div class="bar-pass" style="width:75%"></div>
+              <div class="bar-draft" style="width:25%"></div>
+            </div>
+            <span class="bar-count">4</span>
+          </div>
+        </div>
+        <div class="cap-card-footer">
+          <div class="cap-stat">
+            <div class="cap-stat-value">4</div>
+            <div class="cap-stat-label">Scenarios</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value">55%</div>
+            <div class="cap-stat-label">Coverage</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value health-grade grade-c">C</div>
+            <div class="cap-stat-label">Health</div>
+          </div>
+        </div>
+      </a>
+
+      <!-- 9. Notifications -->
+      <a href="h-03-scenarios.html" class="cap-card">
+        <div class="cap-card-header">
+          <div>
+            <div class="cap-card-title">Notifications</div>
+          </div>
+          <div class="cap-card-icon slate">&#128276;</div>
+        </div>
+        <div class="cap-card-body">
+          <div class="interaction-badges">
+            <span class="int-badge api">API</span>
+            <span class="int-badge mobile">Mobile</span>
+            <span class="int-badge event">Event</span>
+          </div>
+          <div class="req-trace">
+            <span class="jira-key">HTL-230</span>
+          </div>
+          <div class="cap-scenario-bar mt-md">
+            <span class="bar-label">Scenarios</span>
+            <div class="bar-track">
+              <div class="bar-pass" style="width:100%"></div>
+            </div>
+            <span class="bar-count">2</span>
+          </div>
+        </div>
+        <div class="cap-card-footer">
+          <div class="cap-stat">
+            <div class="cap-stat-value">2</div>
+            <div class="cap-stat-label">Scenarios</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value">45%</div>
+            <div class="cap-stat-label">Coverage</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value health-grade grade-d">D+</div>
+            <div class="cap-stat-label">Health</div>
+          </div>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- Critical Path Callout -->
+    <div class="critical-path-panel mb-xl">
+      <div class="cp-title">Critical Business Path: Search &#8594; Book &#8594; Pay &#8594; Confirm</div>
+      <div class="cp-subtitle">These 3 capabilities form the primary revenue-generating flow</div>
+
+      <div class="critical-path-chain">
+        <div class="cp-node">
+          <div class="cp-node-name">Property Search</div>
+          <div class="cp-node-coverage ok">89% &#10003;</div>
+        </div>
+        <span class="cp-arrow">&#8594;</span>
+        <div class="cp-node">
+          <div class="cp-node-name">Room Booking</div>
+          <div class="cp-node-coverage warn">82% &#9888;</div>
+        </div>
+        <span class="cp-arrow">&#8594;</span>
+        <div class="cp-node">
+          <div class="cp-node-name">Payment Processing</div>
+          <div class="cp-node-coverage warn">77% &#9888;</div>
+        </div>
+        <span class="cp-arrow">&#8594;</span>
+        <div class="cp-node">
+          <div class="cp-node-name">Confirmation</div>
+          <div class="cp-node-coverage" style="font-size:10px;color:var(--ink-tertiary);">(part of Booking)</div>
+        </div>
+      </div>
+
+      <div class="cp-note">End-to-end flow coverage: <strong>74%</strong> &mdash; 4 cross-capability scenarios untested</div>
+      <div style="text-align:center;">
+        <button class="btn btn-primary">Generate E2E Scenarios</button>
+      </div>
+    </div>
+
+    <!-- Unmapped Requirements Panel -->
+    <div class="unmapped-panel">
+      <div class="unmapped-header">
+        <span class="warn-icon">&#9888;</span>
+        <div>
+          <div class="unmapped-title">3 Unmapped Requirements</div>
+          <div class="unmapped-count">JIRA stories not linked to any capability</div>
+        </div>
+      </div>
+
+      <div class="unmapped-row">
+        <span class="jira-key">HTL-240</span>
+        <span class="story-title">Group booking for conferences</span>
+        <span class="unmapped-label">No capability mapped</span>
+        <button class="btn btn-sm btn-secondary">Map to Capability</button>
+      </div>
+
+      <div class="unmapped-row">
+        <span class="jira-key">HTL-245</span>
+        <span class="story-title">Room upgrade automation</span>
+        <span class="unmapped-label">No capability mapped</span>
+        <button class="btn btn-sm btn-secondary">Map to Capability</button>
+      </div>
+
+      <div class="unmapped-row">
+        <span class="jira-key">HTL-252</span>
+        <span class="story-title">Multi-property search aggregation</span>
+        <span class="unmapped-label">No capability mapped</span>
+        <button class="btn btn-sm btn-secondary">Map to Capability</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>

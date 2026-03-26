@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUALINT — CCM Mortgage Automation</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="capabilities.css">
+  <style>
+    /* File tree */
+    .file-tree {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1.8;
+      color: #9C9998;
+    }
+
+    .file-tree .tree-dir {
+      color: #E8E0D0;
+      font-weight: 600;
+    }
+
+    .file-tree .tree-file {
+      color: #9C9998;
+      cursor: pointer;
+      padding: 1px 4px;
+      border-radius: var(--radius-xs);
+      transition: all 0.1s;
+    }
+
+    .file-tree .tree-file:hover {
+      color: #E8E0D0;
+      background: rgba(255,255,255,0.06);
+    }
+
+    .file-tree .tree-file.selected {
+      color: var(--brand-orange);
+      background: rgba(233,92,8,0.15);
+    }
+
+    .tree-indent {
+      color: #64605F;
+      user-select: none;
+    }
+
+    /* Code panel header */
+    .code-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--sp-sm) var(--sp-lg);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-tertiary);
+    }
+
+    .code-panel-header .file-path {
+      color: var(--brand-orange);
+      font-weight: 600;
+    }
+
+    /* Code content */
+    .code-content {
+      padding: var(--sp-lg);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1.7;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    /* Selector health table */
+    .selector-health-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .selector-health-table th {
+      text-align: left;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-secondary);
+      padding: var(--sp-sm) var(--sp-md);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .selector-health-table td {
+      padding: var(--sp-sm) var(--sp-md);
+      font-size: 12px;
+      border-bottom: 1px solid var(--border-light);
+      vertical-align: middle;
+    }
+
+    .selector-health-table tr:hover td {
+      background: var(--hover-bg);
+    }
+
+    .grade-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px 10px;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .grade-pill.grade-green {
+      background: var(--success-green-light);
+      color: var(--success-green);
+    }
+
+    .grade-pill.grade-blue {
+      background: #EBF5FF;
+      color: #1D4ED8;
+    }
+
+    .grade-pill.grade-amber {
+      background: var(--warm-amber-light);
+      color: var(--warm-amber);
+    }
+
+    .selector-note {
+      font-size: 10px;
+      color: var(--ink-tertiary);
+    }
+
+    /* KPI card blue state */
+    .kpi-card.state-blue { border-top: 3px solid #1D4ED8; }
+    .kpi-card.state-blue .kpi-value { color: #1D4ED8; }
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo-mark"><div class="logo-mark-inner"><span></span><span></span><span></span><span></span></div></div>
+      <div class="brand-text">QUALINT<small>Quality Intelligence</small></div>
+    </div>
+    <div class="sidebar-nav">
+      <span class="sidebar-section-label">Project</span>
+      <a href="01-dashboard.html"><span class="nav-icon">&#9707;</span><span class="nav-label">Dashboard</span></a>
+      <a href="02-capabilities.html"><span class="nav-icon">&#11041;</span><span class="nav-label">Capabilities</span></a>
+      <a href="03-context.html"><span class="nav-icon">&#9673;</span><span class="nav-label">Context</span></a>
+      <a href="05-test-cases.html"><span class="nav-icon">&#9745;</span><span class="nav-label">Test Cases</span></a>
+      <a href="06-automation.html" class="active"><span class="nav-icon">&#9881;</span><span class="nav-label">Automation</span></a>
+      <a href="09-accessibility.html"><span class="nav-icon">&#9855;</span><span class="nav-label">Accessibility</span></a>
+      <a href="07-execution.html"><span class="nav-icon">&#9654;</span><span class="nav-label">Execution</span></a>
+      <a href="08-results.html"><span class="nav-icon">&#9638;</span><span class="nav-label">Results</span></a>
+      <span class="sidebar-section-label">Settings</span>
+      <a href="10-settings.html"><span class="nav-icon">&#9881;</span><span class="nav-label">Settings</span></a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">MK</div>
+        <div class="user-info"><div class="name">Mehul K.</div><div class="role">QA Manager</div></div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="main-content">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <div class="eyebrow">CCM MORTGAGE</div>
+        <h1>Automation</h1>
+        <p class="subtitle">Playwright Page Objects and test specifications</p>
+      </div>
+      <div class="flex gap-sm items-center">
+        <button class="btn btn-secondary">Download Project</button>
+        <button class="btn btn-primary">Regenerate</button>
+      </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid mb-xl">
+      <div class="kpi-card state-blue">
+        <div class="kpi-eyebrow">Selector Health</div>
+        <div class="kpi-value">B+</div>
+        <div class="kpi-meta">Overall grade</div>
+      </div>
+      <div class="kpi-card state-brand">
+        <div class="kpi-eyebrow">Page Objects</div>
+        <div class="kpi-value">8</div>
+        <div class="kpi-meta">Generated files</div>
+      </div>
+      <div class="kpi-card state-neutral">
+        <div class="kpi-eyebrow">Spec Files</div>
+        <div class="kpi-value">12</div>
+        <div class="kpi-meta">Test specifications</div>
+      </div>
+      <div class="kpi-card state-warning">
+        <div class="kpi-eyebrow">User Modified</div>
+        <div class="kpi-value">3</div>
+        <div class="kpi-meta">Manual overrides</div>
+      </div>
+    </div>
+
+    <!-- Two-column layout -->
+    <div class="grid-sidebar mb-xl">
+
+      <!-- LEFT: File Tree -->
+      <div class="terminal" style="padding:var(--sp-lg);align-self:start;">
+        <div class="file-tree">
+          <div><span class="tree-dir">ccm-mortgage/</span></div>
+          <div><span class="tree-indent">&#9500;&#9472;&#9472; </span><span class="tree-dir">page-objects/</span></div>
+          <div><span class="tree-indent">&#9474;&nbsp;&nbsp; &#9500;&#9472;&#9472; </span><span class="tree-file">LoanApplicationPage.ts</span></div>
+          <div><span class="tree-indent">&#9474;&nbsp;&nbsp; &#9500;&#9472;&#9472; </span><span class="tree-file selected">DocumentUploadPage.ts</span></div>
+          <div><span class="tree-indent">&#9474;&nbsp;&nbsp; &#9500;&#9472;&#9472; </span><span class="tree-file">CreditCheckPage.ts</span></div>
+          <div><span class="tree-indent">&#9474;&nbsp;&nbsp; &#9500;&#9472;&#9472; </span><span class="tree-file">RateCalculatorPage.ts</span></div>
+          <div><span class="tree-indent">&#9474;&nbsp;&nbsp; &#9500;&#9472;&#9472; </span><span class="tree-file">ESignaturePage.ts</span></div>
+          <div><span class="tree-indent">&#9474;&nbsp;&nbsp; &#9500;&#9472;&#9472; </span><span class="tree-file">UnderwritingPage.ts</span></div>
+          <div><span class="tree-indent">&#9474;&nbsp;&nbsp; &#9500;&#9472;&#9472; </span><span class="tree-file">ComplianceAuditPage.ts</span></div>
+          <div><span class="tree-indent">&#9474;&nbsp;&nbsp; &#9492;&#9472;&#9472; </span><span class="tree-file">LoginPage.ts</span></div>
+          <div><span class="tree-indent">&#9500;&#9472;&#9472; </span><span class="tree-dir">specs/</span></div>
+          <div><span class="tree-indent">&#9474;&nbsp;&nbsp; &#9500;&#9472;&#9472; </span><span class="tree-file">loan-application.spec.ts</span></div>
+          <div><span class="tree-indent">&#9474;&nbsp;&nbsp; &#9500;&#9472;&#9472; </span><span class="tree-file">document-upload.spec.ts</span></div>
+          <div><span class="tree-indent">&#9474;&nbsp;&nbsp; &#9500;&#9472;&#9472; </span><span class="tree-file">credit-check.spec.ts</span></div>
+          <div><span class="tree-indent">&#9474;&nbsp;&nbsp; &#9500;&#9472;&#9472; </span><span class="tree-file">rate-calculator.spec.ts</span></div>
+          <div><span class="tree-indent">&#9474;&nbsp;&nbsp; &#9500;&#9472;&#9472; </span><span class="tree-file">e-signature.spec.ts</span></div>
+          <div><span class="tree-indent">&#9474;&nbsp;&nbsp; &#9500;&#9472;&#9472; </span><span class="tree-file">underwriting.spec.ts</span></div>
+          <div><span class="tree-indent">&#9474;&nbsp;&nbsp; &#9500;&#9472;&#9472; </span><span class="tree-file">compliance-audit.spec.ts</span></div>
+          <div><span class="tree-indent">&#9474;&nbsp;&nbsp; &#9500;&#9472;&#9472; </span><span class="tree-file">login.spec.ts</span></div>
+          <div><span class="tree-indent">&#9474;&nbsp;&nbsp; &#9500;&#9472;&#9472; </span><span class="tree-file">api-documents.spec.ts</span></div>
+          <div><span class="tree-indent">&#9474;&nbsp;&nbsp; &#9500;&#9472;&#9472; </span><span class="tree-file">api-credit.spec.ts</span></div>
+          <div><span class="tree-indent">&#9474;&nbsp;&nbsp; &#9500;&#9472;&#9472; </span><span class="tree-file">api-loans.spec.ts</span></div>
+          <div><span class="tree-indent">&#9474;&nbsp;&nbsp; &#9492;&#9472;&#9472; </span><span class="tree-file">api-auth.spec.ts</span></div>
+          <div><span class="tree-indent">&#9500;&#9472;&#9472; </span><span class="tree-dir">fixtures/</span></div>
+          <div><span class="tree-indent">&#9474;&nbsp;&nbsp; &#9492;&#9472;&#9472; </span><span class="tree-file">test-data.ts</span></div>
+          <div><span class="tree-indent">&#9492;&#9472;&#9472; </span><span class="tree-dir">helpers/</span></div>
+          <div><span class="tree-indent">&nbsp;&nbsp;&nbsp; &#9492;&#9472;&#9472; </span><span class="tree-file">self-healing.ts</span></div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Code Preview -->
+      <div class="terminal" style="padding:0;align-self:start;">
+        <div class="code-panel-header">
+          <span class="file-path">page-objects/DocumentUploadPage.ts</span>
+          <span>48 lines</span>
+        </div>
+        <div class="code-content"><span class="line-number"> 1</span>  <span class="keyword">import</span> { <span class="type">Page</span>, <span class="type">Locator</span> } <span class="keyword">from</span> <span class="string">'@playwright/test'</span>;
+<span class="line-number"> 2</span>  <span class="keyword">import</span> { <span class="method">safeLocator</span> } <span class="keyword">from</span> <span class="string">'../helpers/self-healing'</span>;
+<span class="line-number"> 3</span>
+<span class="line-number"> 4</span>  <span class="keyword">export class</span> <span class="type">DocumentUploadPage</span> {
+<span class="line-number"> 5</span>    <span class="keyword">readonly</span> page: <span class="type">Page</span>;
+<span class="line-number"> 6</span>    <span class="keyword">readonly</span> uploadButton: <span class="type">Locator</span>;
+<span class="line-number"> 7</span>    <span class="keyword">readonly</span> fileInput: <span class="type">Locator</span>;
+<span class="line-number"> 8</span>    <span class="keyword">readonly</span> progressBar: <span class="type">Locator</span>;
+<span class="line-number"> 9</span>    <span class="keyword">readonly</span> documentList: <span class="type">Locator</span>;
+<span class="line-number">10</span>    <span class="keyword">readonly</span> errorMessage: <span class="type">Locator</span>;
+<span class="line-number">11</span>
+<span class="line-number">12</span>    <span class="method">constructor</span>(page: <span class="type">Page</span>) {
+<span class="line-number">13</span>      <span class="keyword">this</span>.page = page;
+<span class="line-number">14</span>      <span class="keyword">this</span>.uploadButton = <span class="method">safeLocator</span>(page,
+<span class="line-number">15</span>        <span class="string">'#upload-btn, .doc-upload-action, [data-testid="upload"]'</span>,
+<span class="line-number">16</span>        <span class="string">'Upload document button in borrower portal'</span>
+<span class="line-number">17</span>      );
+<span class="line-number">18</span>      <span class="keyword">this</span>.fileInput = <span class="method">safeLocator</span>(page,
+<span class="line-number">19</span>        <span class="string">'input[type="file"], #doc-file-input'</span>,
+<span class="line-number">20</span>        <span class="string">'File input for document upload'</span>
+<span class="line-number">21</span>      );
+<span class="line-number">22</span>      <span class="keyword">this</span>.progressBar = <span class="method">safeLocator</span>(page,
+<span class="line-number">23</span>        <span class="string">'.upload-progress, [role="progressbar"]'</span>,
+<span class="line-number">24</span>        <span class="string">'Upload progress indicator bar'</span>
+<span class="line-number">25</span>      );
+<span class="line-number">26</span>      <span class="keyword">this</span>.documentList = <span class="method">safeLocator</span>(page,
+<span class="line-number">27</span>        <span class="string">'.document-list, #borrower-documents'</span>,
+<span class="line-number">28</span>        <span class="string">'List of uploaded borrower documents'</span>
+<span class="line-number">29</span>      );
+<span class="line-number">30</span>      <span class="keyword">this</span>.errorMessage = <span class="method">safeLocator</span>(page,
+<span class="line-number">31</span>        <span class="string">'.upload-error, .error-message'</span>,
+<span class="line-number">32</span>        <span class="string">'Error message for invalid upload'</span>
+<span class="line-number">33</span>      );
+<span class="line-number">34</span>    }
+<span class="line-number">35</span>
+<span class="line-number">36</span>    <span class="keyword">async</span> <span class="method">uploadDocument</span>(filePath: <span class="type">string</span>) {
+<span class="line-number">37</span>      <span class="keyword">await</span> <span class="keyword">this</span>.fileInput.<span class="method">setInputFiles</span>(filePath);
+<span class="line-number">38</span>      <span class="keyword">await</span> <span class="keyword">this</span>.uploadButton.<span class="method">click</span>();
+<span class="line-number">39</span>      <span class="keyword">await</span> <span class="keyword">this</span>.progressBar.<span class="method">waitFor</span>({ state: <span class="string">'visible'</span> });
+<span class="line-number">40</span>    }
+<span class="line-number">41</span>
+<span class="line-number">42</span>    <span class="keyword">async</span> <span class="method">getDocumentCount</span>(): <span class="type">Promise</span>&lt;<span class="type">number</span>&gt; {
+<span class="line-number">43</span>      <span class="keyword">return</span> <span class="keyword">await</span> <span class="keyword">this</span>.documentList.<span class="method">locator</span>(<span class="string">'.doc-item'</span>).<span class="method">count</span>();
+<span class="line-number">44</span>    }
+<span class="line-number">45</span>  }</div>
+      </div>
+
+    </div>
+
+    <!-- Selector Health Table -->
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Selector Health</div>
+          <div class="panel-subtitle">DocumentUploadPage.ts — Locator resilience grades</div>
+        </div>
+      </div>
+      <table class="selector-health-table">
+        <thead>
+          <tr>
+            <th>Locator</th>
+            <th>Grade</th>
+            <th>Strategy</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="font-mono text-sm">uploadButton</td>
+            <td><span class="grade-pill grade-green">A</span></td>
+            <td class="text-sm">3 fallbacks</td>
+            <td><span class="selector-note">ID + class + data-testid chain</span></td>
+          </tr>
+          <tr>
+            <td class="font-mono text-sm">fileInput</td>
+            <td><span class="grade-pill grade-green">A+</span></td>
+            <td class="text-sm">Native selector</td>
+            <td><span class="selector-note">input[type="file"] is highly stable</span></td>
+          </tr>
+          <tr>
+            <td class="font-mono text-sm">progressBar</td>
+            <td><span class="grade-pill grade-blue">B</span></td>
+            <td class="text-sm">ARIA fallback</td>
+            <td><span class="selector-note">[role="progressbar"] provides resilience</span></td>
+          </tr>
+          <tr>
+            <td class="font-mono text-sm">documentList</td>
+            <td><span class="grade-pill grade-blue">B</span></td>
+            <td class="text-sm">Class-based</td>
+            <td><span class="selector-note">Two class selectors, no semantic fallback</span></td>
+          </tr>
+          <tr>
+            <td class="font-mono text-sm">errorMessage</td>
+            <td><span class="grade-pill grade-amber">C+</span></td>
+            <td class="text-sm">Weak selector</td>
+            <td><span class="selector-note">Generic class names — needs improvement</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>

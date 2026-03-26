@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUALINT — Projects</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="capabilities.css">
+  <style>
+    /* Quick Stats Bar */
+    .quick-stats {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2xl);
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-lg) var(--sp-2xl);
+      box-shadow: var(--shadow-card);
+      margin-bottom: var(--sp-2xl);
+    }
+
+    .quick-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .quick-stat-value {
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .quick-stat-label {
+      font-size: 10px;
+      color: var(--ink-tertiary);
+      font-weight: 500;
+    }
+
+    .quick-stat-divider {
+      width: 1px;
+      height: 32px;
+      background: var(--border-color);
+    }
+
+    /* Projects Grid */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--card-gap);
+    }
+
+    /* Project Card */
+    .project-card {
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: var(--panel-padding);
+      box-shadow: var(--shadow-card);
+      transition: all 0.2s;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-card:hover {
+      border-color: var(--brand-orange);
+      box-shadow: 0 4px 16px rgba(233,92,8,0.1);
+      transform: translateY(-2px);
+    }
+
+    .project-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: var(--sp-md);
+    }
+
+    .project-card-header-left {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-md);
+    }
+
+    .project-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .project-card-title {
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .project-card-url {
+      font-size: 10px;
+      color: var(--ink-tertiary);
+      font-family: var(--font-mono);
+    }
+
+    /* Stats row */
+    .project-stats {
+      display: flex;
+      gap: var(--sp-lg);
+      margin-bottom: var(--sp-md);
+      padding-bottom: var(--sp-md);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .project-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .project-stat-value {
+      font-size: 14px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+    }
+
+    .project-stat-label {
+      font-size: 9px;
+      color: var(--ink-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* Footer row */
+    .project-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+    }
+
+    .project-last-run {
+      font-size: 10px;
+      color: var(--ink-tertiary);
+    }
+
+    .team-avatars {
+      display: flex;
+      gap: 0;
+    }
+
+    .team-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 700;
+      color: white;
+      border: 2px solid var(--card-surface);
+      margin-left: -6px;
+    }
+
+    .team-avatar:first-child {
+      margin-left: 0;
+    }
+
+    /* New Project Card (dashed) */
+    .project-card-new {
+      background: transparent;
+      border: 2px dashed var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: var(--panel-padding);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--sp-md);
+      text-decoration: none;
+      color: var(--ink-secondary);
+      transition: all 0.2s;
+      min-height: 200px;
+      cursor: pointer;
+    }
+
+    .project-card-new:hover {
+      border-color: var(--brand-orange);
+      color: var(--brand-orange);
+      background: var(--brand-orange-light);
+    }
+
+    .project-card-new-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-lg);
+      background: var(--hover-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: var(--ink-tertiary);
+      transition: all 0.2s;
+    }
+
+    .project-card-new:hover .project-card-new-icon {
+      background: rgba(233,92,8,0.1);
+      color: var(--brand-orange);
+    }
+
+    .project-card-new-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .project-card-new-sub {
+      font-size: 11px;
+      color: var(--ink-tertiary);
+    }
+
+    /* Quick Access in sidebar */
+    .sidebar-quick-access a {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+      padding: 6px var(--sp-sm);
+      border-radius: var(--radius-sm);
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      font-size: 11px;
+      transition: all 0.15s;
+    }
+
+    .sidebar-quick-access a:hover {
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.85);
+    }
+
+    .sidebar-quick-access .qa-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+
+    <!-- ============ SIDEBAR (Platform-Level) ============ -->
+    <nav class="sidebar">
+      <div class="sidebar-brand">
+        <div class="logo-mark">
+          <div class="logo-mark-inner">
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+        <div class="brand-text">
+          QUALINT
+          <small>Quality Intelligence</small>
+        </div>
+      </div>
+
+      <div class="sidebar-nav">
+        <span class="sidebar-section-label">Platform</span>
+        <a href="00-projects.html" class="active">
+          <span class="nav-icon">&#x25A3;</span>
+          <span class="nav-label">Projects</span>
+        </a>
+        <a href="#">
+          <span class="nav-icon">&#x2699;</span>
+          <span class="nav-label">Settings</span>
+        </a>
+        <a href="#">
+          <span class="nav-icon">&#x2753;</span>
+          <span class="nav-label">Documentation</span>
+        </a>
+
+        <span class="sidebar-section-label">Quick Access</span>
+        <div class="sidebar-quick-access">
+          <a href="01-dashboard.html">
+            <span class="qa-dot" style="background: var(--brand-orange);"></span>
+            <span>CCM Mortgage</span>
+          </a>
+          <a href="#">
+            <span class="qa-dot" style="background: var(--brand-orange);"></span>
+            <span>SaaS Dashboard</span>
+          </a>
+          <a href="h-01-dashboard.html">
+            <span class="qa-dot" style="background: var(--success-green);"></span>
+            <span>Grand Horizon Hotels</span>
+          </a>
+          <a href="#">
+            <span class="qa-dot" style="background: var(--ink-tertiary);"></span>
+            <span>Marketing Site</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="avatar">MK</div>
+          <div class="user-info">
+            <div class="name">Mehul K.</div>
+            <div class="role">QA Manager</div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ============ MAIN CONTENT ============ -->
+    <main class="main-content">
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <div class="eyebrow">Organization: Acme Startup</div>
+          <h1>Projects</h1>
+          <div class="subtitle">Manage your testing projects across all applications</div>
+        </div>
+        <div>
+          <a href="#" class="btn btn-primary" style="font-size:13px;padding:9px 20px;">+ New Project</a>
+        </div>
+      </div>
+
+      <!-- Quick Stats Bar -->
+      <div class="quick-stats">
+        <div class="quick-stat">
+          <div class="quick-stat-value">4</div>
+          <div class="quick-stat-label">Active Projects</div>
+        </div>
+        <div class="quick-stat-divider"></div>
+        <div class="quick-stat">
+          <div class="quick-stat-value" style="color: var(--success-green);">389</div>
+          <div class="quick-stat-label">Total Test Cases</div>
+        </div>
+        <div class="quick-stat-divider"></div>
+        <div class="quick-stat">
+          <div class="quick-stat-value">48</div>
+          <div class="quick-stat-label">Runs This Week</div>
+        </div>
+        <div class="quick-stat-divider"></div>
+        <div class="quick-stat">
+          <div class="quick-stat-value" style="color: var(--success-green);">91%</div>
+          <div class="quick-stat-label">Avg Pass Rate</div>
+        </div>
+        <div class="quick-stat-divider"></div>
+        <div class="quick-stat">
+          <div class="quick-stat-value">4/5</div>
+          <div class="quick-stat-label">Free Tier Used</div>
+        </div>
+      </div>
+
+      <!-- Projects Grid -->
+      <div class="projects-grid">
+
+        <!-- Card 1: SaaS Dashboard -->
+        <a href="#" class="project-card">
+          <div class="project-card-header">
+            <div class="project-card-header-left">
+              <div class="project-icon" style="background: var(--brand-orange);">S</div>
+              <div>
+                <div class="project-card-title">SaaS Dashboard</div>
+                <div class="project-card-url">app.acmedash.com</div>
+              </div>
+            </div>
+            <span class="ccs-badge good">
+              <span class="ccs-dot"></span>
+              CCS 82%
+            </span>
+          </div>
+
+          <div class="project-stats">
+            <div class="project-stat">
+              <div class="project-stat-value">106</div>
+              <div class="project-stat-label">Test Cases</div>
+            </div>
+            <div class="project-stat">
+              <div class="project-stat-value">12</div>
+              <div class="project-stat-label">Suites</div>
+            </div>
+            <div class="project-stat">
+              <div class="project-stat-value" style="color: var(--success-green);">94%</div>
+              <div class="project-stat-label">Pass Rate</div>
+            </div>
+          </div>
+
+          <div class="project-card-footer">
+            <span class="project-last-run">Last run: 2h ago</span>
+            <div class="team-avatars">
+              <div class="team-avatar" style="background: #7C3AED;">AK</div>
+              <div class="team-avatar" style="background: #1D4ED8;">JR</div>
+              <div class="team-avatar" style="background: var(--success-green);">MS</div>
+            </div>
+          </div>
+        </a>
+
+        <!-- Card 2: CCM Mortgage (Main Flow) -->
+        <a href="01-dashboard.html" class="project-card">
+          <div class="project-card-header">
+            <div class="project-card-header-left">
+              <div class="project-icon" style="background: #1D4ED8;">C</div>
+              <div>
+                <div class="project-card-title">CCM Mortgage</div>
+                <div class="project-card-url">portal.ccmmortgage.com</div>
+              </div>
+            </div>
+            <span class="ccs-badge good">
+              <span class="ccs-dot"></span>
+              CCS 88%
+            </span>
+          </div>
+
+          <div class="project-stats">
+            <div class="project-stat">
+              <div class="project-stat-value" style="color: var(--warm-amber);">114</div>
+              <div class="project-stat-label">Test Cases</div>
+            </div>
+            <div class="project-stat">
+              <div class="project-stat-value">9</div>
+              <div class="project-stat-label">Suites</div>
+            </div>
+            <div class="project-stat">
+              <div class="project-stat-value" style="color: var(--warm-amber);">79%</div>
+              <div class="project-stat-label">Pass Rate</div>
+            </div>
+          </div>
+
+          <div class="project-card-footer">
+            <span class="project-last-run">Last run: 4h ago</span>
+            <div class="team-avatars">
+              <div class="team-avatar" style="background: var(--brand-orange);">MK</div>
+              <div class="team-avatar" style="background: #C62828;">RM</div>
+              <div class="team-avatar" style="background: #1D4ED8;">JT</div>
+              <div class="team-avatar" style="background: var(--success-green);">PL</div>
+            </div>
+          </div>
+        </a>
+
+        <!-- Card 3: Grand Horizon Hotels -->
+        <a href="h-01-dashboard.html" class="project-card">
+          <div class="project-card-header">
+            <div class="project-card-header-left">
+              <div class="project-icon" style="background: var(--success-green);">H</div>
+              <div>
+                <div class="project-card-title">Grand Horizon Hotels</div>
+                <div class="project-card-url">booking.grandhorizon.com</div>
+              </div>
+            </div>
+            <span class="ccs-badge good">
+              <span class="ccs-dot"></span>
+              CCS 76%
+            </span>
+          </div>
+
+          <div class="project-stats">
+            <div class="project-stat">
+              <div class="project-stat-value" style="color: var(--success-green);">128</div>
+              <div class="project-stat-label">Test Cases</div>
+            </div>
+            <div class="project-stat">
+              <div class="project-stat-value">10</div>
+              <div class="project-stat-label">Suites</div>
+            </div>
+            <div class="project-stat">
+              <div class="project-stat-value" style="color: var(--success-green);">88%</div>
+              <div class="project-stat-label">Pass Rate</div>
+            </div>
+          </div>
+
+          <div class="project-card-footer">
+            <span class="project-last-run">Last run: 1h ago</span>
+            <div class="team-avatars">
+              <div class="team-avatar" style="background: var(--brand-orange);">MK</div>
+              <div class="team-avatar" style="background: var(--success-green);">SP</div>
+              <div class="team-avatar" style="background: #7C3AED;">LW</div>
+              <div class="team-avatar" style="background: #1D4ED8;">AN</div>
+              <div class="team-avatar" style="background: var(--warm-amber);">RJ</div>
+            </div>
+          </div>
+        </a>
+
+        <!-- Card 4: Marketing Site -->
+        <a href="#" class="project-card">
+          <div class="project-card-header">
+            <div class="project-card-header-left">
+              <div class="project-icon" style="background: var(--risk-slate);">M</div>
+              <div>
+                <div class="project-card-title">Marketing Site</div>
+                <div class="project-card-url">www.acme.com</div>
+              </div>
+            </div>
+            <span class="ccs-badge minimal">
+              <span class="ccs-dot"></span>
+              CCS 18%
+            </span>
+          </div>
+
+          <div class="project-stats">
+            <div class="project-stat">
+              <div class="project-stat-value" style="color: var(--critical-red);">41</div>
+              <div class="project-stat-label">Test Cases</div>
+            </div>
+            <div class="project-stat">
+              <div class="project-stat-value">3</div>
+              <div class="project-stat-label">Suites</div>
+            </div>
+            <div class="project-stat">
+              <div class="project-stat-value" style="color: var(--critical-red);">62%</div>
+              <div class="project-stat-label">Pass Rate</div>
+            </div>
+          </div>
+
+          <div class="project-card-footer">
+            <span class="project-last-run">Last run: 5d ago</span>
+            <div class="team-avatars">
+              <div class="team-avatar" style="background: #7C3AED;">AK</div>
+            </div>
+          </div>
+        </a>
+
+        <!-- Card 4: New Project (dashed) -->
+        <a href="#" class="project-card-new">
+          <div class="project-card-new-icon">+</div>
+          <div class="project-card-new-title">Create New Project</div>
+          <div class="project-card-new-sub">1 of 5 free projects remaining</div>
+        </a>
+
+      </div><!-- /projects-grid -->
+
+    </main>
+  </div>
+</body>
+</html>

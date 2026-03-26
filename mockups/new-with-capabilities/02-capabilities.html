@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUALINT — CCM Mortgage Capabilities</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="capabilities.css">
+  <style>
+    /* Unmapped requirements panel */
+    .unmapped-panel {
+      background: var(--card-surface);
+      border: 2px solid var(--warm-amber);
+      border-radius: var(--radius-lg);
+      padding: var(--panel-padding);
+      box-shadow: var(--shadow-card);
+    }
+
+    .unmapped-header {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+      margin-bottom: var(--sp-lg);
+    }
+
+    .unmapped-header .warn-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: var(--radius-pill);
+      background: var(--warm-amber-light);
+      color: var(--warm-amber);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    .unmapped-header .unmapped-title {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .unmapped-header .unmapped-count {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--warm-amber);
+      font-weight: 600;
+    }
+
+    .unmapped-row {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-md);
+      padding: var(--sp-sm) var(--sp-md);
+      border-bottom: 1px solid var(--border-light);
+      font-size: 12px;
+    }
+
+    .unmapped-row:last-child {
+      border-bottom: none;
+    }
+
+    .unmapped-row:hover {
+      background: var(--hover-bg);
+    }
+
+    .unmapped-row .story-title {
+      flex: 1;
+      font-weight: 500;
+    }
+
+    .unmapped-row .unmapped-label {
+      font-size: 10px;
+      color: var(--ink-tertiary);
+      font-style: italic;
+    }
+
+    /* Health grade styling */
+    .health-grade {
+      font-family: var(--font-mono);
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .health-grade.grade-a { color: var(--success-green); }
+    .health-grade.grade-b { color: #1D4ED8; }
+    .health-grade.grade-c { color: var(--warm-amber); }
+    .health-grade.grade-d { color: var(--critical-red); }
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo-mark">
+        <div class="logo-mark-inner">
+          <span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="brand-text">QUALINT<small>Quality Intelligence</small></div>
+    </div>
+    <div class="sidebar-nav">
+      <div class="sidebar-section-label">CCM Mortgage</div>
+      <a href="01-dashboard.html"><span class="nav-icon">&#9632;</span><span class="nav-label">Dashboard</span></a>
+      <a href="02-capabilities.html" class="active"><span class="nav-icon">&#11044;</span><span class="nav-label">Capabilities</span></a>
+      <a href="03-context.html"><span class="nav-icon">&#128206;</span><span class="nav-label">Context</span></a>
+      <a href="05-test-cases.html"><span class="nav-icon">&#9745;</span><span class="nav-label">Test Cases</span></a>
+      <a href="06-automation.html"><span class="nav-icon">&#9881;</span><span class="nav-label">Automation</span></a>
+      <a href="09-accessibility.html"><span class="nav-icon">&#9855;</span><span class="nav-label">Accessibility</span></a>
+      <a href="07-execution.html"><span class="nav-icon">&#9654;</span><span class="nav-label">Execution</span></a>
+      <a href="08-results.html"><span class="nav-icon">&#9638;</span><span class="nav-label">Results</span></a>
+
+      <div class="sidebar-section-label">Settings</div>
+      <a href="10-settings.html"><span class="nav-icon">&#9881;</span><span class="nav-label">Settings</span></a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">MK</div>
+        <div class="user-info">
+          <div class="name">Mehul K.</div>
+          <div class="role">QA Manager</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="main-content">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <div class="eyebrow">CCM MORTGAGE</div>
+        <h1>Capabilities</h1>
+        <p class="subtitle">Business functions mapped to test scenarios</p>
+      </div>
+      <div class="flex gap-sm items-center">
+        <button class="btn btn-secondary">All Interaction Types &#9662;</button>
+        <button class="btn btn-primary">+ Add Capability</button>
+      </div>
+    </div>
+
+    <!-- Architecture Model Banner — Simplified -->
+    <div class="panel mb-xl">
+      <div class="arch-flow">
+        <div class="arch-node active">
+          <span class="arch-node-icon">&#11044;</span>
+          <span class="arch-node-label">Capability</span>
+          <span class="arch-node-sub">Business function</span>
+        </div>
+        <span class="arch-arrow">&#8594;</span>
+        <div class="arch-node">
+          <span class="arch-node-icon">&#9998;</span>
+          <span class="arch-node-label">Scenarios</span>
+          <span class="arch-node-sub">What to validate</span>
+        </div>
+        <span class="arch-arrow">&#8594;</span>
+        <div class="arch-node">
+          <span class="arch-node-icon">&#9989;</span>
+          <span class="arch-node-label">Evidence</span>
+          <span class="arch-node-sub">Execution results</span>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:var(--sp-sm);font-size:10px;color:var(--ink-tertiary);">
+        Powered by: Requirements &middot; Interaction Types &middot; Conditions &middot; Test Assets — <a href="#" style="color:var(--brand-orange);text-decoration:none;font-weight:600;">Learn more</a>
+      </div>
+    </div>
+
+    <!-- Capability Cards Grid -->
+    <div class="cap-grid mb-xl">
+
+      <!-- 1. Loan Application -->
+      <a href="04-scenarios.html" class="cap-card">
+        <div class="cap-card-header">
+          <div>
+            <div class="cap-card-title">Loan Application</div>
+          </div>
+          <div class="cap-card-icon green">&#127968;</div>
+        </div>
+        <div class="cap-card-body">
+          <div class="interaction-badges">
+            <span class="int-badge web">Web UI</span>
+            <span class="int-badge api">API</span>
+            <span class="int-badge mobile">Mobile</span>
+          </div>
+          <div class="req-trace">
+            <span class="jira-key">CCM-142</span>
+            <span class="jira-key">CCM-156</span>
+          </div>
+          <div class="cap-scenario-bar mt-md">
+            <span class="bar-label">Scenarios</span>
+            <div class="bar-track">
+              <div class="bar-pass" style="width:88.9%"></div>
+              <div class="bar-fail" style="width:11.1%"></div>
+            </div>
+            <span class="bar-count">9</span>
+          </div>
+        </div>
+        <div class="cap-card-footer">
+          <div class="cap-stat">
+            <div class="cap-stat-value">9</div>
+            <div class="cap-stat-label">Scenarios</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value">85%</div>
+            <div class="cap-stat-label">Coverage</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value health-grade grade-a">A-</div>
+            <div class="cap-stat-label">Health</div>
+          </div>
+        </div>
+      </a>
+
+      <!-- 2. Document Upload -->
+      <a href="04-scenarios.html" class="cap-card">
+        <div class="cap-card-header">
+          <div>
+            <div class="cap-card-title">Document Upload</div>
+          </div>
+          <div class="cap-card-icon blue">&#128196;</div>
+        </div>
+        <div class="cap-card-body">
+          <div class="interaction-badges">
+            <span class="int-badge web">Web UI</span>
+            <span class="int-badge api">API</span>
+          </div>
+          <div class="req-trace">
+            <span class="jira-key">CCM-142</span>
+          </div>
+          <div class="cap-scenario-bar mt-md">
+            <span class="bar-label">Scenarios</span>
+            <div class="bar-track">
+              <div class="bar-pass" style="width:85.7%"></div>
+              <div class="bar-draft" style="width:14.3%"></div>
+            </div>
+            <span class="bar-count">7</span>
+          </div>
+        </div>
+        <div class="cap-card-footer">
+          <div class="cap-stat">
+            <div class="cap-stat-value">7</div>
+            <div class="cap-stat-label">Scenarios</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value">83%</div>
+            <div class="cap-stat-label">Coverage</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value health-grade grade-b">B+</div>
+            <div class="cap-stat-label">Health</div>
+          </div>
+        </div>
+      </a>
+
+      <!-- 3. Credit Check -->
+      <a href="04-scenarios.html" class="cap-card">
+        <div class="cap-card-header">
+          <div>
+            <div class="cap-card-title">Credit Check</div>
+          </div>
+          <div class="cap-card-icon amber">&#128202;</div>
+        </div>
+        <div class="cap-card-body">
+          <div class="interaction-badges">
+            <span class="int-badge web">Web UI</span>
+            <span class="int-badge api">API</span>
+            <span class="int-badge event">Event</span>
+          </div>
+          <div class="req-trace">
+            <span class="jira-key">CCM-156</span>
+          </div>
+          <div class="cap-scenario-bar mt-md">
+            <span class="bar-label">Scenarios</span>
+            <div class="bar-track">
+              <div class="bar-pass" style="width:66.7%"></div>
+              <div class="bar-fail" style="width:33.3%"></div>
+            </div>
+            <span class="bar-count">6</span>
+          </div>
+        </div>
+        <div class="cap-card-footer">
+          <div class="cap-stat">
+            <div class="cap-stat-value">6</div>
+            <div class="cap-stat-label">Scenarios</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value">68%</div>
+            <div class="cap-stat-label">Coverage</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value health-grade grade-c">C+</div>
+            <div class="cap-stat-label">Health</div>
+          </div>
+        </div>
+      </a>
+
+      <!-- 4. Rate Calculator -->
+      <a href="04-scenarios.html" class="cap-card">
+        <div class="cap-card-header">
+          <div>
+            <div class="cap-card-title">Rate Calculator</div>
+          </div>
+          <div class="cap-card-icon orange">&#128176;</div>
+        </div>
+        <div class="cap-card-body">
+          <div class="interaction-badges">
+            <span class="int-badge web">Web UI</span>
+            <span class="int-badge api">API</span>
+            <span class="int-badge mobile">Mobile</span>
+          </div>
+          <div class="req-trace">
+            <span class="jira-key">CCM-201</span>
+          </div>
+          <div class="cap-scenario-bar mt-md">
+            <span class="bar-label">Scenarios</span>
+            <div class="bar-track">
+              <div class="bar-pass" style="width:83.3%"></div>
+              <div class="bar-draft" style="width:16.7%"></div>
+            </div>
+            <span class="bar-count">6</span>
+          </div>
+        </div>
+        <div class="cap-card-footer">
+          <div class="cap-stat">
+            <div class="cap-stat-value">6</div>
+            <div class="cap-stat-label">Scenarios</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value">72%</div>
+            <div class="cap-stat-label">Coverage</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value health-grade grade-b">B</div>
+            <div class="cap-stat-label">Health</div>
+          </div>
+        </div>
+      </a>
+
+      <!-- 5. E-Signature -->
+      <a href="04-scenarios.html" class="cap-card">
+        <div class="cap-card-header">
+          <div>
+            <div class="cap-card-title">E-Signature</div>
+          </div>
+          <div class="cap-card-icon green">&#9997;&#65039;</div>
+        </div>
+        <div class="cap-card-body">
+          <div class="interaction-badges">
+            <span class="int-badge web">Web UI</span>
+            <span class="int-badge api">API</span>
+          </div>
+          <div class="req-trace">
+            <span class="jira-key">CCM-189</span>
+          </div>
+          <div class="cap-scenario-bar mt-md">
+            <span class="bar-label">Scenarios</span>
+            <div class="bar-track">
+              <div class="bar-pass" style="width:83.3%"></div>
+              <div class="bar-fail" style="width:16.7%"></div>
+            </div>
+            <span class="bar-count">6</span>
+          </div>
+        </div>
+        <div class="cap-card-footer">
+          <div class="cap-stat">
+            <div class="cap-stat-value">6</div>
+            <div class="cap-stat-label">Scenarios</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value">76%</div>
+            <div class="cap-stat-label">Coverage</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value health-grade grade-b">B+</div>
+            <div class="cap-stat-label">Health</div>
+          </div>
+        </div>
+      </a>
+
+      <!-- 6. Underwriting -->
+      <a href="04-scenarios.html" class="cap-card">
+        <div class="cap-card-header">
+          <div>
+            <div class="cap-card-title">Underwriting</div>
+          </div>
+          <div class="cap-card-icon red">&#128269;</div>
+        </div>
+        <div class="cap-card-body">
+          <div class="interaction-badges">
+            <span class="int-badge web">Web UI</span>
+            <span class="int-badge api">API</span>
+            <span class="int-badge event">Event</span>
+          </div>
+          <div class="req-trace">
+            <span class="jira-key">CCM-210</span>
+          </div>
+          <div class="cap-scenario-bar mt-md">
+            <span class="bar-label">Scenarios</span>
+            <div class="bar-track">
+              <div class="bar-pass" style="width:50%"></div>
+              <div class="bar-fail" style="width:16.7%"></div>
+              <div class="bar-draft" style="width:33.3%"></div>
+            </div>
+            <span class="bar-count">6</span>
+          </div>
+        </div>
+        <div class="cap-card-footer">
+          <div class="cap-stat">
+            <div class="cap-stat-value">6</div>
+            <div class="cap-stat-label">Scenarios</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value">48%</div>
+            <div class="cap-stat-label">Coverage</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value health-grade grade-d">D+</div>
+            <div class="cap-stat-label">Health</div>
+          </div>
+        </div>
+      </a>
+
+      <!-- 7. Compliance Audit -->
+      <a href="04-scenarios.html" class="cap-card">
+        <div class="cap-card-header">
+          <div>
+            <div class="cap-card-title">Compliance Audit</div>
+          </div>
+          <div class="cap-card-icon amber">&#9878;&#65039;</div>
+        </div>
+        <div class="cap-card-body">
+          <div class="interaction-badges">
+            <span class="int-badge api">API</span>
+            <span class="int-badge event">Event</span>
+          </div>
+          <div class="req-trace">
+            <span class="jira-key">CCM-215</span>
+          </div>
+          <div class="cap-scenario-bar mt-md">
+            <span class="bar-label">Scenarios</span>
+            <div class="bar-track">
+              <div class="bar-pass" style="width:100%"></div>
+            </div>
+            <span class="bar-count">4</span>
+          </div>
+        </div>
+        <div class="cap-card-footer">
+          <div class="cap-stat">
+            <div class="cap-stat-value">4</div>
+            <div class="cap-stat-label">Scenarios</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value">52%</div>
+            <div class="cap-stat-label">Coverage</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value health-grade grade-c">C</div>
+            <div class="cap-stat-label">Health</div>
+          </div>
+        </div>
+      </a>
+
+      <!-- 8. User Authentication -->
+      <a href="04-scenarios.html" class="cap-card">
+        <div class="cap-card-header">
+          <div>
+            <div class="cap-card-title">User Authentication</div>
+          </div>
+          <div class="cap-card-icon green">&#128272;</div>
+        </div>
+        <div class="cap-card-body">
+          <div class="interaction-badges">
+            <span class="int-badge web">Web UI</span>
+            <span class="int-badge api">API</span>
+            <span class="int-badge mobile">Mobile</span>
+          </div>
+          <div class="req-trace">
+            <span class="jira-key">CCM-101</span>
+          </div>
+          <div class="cap-scenario-bar mt-md">
+            <span class="bar-label">Scenarios</span>
+            <div class="bar-track">
+              <div class="bar-pass" style="width:100%"></div>
+            </div>
+            <span class="bar-count">3</span>
+          </div>
+        </div>
+        <div class="cap-card-footer">
+          <div class="cap-stat">
+            <div class="cap-stat-value">3</div>
+            <div class="cap-stat-label">Scenarios</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value">89%</div>
+            <div class="cap-stat-label">Coverage</div>
+          </div>
+          <div class="cap-stat">
+            <div class="cap-stat-value health-grade grade-a">A</div>
+            <div class="cap-stat-label">Health</div>
+          </div>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- Unmapped Requirements Panel -->
+    <div class="unmapped-panel">
+      <div class="unmapped-header">
+        <span class="warn-icon">&#9888;</span>
+        <div>
+          <div class="unmapped-title">4 Unmapped Requirements</div>
+          <div class="unmapped-count">JIRA stories not linked to any capability</div>
+        </div>
+      </div>
+
+      <div class="unmapped-row">
+        <span class="jira-key">CCM-228</span>
+        <span class="story-title">Borrower notification preferences</span>
+        <span class="unmapped-label">No capability mapped</span>
+        <button class="btn btn-sm btn-secondary">Map to Capability</button>
+      </div>
+
+      <div class="unmapped-row">
+        <span class="jira-key">CCM-234</span>
+        <span class="story-title">Document expiry alerts</span>
+        <span class="unmapped-label">No capability mapped</span>
+        <button class="btn btn-sm btn-secondary">Map to Capability</button>
+      </div>
+
+      <div class="unmapped-row">
+        <span class="jira-key">CCM-241</span>
+        <span class="story-title">Multi-language support for disclosures</span>
+        <span class="unmapped-label">No capability mapped</span>
+        <button class="btn btn-sm btn-secondary">Map to Capability</button>
+      </div>
+
+      <div class="unmapped-row">
+        <span class="jira-key">CCM-250</span>
+        <span class="story-title">Automated appraisal ordering</span>
+        <span class="unmapped-label">No capability mapped</span>
+        <button class="btn btn-sm btn-secondary">Map to Capability</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>

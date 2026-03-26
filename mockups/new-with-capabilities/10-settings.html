@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUALINT — CCM Mortgage Settings</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="capabilities.css">
+  <style>
+    /* Tabs */
+    .tab-bar {
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid var(--border-color);
+      margin-bottom: var(--sp-xl);
+    }
+    .tab-item {
+      padding: var(--sp-sm) var(--sp-lg);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-secondary);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .tab-item:hover {
+      color: var(--ink);
+    }
+    .tab-item.active {
+      color: var(--brand-orange);
+      border-bottom-color: var(--brand-orange);
+    }
+
+    /* Integration cards */
+    .integration-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-md);
+    }
+    .integration-card {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-lg);
+      padding: var(--sp-lg);
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card);
+    }
+    .integration-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      flex-shrink: 0;
+      color: white;
+    }
+    .integration-icon.jira { background: #DBEAFE; color: #1D4ED8; }
+    .integration-icon.swagger { background: #1B3A2A; color: #85E89D; }
+    .integration-icon.github { background: #1F2937; color: #F9FAFB; }
+    .integration-icon.slack { background: #7C3AED; color: white; }
+    .integration-icon.cicd { background: #64748B; color: white; }
+
+    .integration-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .integration-name {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    .integration-details {
+      font-size: 11px;
+      color: var(--ink-secondary);
+    }
+    .integration-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+      flex-shrink: 0;
+    }
+
+    /* Environment table add button */
+    .add-env-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-xs);
+      padding: var(--sp-sm) var(--sp-md);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--brand-orange);
+      background: transparent;
+      border: 1px dashed var(--brand-orange);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      margin-top: var(--sp-md);
+      transition: all 0.15s;
+    }
+    .add-env-btn:hover {
+      background: var(--brand-orange-light);
+    }
+
+    /* Project info grid */
+    .project-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-md) var(--sp-2xl);
+    }
+    .project-info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .project-info-label {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-tertiary);
+    }
+    .project-info-value {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo-mark"><div class="logo-mark-inner"><span></span><span></span><span></span><span></span></div></div>
+      <div class="brand-text">QUALINT<small>Quality Intelligence</small></div>
+    </div>
+    <div class="sidebar-nav">
+      <span class="sidebar-section-label">Project</span>
+      <a href="01-dashboard.html"><span class="nav-icon">&#9707;</span><span class="nav-label">Dashboard</span></a>
+      <a href="02-capabilities.html"><span class="nav-icon">&#11041;</span><span class="nav-label">Capabilities</span></a>
+      <a href="03-context.html"><span class="nav-icon">&#9673;</span><span class="nav-label">Context</span></a>
+      <a href="05-test-cases.html"><span class="nav-icon">&#9745;</span><span class="nav-label">Test Cases</span></a>
+      <a href="06-automation.html"><span class="nav-icon">&#9881;</span><span class="nav-label">Automation</span></a>
+      <a href="09-accessibility.html"><span class="nav-icon">&#9855;</span><span class="nav-label">Accessibility</span></a>
+      <a href="07-execution.html"><span class="nav-icon">&#9654;</span><span class="nav-label">Execution</span></a>
+      <a href="08-results.html"><span class="nav-icon">&#9638;</span><span class="nav-label">Results</span></a>
+      <span class="sidebar-section-label">Settings</span>
+      <a href="10-settings.html" class="active"><span class="nav-icon">&#9881;</span><span class="nav-label">Settings</span></a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">MK</div>
+        <div class="user-info"><div class="name">Mehul K.</div><div class="role">QA Manager</div></div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <div class="eyebrow">CCM MORTGAGE</div>
+        <h1>Settings</h1>
+        <div class="subtitle">Project configuration and integrations</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tab-bar">
+      <a class="tab-item" href="#">General</a>
+      <a class="tab-item active" href="#">Integrations</a>
+      <a class="tab-item" href="#">Environments</a>
+      <a class="tab-item" href="#">Team</a>
+    </div>
+
+    <!-- Connected Integrations -->
+    <div class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title">Connected Integrations</h2>
+      </div>
+      <div class="panel-body">
+        <div class="integration-list">
+
+          <!-- JIRA -->
+          <div class="integration-card">
+            <div class="integration-icon jira">J</div>
+            <div class="integration-info">
+              <div class="integration-name">JIRA</div>
+              <div class="integration-details">CCM Mortgage Board &middot; 32 stories synced &middot; Last sync: 2h ago</div>
+            </div>
+            <div class="integration-actions">
+              <span class="pill pill-pass">Active</span>
+              <button class="btn btn-sm">Configure</button>
+              <button class="btn btn-sm btn-ghost">Disconnect</button>
+            </div>
+          </div>
+
+          <!-- Swagger / OpenAPI -->
+          <div class="integration-card">
+            <div class="integration-icon swagger">S</div>
+            <div class="integration-info">
+              <div class="integration-name">Swagger / OpenAPI</div>
+              <div class="integration-details">api.ccmmortgage.com &middot; v1 &middot; 26 endpoints &middot; Auto-sync enabled</div>
+            </div>
+            <div class="integration-actions">
+              <span class="pill pill-pass">Active</span>
+              <button class="btn btn-sm">Configure</button>
+              <button class="btn btn-sm">Re-sync</button>
+            </div>
+          </div>
+
+          <!-- GitHub -->
+          <div class="integration-card">
+            <div class="integration-icon github">G</div>
+            <div class="integration-info">
+              <div class="integration-name">GitHub</div>
+              <div class="integration-details">ccm-org/mortgage-portal &middot; main branch &middot; Webhook active</div>
+            </div>
+            <div class="integration-actions">
+              <span class="pill pill-pass">Active</span>
+              <button class="btn btn-sm">Configure</button>
+              <button class="btn btn-sm btn-ghost">Disconnect</button>
+            </div>
+          </div>
+
+          <!-- Slack -->
+          <div class="integration-card">
+            <div class="integration-icon slack">S</div>
+            <div class="integration-info">
+              <div class="integration-name">Slack</div>
+              <div class="integration-details">Send test results and alerts to Slack channels</div>
+            </div>
+            <div class="integration-actions">
+              <span class="pill pill-draft">Inactive</span>
+              <button class="btn btn-sm btn-primary">Connect</button>
+            </div>
+          </div>
+
+          <!-- CI/CD Pipeline -->
+          <div class="integration-card">
+            <div class="integration-icon cicd">CI</div>
+            <div class="integration-info">
+              <div class="integration-name">CI/CD Pipeline</div>
+              <div class="integration-details">Trigger test runs from GitHub Actions, Jenkins, or GitLab CI</div>
+            </div>
+            <div class="integration-actions">
+              <span class="pill pill-draft">Inactive</span>
+              <button class="btn btn-sm btn-primary">Connect</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Environment Configuration -->
+    <div class="panel" style="margin-top: var(--card-gap);">
+      <div class="panel-header">
+        <h2 class="panel-title">Environment Configuration</h2>
+      </div>
+      <div class="panel-body">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Environment</th>
+              <th>Base URL</th>
+              <th>Status</th>
+              <th>Last Used</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight: 600;">Production</td>
+              <td class="mono">https://portal.ccmmortgage.com</td>
+              <td><span class="pill pill-pass">Active</span></td>
+              <td>3d ago</td>
+            </tr>
+            <tr>
+              <td style="font-weight: 600;">Staging</td>
+              <td class="mono">https://staging.ccmmortgage.com</td>
+              <td><span class="pill pill-pass">Active</span></td>
+              <td>2h ago</td>
+            </tr>
+            <tr>
+              <td style="font-weight: 600;">QA</td>
+              <td class="mono">https://qa.ccmmortgage.com</td>
+              <td><span class="pill pill-pass">Active</span></td>
+              <td>1d ago</td>
+            </tr>
+            <tr>
+              <td style="font-weight: 600;">Dev</td>
+              <td class="mono">https://dev.ccmmortgage.com</td>
+              <td><span class="pill pill-warn">Unstable</span></td>
+              <td>5d ago</td>
+            </tr>
+          </tbody>
+        </table>
+        <button class="add-env-btn">+ Add Environment</button>
+      </div>
+    </div>
+
+    <!-- Project Info -->
+    <div class="panel" style="margin-top: var(--card-gap);">
+      <div class="panel-header">
+        <h2 class="panel-title">Project Info</h2>
+      </div>
+      <div class="panel-body">
+        <div class="project-info-grid">
+          <div class="project-info-item">
+            <span class="project-info-label">Project Name</span>
+            <span class="project-info-value">CCM Mortgage</span>
+          </div>
+          <div class="project-info-item">
+            <span class="project-info-label">Created</span>
+            <span class="project-info-value">Jan 15, 2026</span>
+          </div>
+          <div class="project-info-item">
+            <span class="project-info-label">Owner</span>
+            <span class="project-info-value">Mehul K.</span>
+          </div>
+          <div class="project-info-item">
+            <span class="project-info-label">Plan</span>
+            <span class="project-info-value">Professional (5 projects, unlimited tests)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>

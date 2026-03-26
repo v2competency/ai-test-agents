@@ -1,0 +1,528 @@
+/* ============================================================
+   QUALINT Capabilities Model — Extended Styles
+   Supplements ../styles.css with capability-specific components
+   ============================================================ */
+
+/* ---- Capability Cards ---- */
+.cap-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--card-gap);
+}
+
+.cap-card {
+  background: var(--card-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: var(--panel-padding);
+  box-shadow: var(--shadow-card);
+  transition: all 0.2s;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.cap-card:hover {
+  border-color: var(--brand-orange);
+  box-shadow: 0 4px 16px rgba(233,92,8,0.1);
+  transform: translateY(-1px);
+}
+
+.cap-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: var(--sp-md);
+}
+
+.cap-card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.cap-card-icon.green { background: var(--success-green-light); color: var(--success-green); }
+.cap-card-icon.amber { background: var(--warm-amber-light); color: var(--warm-amber); }
+.cap-card-icon.red { background: var(--critical-red-light); color: var(--critical-red); }
+.cap-card-icon.blue { background: #EBF5FF; color: #1D4ED8; }
+.cap-card-icon.orange { background: var(--brand-orange-light); color: var(--brand-orange); }
+.cap-card-icon.slate { background: #F1F0EB; color: var(--risk-slate); }
+
+.cap-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.cap-card-sub {
+  font-size: 10px;
+  color: var(--ink-tertiary);
+}
+
+.cap-card-body {
+  margin-bottom: var(--sp-md);
+}
+
+/* Interaction type badges */
+.interaction-badges {
+  display: flex;
+  gap: var(--sp-xs);
+  flex-wrap: wrap;
+  margin-bottom: var(--sp-md);
+}
+
+.int-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: var(--radius-xs);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.int-badge.web { background: #EDE9FE; color: #7C3AED; }
+.int-badge.api { background: #DBEAFE; color: #1D4ED8; }
+.int-badge.mobile { background: #FEF3C7; color: #D97706; }
+.int-badge.event { background: #E0E7FF; color: #4338CA; }
+
+/* Scenario mini-bars inside capability cards */
+.cap-scenario-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  margin-bottom: var(--sp-xs);
+}
+
+.cap-scenario-bar .bar-label {
+  font-size: 10px;
+  color: var(--ink-secondary);
+  width: 50px;
+  flex-shrink: 0;
+}
+
+.cap-scenario-bar .bar-track {
+  flex: 1;
+  height: 6px;
+  background: var(--border-light);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  display: flex;
+}
+
+.cap-scenario-bar .bar-pass { background: var(--success-green); height: 100%; }
+.cap-scenario-bar .bar-fail { background: var(--critical-red); height: 100%; }
+.cap-scenario-bar .bar-draft { background: var(--border-color); height: 100%; }
+.cap-scenario-bar .bar-missing { background: var(--warm-amber); height: 100%; }
+
+.cap-scenario-bar .bar-count {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-tertiary);
+  width: 32px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* Cap footer stats */
+.cap-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--sp-sm);
+  border-top: 1px solid var(--border-light);
+}
+
+.cap-stat {
+  text-align: center;
+}
+
+.cap-stat-value {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.cap-stat-label {
+  font-size: 9px;
+  color: var(--ink-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ---- Requirement Trace ---- */
+.req-trace {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  padding: var(--sp-xs) 0;
+  font-size: 11px;
+}
+
+.req-trace .jira-key {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  color: #1D4ED8;
+  background: #DBEAFE;
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+  text-decoration: none;
+}
+
+.req-trace .jira-key:hover {
+  background: #BFDBFE;
+}
+
+.req-trace .trace-arrow {
+  color: var(--ink-tertiary);
+  font-size: 10px;
+}
+
+/* ---- Architecture Flow ---- */
+.arch-flow {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: var(--sp-lg) 0;
+  justify-content: center;
+}
+
+.arch-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-xs);
+  padding: var(--sp-md) var(--sp-lg);
+  border-radius: var(--radius-md);
+  background: var(--card-surface);
+  border: 1px solid var(--border-color);
+  min-width: 120px;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+}
+
+.arch-node.active {
+  border-color: var(--brand-orange);
+  background: var(--brand-orange-light);
+}
+
+.arch-node-icon {
+  font-size: 18px;
+}
+
+.arch-node-label {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.arch-node-sub {
+  font-size: 9px;
+  color: var(--ink-tertiary);
+}
+
+.arch-arrow {
+  display: flex;
+  align-items: center;
+  padding: 0 var(--sp-xs);
+  color: var(--ink-tertiary);
+  font-size: 16px;
+}
+
+/* ---- Context Source Cards ---- */
+.ctx-source-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--card-gap);
+}
+
+.ctx-source-card {
+  background: var(--card-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: var(--panel-padding);
+  box-shadow: var(--shadow-card);
+  position: relative;
+}
+
+.ctx-source-card.connected {
+  border-color: var(--success-green);
+}
+
+.ctx-source-card.disconnected {
+  border-color: var(--border-color);
+  opacity: 0.7;
+}
+
+.ctx-source-header {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  margin-bottom: var(--sp-md);
+}
+
+.ctx-source-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.ctx-source-icon.jira { background: #DBEAFE; color: #1D4ED8; }
+.ctx-source-icon.swagger { background: #1B3A2A; color: #85E89D; }
+.ctx-source-icon.screenshot { background: var(--brand-orange-light); color: var(--brand-orange); }
+.ctx-source-icon.url { background: #EDE9FE; color: #7C3AED; }
+.ctx-source-icon.source { background: #F1F0EB; color: var(--risk-slate); }
+
+.ctx-source-name {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ctx-source-status {
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.ctx-source-status.connected { color: var(--success-green); }
+.ctx-source-status.disconnected { color: var(--ink-tertiary); }
+
+.ctx-source-stats {
+  display: flex;
+  gap: var(--sp-lg);
+  margin-bottom: var(--sp-sm);
+}
+
+.ctx-source-stat {
+  font-size: 10px;
+  color: var(--ink-secondary);
+}
+
+.ctx-source-stat strong {
+  font-family: var(--font-mono);
+  color: var(--ink);
+}
+
+.ctx-ccs-contribution {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--brand-orange);
+}
+
+/* ---- JIRA Specific ---- */
+.jira-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
+  font-size: 10px;
+  font-weight: 600;
+  background: #DBEAFE;
+  color: #1D4ED8;
+}
+
+.jira-type-story { background: #ECFDF5; color: var(--success-green); }
+.jira-type-bug { background: var(--critical-red-light); color: var(--critical-red); }
+.jira-type-epic { background: #EDE9FE; color: #7C3AED; }
+.jira-type-task { background: #DBEAFE; color: #1D4ED8; }
+
+.jira-priority-high { color: var(--critical-red); }
+.jira-priority-medium { color: var(--warm-amber); }
+.jira-priority-low { color: var(--success-green); }
+
+/* ---- Scenario Hierarchy Table ---- */
+.scenario-tree {
+  width: 100%;
+}
+
+.scenario-tree .tree-group {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.scenario-tree .tree-group-header {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-md);
+  padding: var(--sp-md);
+  font-weight: 700;
+  font-size: 12px;
+  background: var(--hover-bg);
+  cursor: pointer;
+}
+
+.scenario-tree .tree-group-header:hover {
+  background: #F0EDE4;
+}
+
+.tree-toggle {
+  width: 16px;
+  text-align: center;
+  color: var(--ink-tertiary);
+  font-size: 10px;
+}
+
+.tree-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-md);
+  padding: var(--sp-sm) var(--sp-md) var(--sp-sm) 36px;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 12px;
+}
+
+.tree-row:hover {
+  background: var(--hover-bg);
+}
+
+.tree-row .condition-tag {
+  display: inline-flex;
+  padding: 1px 6px;
+  border-radius: var(--radius-xs);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.condition-tag.positive { background: var(--success-green-light); color: var(--success-green); }
+.condition-tag.negative { background: var(--critical-red-light); color: var(--critical-red); }
+.condition-tag.edge { background: var(--warm-amber-light); color: var(--warm-amber); }
+.condition-tag.boundary { background: #EDE9FE; color: #7C3AED; }
+
+/* ---- Coverage Heatmap ---- */
+.coverage-heatmap {
+  display: grid;
+  grid-template-columns: 140px repeat(4, 1fr);
+  gap: 2px;
+  font-size: 11px;
+}
+
+.heatmap-header {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-secondary);
+  padding: var(--sp-sm);
+  text-align: center;
+}
+
+.heatmap-label {
+  padding: var(--sp-sm);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+.heatmap-cell {
+  padding: var(--sp-sm);
+  text-align: center;
+  border-radius: var(--radius-xs);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.heatmap-cell.full { background: var(--success-green); color: white; }
+.heatmap-cell.high { background: #86EFAC; color: #166534; }
+.heatmap-cell.medium { background: #FDE68A; color: #92400E; }
+.heatmap-cell.low { background: #FECACA; color: #991B1B; }
+.heatmap-cell.none { background: #F1F0EB; color: var(--ink-tertiary); }
+
+/* ---- Feedback Loop Indicator ---- */
+.feedback-loop {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  padding: var(--sp-sm) var(--sp-md);
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  color: var(--warm-amber);
+  font-weight: 500;
+}
+
+.feedback-loop .loop-icon {
+  font-size: 14px;
+}
+
+/* ---- Mini Score Ring (inline) ---- */
+.mini-ring {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+/* ---- Swagger Endpoint Table Row ---- */
+.method-badge {
+  display: inline-flex;
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  min-width: 42px;
+  justify-content: center;
+}
+
+.method-badge.get { background: #ECFDF5; color: #16A344; }
+.method-badge.post { background: #DBEAFE; color: #1D4ED8; }
+.method-badge.put { background: #FFFBEB; color: #CA8B04; }
+.method-badge.delete { background: #FEF2F2; color: #C62828; }
+.method-badge.patch { background: #FFF7ED; color: #C2410C; }
+
+/* ---- Condition Scenario Rows ---- */
+.cond-scenario-row {
+  display: grid;
+  grid-template-columns: 100px 1fr 80px 80px 80px 60px;
+  align-items: center;
+  gap: var(--sp-sm);
+  padding: var(--sp-sm) var(--sp-md);
+  border-bottom: 1px solid var(--border-light);
+  font-size: 12px;
+}
+
+.cond-scenario-row:hover {
+  background: var(--hover-bg);
+}
+
+/* ---- Traceability Chain ---- */
+.trace-chain {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-xs);
+  font-size: 10px;
+  flex-wrap: wrap;
+}
+
+.trace-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
+  font-weight: 600;
+  font-size: 10px;
+}
+
+.trace-chip.requirement { background: #DBEAFE; color: #1D4ED8; }
+.trace-chip.capability { background: var(--brand-orange-light); color: var(--brand-orange); }
+.trace-chip.scenario { background: #EDE9FE; color: #7C3AED; }
+.trace-chip.test { background: var(--success-green-light); color: var(--success-green); }
+
+.trace-sep {
+  color: var(--ink-tertiary);
+  font-size: 9px;
+}

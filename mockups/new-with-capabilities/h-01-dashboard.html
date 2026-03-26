@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUALINT — Grand Horizon Hotels Dashboard</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="capabilities.css">
+  <style>
+    /* Dashboard-specific layout */
+    .content-columns {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: var(--card-gap);
+    }
+
+    /* Architecture flow compact overrides */
+    .arch-flow-strip {
+      background: var(--card-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-md) var(--sp-lg);
+      box-shadow: var(--shadow-card);
+      margin-bottom: var(--sp-2xl);
+      overflow-x: auto;
+    }
+    .arch-flow-strip .arch-node {
+      min-width: 90px;
+      padding: var(--sp-sm) var(--sp-md);
+    }
+    .arch-flow-strip .arch-node-label {
+      font-size: 10px;
+    }
+
+    /* SVG ring styles */
+    .ring-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--sp-md);
+    }
+    .ring-svg {
+      transform: rotate(-90deg);
+    }
+    .ring-bg {
+      fill: none;
+      stroke: var(--border-light);
+      stroke-width: 8;
+    }
+    .ring-fill {
+      fill: none;
+      stroke-width: 8;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.6s ease;
+    }
+    .ring-fill.green { stroke: var(--success-green); }
+    .ring-fill.orange { stroke: var(--brand-orange); }
+    .ring-fill.amber { stroke: var(--warm-amber); }
+    .ring-text {
+      font-family: var(--font-ui);
+      font-weight: 700;
+      fill: var(--ink);
+    }
+
+    /* Context source bars */
+    .ctx-bar-row {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+      padding: 4px 0;
+    }
+    .ctx-bar-label {
+      width: 100px;
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+      flex-shrink: 0;
+    }
+    .ctx-bar-track {
+      flex: 1;
+      height: 6px;
+      background: var(--border-light);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+    }
+    .ctx-bar-fill {
+      height: 100%;
+      background: var(--success-green);
+      border-radius: var(--radius-pill);
+    }
+    .ctx-bar-fill.disconnected {
+      background: var(--border-light);
+    }
+    .ctx-bar-value {
+      width: 32px;
+      text-align: right;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--ink-secondary);
+      flex-shrink: 0;
+    }
+    .ctx-bar-note {
+      font-size: 9px;
+      color: var(--brand-orange);
+      font-weight: 500;
+      margin-left: 4px;
+    }
+
+    /* JIRA traceability rows */
+    .jira-trace-row {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+      padding: var(--sp-sm) 0;
+      border-bottom: 1px solid var(--border-light);
+      font-size: 11px;
+    }
+    .jira-trace-row:last-child { border-bottom: none; }
+    .jira-desc {
+      flex: 1;
+      color: var(--ink-secondary);
+      font-size: 11px;
+    }
+    .trace-cap {
+      font-weight: 600;
+      font-size: 11px;
+    }
+    .trace-status {
+      font-size: 13px;
+      flex-shrink: 0;
+      width: 20px;
+      text-align: center;
+    }
+    .trace-note {
+      font-size: 9px;
+      color: var(--warm-amber);
+      font-weight: 500;
+    }
+
+    /* Recommendations */
+    .rec-list {
+      list-style: none;
+      counter-reset: rec;
+    }
+    .rec-list li {
+      counter-increment: rec;
+      display: flex;
+      align-items: flex-start;
+      gap: var(--sp-sm);
+      padding: var(--sp-sm) 0;
+      border-bottom: 1px solid var(--border-light);
+      font-size: 12px;
+    }
+    .rec-list li:last-child { border-bottom: none; }
+    .rec-list li::before {
+      content: counter(rec);
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--brand-orange-light);
+      color: var(--brand-orange);
+      font-size: 10px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .rec-impact {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--success-green);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .rec-detail {
+      font-size: 10px;
+      color: var(--ink-tertiary);
+      margin-top: 2px;
+    }
+
+    /* Scenario health rows */
+    .cap-health-row {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+      padding: var(--sp-sm) 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .cap-health-row:last-child { border-bottom: none; }
+    .cap-health-name {
+      width: 130px;
+      font-size: 11px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .cap-health-bar {
+      flex: 1;
+      height: 8px;
+      background: var(--border-light);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+      display: flex;
+    }
+    .cap-health-counts {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--ink-tertiary);
+      width: 90px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .cap-health-badge {
+      font-size: 8px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--critical-red);
+      letter-spacing: 0.5px;
+      margin-left: var(--sp-xs);
+    }
+
+    /* Header actions */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-md);
+    }
+
+    /* Column gap */
+    .left-col, .right-col {
+      display: flex;
+      flex-direction: column;
+      gap: var(--card-gap);
+    }
+
+    /* Combo bonus text */
+    .combo-bonus {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--brand-orange);
+      text-align: center;
+      padding-top: var(--sp-sm);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+
+    <!-- ============ SIDEBAR ============ -->
+    <nav class="sidebar">
+      <div class="sidebar-brand">
+        <div class="logo-mark">
+          <div class="logo-mark-inner">
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+        <div class="brand-text">
+          QUALINT
+          <small>Quality Intelligence</small>
+        </div>
+      </div>
+
+      <div class="sidebar-nav">
+        <span class="sidebar-section-label">Project</span>
+        <a href="h-01-dashboard.html" class="active">
+          <span class="nav-icon">&#9707;</span>
+          <span class="nav-label">Dashboard</span>
+        </a>
+        <a href="h-02-capabilities.html">
+          <span class="nav-icon">&#11041;</span>
+          <span class="nav-label">Capabilities</span>
+        </a>
+        <a href="h-03-scenarios.html">
+          <span class="nav-icon">&#9673;</span>
+          <span class="nav-label">Context</span>
+        </a>
+        <a href="#">
+          <span class="nav-icon">&#9745;</span>
+          <span class="nav-label">Test Cases</span>
+        </a>
+        <a href="#">
+          <span class="nav-icon">&#9881;</span>
+          <span class="nav-label">Automation</span>
+        </a>
+        <a href="#">
+          <span class="nav-icon">&#9855;</span>
+          <span class="nav-label">Accessibility</span>
+        </a>
+        <a href="#">
+          <span class="nav-icon">&#9654;</span>
+          <span class="nav-label">Execution</span>
+        </a>
+        <a href="#">
+          <span class="nav-icon">&#9638;</span>
+          <span class="nav-label">Results</span>
+        </a>
+
+        <span class="sidebar-section-label">Settings</span>
+        <a href="#">
+          <span class="nav-icon">&#9881;</span>
+          <span class="nav-label">Settings</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="avatar">MK</div>
+          <div class="user-info">
+            <div class="name">Mehul K.</div>
+            <div class="role">QA Manager</div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ============ MAIN CONTENT ============ -->
+    <main class="main-content">
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <div class="eyebrow">GRAND HORIZON HOTELS</div>
+          <h1>Quality Dashboard</h1>
+          <div class="subtitle">Capability-driven quality intelligence &mdash; Hospitality Platform</div>
+        </div>
+        <div class="header-actions">
+          <a href="#" class="review-queue-btn">
+            <span class="rq-icon">&#9998;</span>
+            <span class="rq-text">
+              <span class="rq-label">Review Queue</span>
+              <span class="rq-sub">AI drafts pending approval</span>
+            </span>
+            <span class="rq-count">9</span>
+          </a>
+          <button class="btn btn-primary">Run Tests</button>
+        </div>
+      </div>
+
+      <!-- Architecture Flow Strip — Simplified 3-node -->
+      <div class="arch-flow-strip">
+        <div class="arch-flow">
+          <div class="arch-node active">
+            <span class="arch-node-icon">&#11041;</span>
+            <span class="arch-node-label">Capability</span>
+            <span class="arch-node-sub">Business function</span>
+          </div>
+          <span class="arch-arrow">&rarr;</span>
+          <div class="arch-node">
+            <span class="arch-node-icon">&#9638;</span>
+            <span class="arch-node-label">Scenarios</span>
+            <span class="arch-node-sub">What to validate</span>
+          </div>
+          <span class="arch-arrow">&rarr;</span>
+          <div class="arch-node">
+            <span class="arch-node-icon">&#128202;</span>
+            <span class="arch-node-label">Evidence</span>
+            <span class="arch-node-sub">Execution results</span>
+          </div>
+        </div>
+        <div style="text-align:center;margin-top:var(--sp-sm);font-size:10px;color:var(--ink-tertiary);">
+          Powered by: Requirements &middot; Interaction Types &middot; Conditions &middot; Test Assets &mdash; <a href="#" style="color:var(--brand-orange);text-decoration:none;font-weight:600;">Learn more</a>
+        </div>
+      </div>
+
+      <!-- KPI Grid -->
+      <div class="kpi-grid mb-xl">
+        <div class="kpi-card state-brand">
+          <div class="kpi-eyebrow">Capabilities</div>
+          <div class="kpi-value">9</div>
+          <div class="kpi-meta">7 verified, 2 gaps</div>
+        </div>
+        <div class="kpi-card state-healthy">
+          <div class="kpi-eyebrow">Scenarios</div>
+          <div class="kpi-value">68</div>
+          <div class="kpi-meta">56 pass, 7 fail, 5 draft</div>
+        </div>
+        <div class="kpi-card state-warning">
+          <div class="kpi-eyebrow">Coverage</div>
+          <div class="kpi-value">76%</div>
+          <div class="kpi-meta">across Web, API, Mobile</div>
+        </div>
+        <div class="kpi-card state-neutral">
+          <div class="kpi-eyebrow">JIRA Linked</div>
+          <div class="kpi-value">31</div>
+          <div class="kpi-meta">stories mapped to capabilities</div>
+        </div>
+        <div class="kpi-card state-healthy">
+          <div class="kpi-eyebrow">Context Score</div>
+          <div class="kpi-value">76%</div>
+          <div class="kpi-meta">4 sources connected</div>
+        </div>
+      </div>
+
+      <!-- Two-Column Layout -->
+      <div class="content-columns">
+
+        <!-- LEFT COLUMN -->
+        <div class="left-col">
+
+          <!-- Capability Coverage Heatmap -->
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">Capability Coverage Heatmap</div>
+                <div class="panel-subtitle">Coverage by capability and interaction type</div>
+              </div>
+            </div>
+            <div class="coverage-heatmap">
+              <!-- Header row -->
+              <div class="heatmap-header" style="text-align:left;"></div>
+              <div class="heatmap-header">Web UI</div>
+              <div class="heatmap-header">API</div>
+              <div class="heatmap-header">Mobile</div>
+              <div class="heatmap-header">Event</div>
+
+              <!-- Property Search -->
+              <div class="heatmap-label">Property Search</div>
+              <div class="heatmap-cell full">95%</div>
+              <div class="heatmap-cell full">90%</div>
+              <div class="heatmap-cell high">82%</div>
+              <div class="heatmap-cell none">&mdash;</div>
+
+              <!-- Room Booking -->
+              <div class="heatmap-label">Room Booking</div>
+              <div class="heatmap-cell high">88%</div>
+              <div class="heatmap-cell high">85%</div>
+              <div class="heatmap-cell high">72%</div>
+              <div class="heatmap-cell none">&mdash;</div>
+
+              <!-- Guest Profile -->
+              <div class="heatmap-label">Guest Profile</div>
+              <div class="heatmap-cell high">78%</div>
+              <div class="heatmap-cell high">82%</div>
+              <div class="heatmap-cell medium">65%</div>
+              <div class="heatmap-cell none">&mdash;</div>
+
+              <!-- Loyalty Program -->
+              <div class="heatmap-label">Loyalty Program</div>
+              <div class="heatmap-cell high">72%</div>
+              <div class="heatmap-cell medium">68%</div>
+              <div class="heatmap-cell medium">50%</div>
+              <div class="heatmap-cell none">&mdash;</div>
+
+              <!-- Check-in/Check-out -->
+              <div class="heatmap-label">Check-in/Check-out</div>
+              <div class="heatmap-cell medium">65%</div>
+              <div class="heatmap-cell medium">58%</div>
+              <div class="heatmap-cell high">80%</div>
+              <div class="heatmap-cell medium">45%</div>
+
+              <!-- Rate & Availability -->
+              <div class="heatmap-label">Rate &amp; Availability</div>
+              <div class="heatmap-cell none">&mdash;</div>
+              <div class="heatmap-cell full">92%</div>
+              <div class="heatmap-cell none">&mdash;</div>
+              <div class="heatmap-cell high">88%</div>
+
+              <!-- Payment Processing -->
+              <div class="heatmap-label">Payment Processing</div>
+              <div class="heatmap-cell high">82%</div>
+              <div class="heatmap-cell high">78%</div>
+              <div class="heatmap-cell high">70%</div>
+              <div class="heatmap-cell none">&mdash;</div>
+
+              <!-- Reviews & Ratings -->
+              <div class="heatmap-label">Reviews &amp; Ratings</div>
+              <div class="heatmap-cell medium">68%</div>
+              <div class="heatmap-cell medium">55%</div>
+              <div class="heatmap-cell medium">42%</div>
+              <div class="heatmap-cell none">&mdash;</div>
+
+              <!-- Notifications -->
+              <div class="heatmap-label">Notifications</div>
+              <div class="heatmap-cell none">&mdash;</div>
+              <div class="heatmap-cell medium">45%</div>
+              <div class="heatmap-cell medium">60%</div>
+              <div class="heatmap-cell high">78%</div>
+            </div>
+          </div>
+
+          <!-- Scenario Health by Capability -->
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">Scenario Health by Capability</div>
+                <div class="panel-subtitle">Pass / fail / draft breakdown per capability</div>
+              </div>
+            </div>
+
+            <!-- Property Search: 12 pass, 1 fail, 0 draft = 13 total -->
+            <div class="cap-health-row">
+              <div class="cap-health-name">Property Search</div>
+              <div class="cap-health-bar">
+                <div class="bar-pass" style="width:92.3%"></div>
+                <div class="bar-fail" style="width:7.7%"></div>
+              </div>
+              <div class="cap-health-counts">12p &middot; 1f &middot; 0d</div>
+            </div>
+
+            <!-- Room Booking: 10 pass, 2 fail, 2 draft = 14 total — MOST CRITICAL -->
+            <div class="cap-health-row">
+              <div class="cap-health-name">Room Booking <span class="cap-health-badge">CRITICAL</span></div>
+              <div class="cap-health-bar">
+                <div class="bar-pass" style="width:71.4%"></div>
+                <div class="bar-fail" style="width:14.3%"></div>
+                <div class="bar-draft" style="width:14.3%"></div>
+              </div>
+              <div class="cap-health-counts">10p &middot; 2f &middot; 2d</div>
+            </div>
+
+            <!-- Guest Profile: 7 pass, 1 fail, 0 draft = 8 total -->
+            <div class="cap-health-row">
+              <div class="cap-health-name">Guest Profile</div>
+              <div class="cap-health-bar">
+                <div class="bar-pass" style="width:87.5%"></div>
+                <div class="bar-fail" style="width:12.5%"></div>
+              </div>
+              <div class="cap-health-counts">7p &middot; 1f &middot; 0d</div>
+            </div>
+
+            <!-- Loyalty Program: 5 pass, 1 fail, 1 draft = 7 total -->
+            <div class="cap-health-row">
+              <div class="cap-health-name">Loyalty Program</div>
+              <div class="cap-health-bar">
+                <div class="bar-pass" style="width:71.4%"></div>
+                <div class="bar-fail" style="width:14.3%"></div>
+                <div class="bar-draft" style="width:14.3%"></div>
+              </div>
+              <div class="cap-health-counts">5p &middot; 1f &middot; 1d</div>
+            </div>
+
+            <!-- Check-in/Check-out: 5 pass, 1 fail, 1 draft = 7 total -->
+            <div class="cap-health-row">
+              <div class="cap-health-name">Check-in/Check-out</div>
+              <div class="cap-health-bar">
+                <div class="bar-pass" style="width:71.4%"></div>
+                <div class="bar-fail" style="width:14.3%"></div>
+                <div class="bar-draft" style="width:14.3%"></div>
+              </div>
+              <div class="cap-health-counts">5p &middot; 1f &middot; 1d</div>
+            </div>
+
+            <!-- Rate & Availability: 6 pass, 0 fail, 0 draft = 6 total -->
+            <div class="cap-health-row">
+              <div class="cap-health-name">Rate &amp; Availability</div>
+              <div class="cap-health-bar">
+                <div class="bar-pass" style="width:100%"></div>
+              </div>
+              <div class="cap-health-counts">6p &middot; 0f &middot; 0d</div>
+            </div>
+
+            <!-- Payment Processing: 6 pass, 1 fail, 0 draft = 7 total -->
+            <div class="cap-health-row">
+              <div class="cap-health-name">Payment Processing</div>
+              <div class="cap-health-bar">
+                <div class="bar-pass" style="width:85.7%"></div>
+                <div class="bar-fail" style="width:14.3%"></div>
+              </div>
+              <div class="cap-health-counts">6p &middot; 1f &middot; 0d</div>
+            </div>
+
+            <!-- Reviews & Ratings: 3 pass, 0 fail, 1 draft = 4 total -->
+            <div class="cap-health-row">
+              <div class="cap-health-name">Reviews &amp; Ratings</div>
+              <div class="cap-health-bar">
+                <div class="bar-pass" style="width:75%"></div>
+                <div class="bar-draft" style="width:25%"></div>
+              </div>
+              <div class="cap-health-counts">3p &middot; 0f &middot; 1d</div>
+            </div>
+
+            <!-- Notifications: 2 pass, 0 fail, 0 draft = 2 total -->
+            <div class="cap-health-row">
+              <div class="cap-health-name">Notifications</div>
+              <div class="cap-health-bar">
+                <div class="bar-pass" style="width:100%"></div>
+              </div>
+              <div class="cap-health-counts">2p &middot; 0f &middot; 0d</div>
+            </div>
+          </div>
+
+        </div><!-- /left-col -->
+
+        <!-- RIGHT COLUMN -->
+        <div class="right-col">
+
+          <!-- Context Confidence Score -->
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">Context Confidence Score</div>
+                <div class="panel-subtitle">Aggregated from context sources</div>
+              </div>
+            </div>
+
+            <div class="ring-container">
+              <!-- SVG ring: circumference = 2*pi*54 = 339.292; 76% -> offset = 339.292 * (1 - 0.76) = 81.430 -->
+              <svg width="128" height="128" viewBox="0 0 128 128">
+                <circle class="ring-bg" cx="64" cy="64" r="54" />
+                <circle class="ring-fill amber" cx="64" cy="64" r="54"
+                  stroke-dasharray="339.292"
+                  stroke-dashoffset="81.430"
+                  style="transform: rotate(-90deg); transform-origin: center;" />
+                <text class="ring-text" x="64" y="64" text-anchor="middle" dominant-baseline="central" font-size="28">76%</text>
+              </svg>
+            </div>
+
+            <div style="margin-top: var(--sp-lg);">
+              <div class="ctx-bar-row">
+                <span class="ctx-bar-label">Screenshots</span>
+                <div class="ctx-bar-track"><div class="ctx-bar-fill" style="width:75%"></div></div>
+                <span class="ctx-bar-value">15%</span>
+              </div>
+              <div class="ctx-bar-row">
+                <span class="ctx-bar-label">URLs</span>
+                <div class="ctx-bar-track"><div class="ctx-bar-fill" style="width:100%"></div></div>
+                <span class="ctx-bar-value">20%</span>
+              </div>
+              <div class="ctx-bar-row">
+                <span class="ctx-bar-label">Source Code</span>
+                <div class="ctx-bar-track"><div class="ctx-bar-fill" style="width:90%"></div></div>
+                <span class="ctx-bar-value">18%</span>
+              </div>
+              <div class="ctx-bar-row">
+                <span class="ctx-bar-label">Swagger/OpenAPI</span>
+                <div class="ctx-bar-track"><div class="ctx-bar-fill" style="width:80%"></div></div>
+                <span class="ctx-bar-value">16%</span>
+              </div>
+              <div class="ctx-bar-row">
+                <span class="ctx-bar-label">JIRA</span>
+                <div class="ctx-bar-track"><div class="ctx-bar-fill disconnected" style="width:0%"></div></div>
+                <span class="ctx-bar-value">0%</span>
+                <span class="ctx-bar-note">Connect JIRA for +12%</span>
+              </div>
+              <div class="combo-bonus">Combo Bonus: +7% (4 of 5 sources)</div>
+            </div>
+          </div>
+
+          <!-- JIRA Requirements Traceability -->
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">JIRA Requirements Traceability</div>
+                <div class="panel-subtitle">Recent requirement-to-capability mappings</div>
+              </div>
+            </div>
+
+            <div class="jira-trace-row">
+              <span class="jira-key">HTL-130</span>
+              <span class="jira-desc">Search by destination and dates</span>
+              <span class="trace-arrow">&rarr;</span>
+              <span class="trace-cap">Property Search</span>
+              <span class="trace-status" style="color:var(--success-green);">&#10003;</span>
+            </div>
+            <div class="jira-trace-row">
+              <span class="jira-key">HTL-145</span>
+              <span class="jira-desc">Complete room booking flow</span>
+              <span class="trace-arrow">&rarr;</span>
+              <span class="trace-cap">Room Booking</span>
+              <span class="trace-status" style="color:var(--success-green);">&#10003;</span>
+            </div>
+            <div class="jira-trace-row">
+              <div style="display:flex;align-items:center;gap:var(--sp-sm);flex:1;flex-wrap:wrap;">
+                <span class="jira-key">HTL-178</span>
+                <span class="jira-desc">Apply loyalty points at checkout</span>
+                <span class="trace-arrow">&rarr;</span>
+                <span class="trace-cap">Loyalty Program</span>
+              </div>
+              <span class="trace-status" style="color:var(--warm-amber);">&#9888;</span>
+            </div>
+            <div style="padding-left:70px;margin-top:-4px;margin-bottom:var(--sp-sm);">
+              <span class="trace-note">2 edge cases missing</span>
+            </div>
+
+            <div class="jira-trace-row">
+              <div style="display:flex;align-items:center;gap:var(--sp-sm);flex:1;flex-wrap:wrap;">
+                <span class="jira-key">HTL-203</span>
+                <span class="jira-desc">Online check-in with digital key</span>
+                <span class="trace-arrow">&rarr;</span>
+                <span class="trace-cap">Check-in/Check-out</span>
+              </div>
+              <span class="trace-status" style="color:var(--warm-amber);">&#9888;</span>
+            </div>
+            <div style="padding-left:70px;margin-top:-4px;margin-bottom:var(--sp-sm);">
+              <span class="trace-note">Mobile untested</span>
+            </div>
+
+            <div class="jira-trace-row">
+              <span class="jira-key">HTL-215</span>
+              <span class="jira-desc">Dynamic rate update on availability change</span>
+              <span class="trace-arrow">&rarr;</span>
+              <span class="trace-cap">Rate &amp; Availability</span>
+              <span class="trace-status" style="color:var(--success-green);">&#10003;</span>
+            </div>
+          </div>
+
+          <!-- Coverage Recommendations -->
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">Coverage Recommendations</div>
+                <div class="panel-subtitle">AI-suggested improvements</div>
+              </div>
+            </div>
+            <ul class="rec-list">
+              <li>
+                <div>
+                  <span>Add mobile scenarios for Room Booking</span>
+                  <div class="rec-detail">Search and Booking are critical paths</div>
+                </div>
+                <span class="rec-impact">+5% coverage</span>
+              </li>
+              <li>
+                <div>
+                  <span>Test payment failure edge cases</span>
+                  <div class="rec-detail">Declined cards, 3DS timeout, currency mismatch</div>
+                </div>
+                <span class="rec-impact">+4% coverage</span>
+              </li>
+              <li>
+                <div>
+                  <span>Create event-driven tests for Rate &amp; Availability</span>
+                  <div class="rec-detail">Real-time inventory sync</div>
+                </div>
+                <span class="rec-impact">+3% coverage</span>
+              </li>
+              <li>
+                <div>
+                  <span>Add negative scenarios for Loyalty point redemption</span>
+                </div>
+                <span class="rec-impact">+2% scenario depth</span>
+              </li>
+            </ul>
+          </div>
+
+        </div><!-- /right-col -->
+      </div><!-- /content-columns -->
+
+      <!-- Activity Feed -->
+      <div class="panel mt-2xl">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Activity Feed</div>
+            <div class="panel-subtitle">Recent project activity</div>
+          </div>
+        </div>
+
+        <div class="activity-item">
+          <div class="activity-icon" style="background:var(--brand-orange-light);color:var(--brand-orange);">&#11041;</div>
+          <div class="activity-text">AI generated 4 scenarios for <strong>Room Booking</strong> from JIRA acceptance criteria</div>
+          <div class="activity-time">1h ago</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon" style="background:#DBEAFE;color:#1D4ED8;">&#8652;</div>
+          <div class="activity-text">Swagger sync: 3 new endpoints in <strong>/reservations</strong></div>
+          <div class="activity-time">3h ago</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon" style="background:var(--critical-red-light);color:var(--critical-red);">&#10005;</div>
+          <div class="activity-text"><strong>Property Search</strong>: 1 test failed on staging &mdash; price filter mismatch</div>
+          <div class="activity-time">4h ago</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon" style="background:#DBEAFE;color:#1D4ED8;">&#128279;</div>
+          <div class="activity-text">JIRA <strong>HTL-203</strong> linked to <strong>Check-in/Check-out</strong> capability</div>
+          <div class="activity-time">6h ago</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon" style="background:var(--success-green-light);color:var(--success-green);">&#10003;</div>
+          <div class="activity-text">Self-healing fixed 2 selectors on <strong>booking confirmation</strong> page</div>
+          <div class="activity-time">1d ago</div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</body>
+</html>

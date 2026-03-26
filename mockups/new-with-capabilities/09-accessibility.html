@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUALINT — CCM Mortgage Accessibility</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="capabilities.css">
+  <style>
+    /* Two-column layout */
+    .content-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--card-gap);
+    }
+
+    /* Score ring */
+    .ring-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--sp-md);
+    }
+    .ring-svg {
+      transform: rotate(-90deg);
+    }
+    .ring-bg {
+      fill: none;
+      stroke: var(--border-light);
+      stroke-width: 8;
+    }
+    .ring-fill {
+      fill: none;
+      stroke-width: 8;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.6s ease;
+    }
+    .ring-fill.red { stroke: var(--critical-red); }
+    .ring-text {
+      font-family: var(--font-ui);
+      font-weight: 700;
+      fill: var(--ink);
+    }
+
+    /* Conformance bars */
+    .conformance-bars {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-md);
+      margin-top: var(--sp-lg);
+    }
+    .conf-bar-row {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+    }
+    .conf-bar-label {
+      width: 80px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink-secondary);
+      flex-shrink: 0;
+    }
+    .conf-bar-track {
+      flex: 1;
+      height: 8px;
+      background: var(--border-light);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+    }
+    .conf-bar-fill {
+      height: 100%;
+      border-radius: var(--radius-pill);
+    }
+    .conf-bar-fill.amber { background: var(--warm-amber); }
+    .conf-bar-fill.red { background: var(--critical-red); }
+    .conf-bar-value {
+      width: 36px;
+      text-align: right;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink-secondary);
+      flex-shrink: 0;
+    }
+
+    /* Severity badges */
+    .severity-badge {
+      display: inline-flex;
+      padding: 2px 8px;
+      border-radius: var(--radius-xs);
+      font-size: 10px;
+      font-weight: 600;
+    }
+    .severity-badge.critical { background: var(--critical-red-light); color: var(--critical-red); }
+    .severity-badge.serious { background: var(--warm-amber-light); color: var(--warm-amber); }
+    .severity-badge.moderate { background: #F1F0EB; color: var(--risk-slate); }
+
+    /* Compliance note */
+    .compliance-note {
+      font-size: 10px;
+      color: var(--ink-tertiary);
+      margin-top: var(--sp-md);
+      font-style: italic;
+    }
+
+    /* Recommendation card */
+    .recommendation-card {
+      background: var(--brand-orange-light);
+      border: 1px solid var(--brand-orange);
+      border-radius: var(--radius-md);
+      padding: var(--sp-lg);
+      font-size: 12px;
+      color: var(--ink);
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo-mark"><div class="logo-mark-inner"><span></span><span></span><span></span><span></span></div></div>
+      <div class="brand-text">QUALINT<small>Quality Intelligence</small></div>
+    </div>
+    <div class="sidebar-nav">
+      <span class="sidebar-section-label">Project</span>
+      <a href="01-dashboard.html"><span class="nav-icon">&#9707;</span><span class="nav-label">Dashboard</span></a>
+      <a href="02-capabilities.html"><span class="nav-icon">&#11041;</span><span class="nav-label">Capabilities</span></a>
+      <a href="03-context.html"><span class="nav-icon">&#9673;</span><span class="nav-label">Context</span></a>
+      <a href="05-test-cases.html"><span class="nav-icon">&#9745;</span><span class="nav-label">Test Cases</span></a>
+      <a href="06-automation.html"><span class="nav-icon">&#9881;</span><span class="nav-label">Automation</span></a>
+      <a href="09-accessibility.html" class="active"><span class="nav-icon">&#9855;</span><span class="nav-label">Accessibility</span></a>
+      <a href="07-execution.html"><span class="nav-icon">&#9654;</span><span class="nav-label">Execution</span></a>
+      <a href="08-results.html"><span class="nav-icon">&#9638;</span><span class="nav-label">Results</span></a>
+      <span class="sidebar-section-label">Settings</span>
+      <a href="10-settings.html"><span class="nav-icon">&#9881;</span><span class="nav-label">Settings</span></a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">MK</div>
+        <div class="user-info"><div class="name">Mehul K.</div><div class="role">QA Manager</div></div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <div class="eyebrow">CCM MORTGAGE</div>
+        <h1>Accessibility</h1>
+        <div class="subtitle">WCAG compliance and accessibility health</div>
+      </div>
+      <div>
+        <button class="btn btn-primary">Run A11y Scan</button>
+      </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-row">
+      <div class="kpi-card state-critical">
+        <div class="kpi-eyebrow">WCAG SCORE</div>
+        <div class="kpi-value">44%</div>
+        <div class="kpi-meta">28 critical issues</div>
+      </div>
+      <div class="kpi-card state-warning">
+        <div class="kpi-eyebrow">LEVEL A</div>
+        <div class="kpi-value">58%</div>
+        <div class="kpi-meta">base conformance</div>
+      </div>
+      <div class="kpi-card state-critical">
+        <div class="kpi-eyebrow">LEVEL AA</div>
+        <div class="kpi-value">41%</div>
+        <div class="kpi-meta">target standard</div>
+      </div>
+      <div class="kpi-card state-critical">
+        <div class="kpi-eyebrow">LEVEL AAA</div>
+        <div class="kpi-value">11%</div>
+        <div class="kpi-meta">enhanced</div>
+      </div>
+    </div>
+
+    <!-- Two-column layout -->
+    <div class="content-columns">
+
+      <!-- LEFT: WCAG Score Ring + Conformance Bars -->
+      <div class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title">WCAG Score</h2>
+        </div>
+        <div class="panel-body">
+          <div class="ring-container">
+            <svg class="ring-svg" width="120" height="120" viewBox="0 0 120 120">
+              <circle class="ring-bg" cx="60" cy="60" r="54"></circle>
+              <circle class="ring-fill red" cx="60" cy="60" r="54"
+                stroke-dasharray="339.292"
+                stroke-dashoffset="189.9"></circle>
+              <text class="ring-text" x="60" y="60" text-anchor="middle" dominant-baseline="central"
+                font-size="24" transform="rotate(90 60 60)">44%</text>
+            </svg>
+          </div>
+
+          <div class="conformance-bars">
+            <div class="conf-bar-row">
+              <span class="conf-bar-label">Level A</span>
+              <div class="conf-bar-track">
+                <div class="conf-bar-fill amber" style="width: 58%"></div>
+              </div>
+              <span class="conf-bar-value">58%</span>
+            </div>
+            <div class="conf-bar-row">
+              <span class="conf-bar-label">Level AA</span>
+              <div class="conf-bar-track">
+                <div class="conf-bar-fill red" style="width: 41%"></div>
+              </div>
+              <span class="conf-bar-value">41%</span>
+            </div>
+            <div class="conf-bar-row">
+              <span class="conf-bar-label">Level AAA</span>
+              <div class="conf-bar-track">
+                <div class="conf-bar-fill red" style="width: 11%"></div>
+              </div>
+              <span class="conf-bar-value">11%</span>
+            </div>
+          </div>
+
+          <div class="compliance-note">ECOA / ADA / Section 508 compliance required for mortgage applications</div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Issues by Category -->
+      <div class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title">Issues by Category</h2>
+        </div>
+        <div class="panel-body">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Issues</th>
+                <th>Severity</th>
+                <th>Affected Pages</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Missing alt text</td>
+                <td class="mono">8</td>
+                <td><span class="severity-badge critical">Critical</span></td>
+                <td>Loan Application, Documents</td>
+              </tr>
+              <tr>
+                <td>Low color contrast</td>
+                <td class="mono">6</td>
+                <td><span class="severity-badge critical">Critical</span></td>
+                <td>Rate Calculator, Dashboard</td>
+              </tr>
+              <tr>
+                <td>Missing form labels</td>
+                <td class="mono">5</td>
+                <td><span class="severity-badge serious">Serious</span></td>
+                <td>Loan Application</td>
+              </tr>
+              <tr>
+                <td>Keyboard navigation</td>
+                <td class="mono">4</td>
+                <td><span class="severity-badge serious">Serious</span></td>
+                <td>E-Signature, Documents</td>
+              </tr>
+              <tr>
+                <td>Missing ARIA landmarks</td>
+                <td class="mono">3</td>
+                <td><span class="severity-badge moderate">Moderate</span></td>
+                <td>All pages</td>
+              </tr>
+              <tr>
+                <td>Focus indicator missing</td>
+                <td class="mono">2</td>
+                <td><span class="severity-badge serious">Serious</span></td>
+                <td>Login, Loan Application</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Worst Pages (full width) -->
+    <div class="panel" style="margin-top: var(--card-gap);">
+      <div class="panel-header">
+        <h2 class="panel-title">Worst Pages</h2>
+      </div>
+      <div class="panel-body">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Page</th>
+              <th>WCAG Score</th>
+              <th>Issues</th>
+              <th>Level A</th>
+              <th>Level AA</th>
+              <th>Risk</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight: 600;">Loan Application</td>
+              <td class="mono">32%</td>
+              <td class="mono">12 issues</td>
+              <td class="mono">45%</td>
+              <td class="mono">28%</td>
+              <td><span class="pill pill-fail">ECOA Risk</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight: 600;">Document Upload</td>
+              <td class="mono">38%</td>
+              <td class="mono">8 issues</td>
+              <td class="mono">52%</td>
+              <td class="mono">35%</td>
+              <td><span class="pill pill-warn">High</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight: 600;">Rate Calculator</td>
+              <td class="mono">45%</td>
+              <td class="mono">6 issues</td>
+              <td class="mono">60%</td>
+              <td class="mono">42%</td>
+              <td><span class="pill pill-warn">High</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight: 600;">E-Signature</td>
+              <td class="mono">52%</td>
+              <td class="mono">5 issues</td>
+              <td class="mono">65%</td>
+              <td class="mono">48%</td>
+              <td><span class="pill pill-warn">Medium</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight: 600;">Login</td>
+              <td class="mono">68%</td>
+              <td class="mono">3 issues</td>
+              <td class="mono">78%</td>
+              <td class="mono">62%</td>
+              <td><span class="pill pill-neutral">Low</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Recommendation -->
+    <div class="recommendation-card" style="margin-top: var(--card-gap);">
+      Fix 12 critical WCAG issues on Loan Application page to improve ECOA compliance. This page handles borrower financial data and must meet Level AA conformance.
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>
